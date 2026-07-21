@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#d8f238" />
+    <meta
+      name="description"
+      content="An Agent Skill for collecting traceable SEO demand signals through Daily Growth Signals MCP."
+    />
+    <title>Daily Growth Signals Skill</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 fill=%22%23d8f238%22/><text x=%228%22 y=%2244%22 font-size=%2232%22 font-family=%22monospace%22 font-weight=%22700%22>D_</text></svg>" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Daily Growth Signals home">DGS_</a>
+      <nav aria-label="Primary navigation">
+        <a href="#install">Install</a>
+        <a href="#workflow">Workflow</a>
+        <a href="https://github.com/daily-growth-signals/seo-signal-skills">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <h1>Give AI a clearer view<br />of SEO demand</h1>
+          <p>One skill. Two MCP tools.<br />Traceable evidence from request to result.</p>
+          <div class="actions">
+            <a class="button button-dark" href="#install">Install Skill</a>
+            <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills">View on GitHub</a>
+          </div>
+        </div>
+        <div class="terminal" aria-label="Repository clone command">
+          <div class="terminal-bar"><span>bash</span><span aria-hidden="true">— □ ×</span></div>
+          <pre><code><span>$</span> git clone https://github.com/
+daily-growth-signals/seo-signal-skills.git</code></pre>
+        </div>
+      </section>
+
+      <section id="workflow" class="section workflow">
+        <h2>Two tools. One research loop.</h2>
+        <div class="workflow-track">
+          <article>
+            <span class="step">01</span>
+            <h3>Submit research</h3>
+            <code>submit_keyword_research_signals</code>
+          </article>
+          <span class="connector" aria-hidden="true">→</span>
+          <article>
+            <span class="step">02</span>
+            <h3>Poll the result</h3>
+            <code>get_keyword_research_signals</code>
+          </article>
+          <span class="connector" aria-hidden="true">→</span>
+          <article>
+            <span class="step">03</span>
+            <h3>Read the evidence</h3>
+            <p>Demand · intent · search · limitations</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="install" class="section install">
+        <h2>Start in three steps</h2>
+        <div class="install-step">
+          <h3><span class="step">1</span>Clone the repository</h3>
+          <div class="code-row">
+            <pre><code>git clone https://github.com/daily-growth-signals/seo-signal-skills.git</code></pre>
+            <button type="button" data-copy="git clone https://github.com/daily-growth-signals/seo-signal-skills.git">Copy</button>
+          </div>
+        </div>
+        <div class="install-step">
+          <h3><span class="step">2</span>Install the skill</h3>
+          <div class="code-row">
+            <pre><code>ln -s "$(pwd)/seo-signal-skills/skills/research-seo-signals" \
+  ~/.agents/skills/research-seo-signals</code></pre>
+            <button type="button" data-copy='ln -s "$(pwd)/seo-signal-skills/skills/research-seo-signals" ~/.agents/skills/research-seo-signals'>Copy</button>
+          </div>
+        </div>
+        <div class="install-step">
+          <h3><span class="step">3</span>Connect the MCP server</h3>
+          <div class="code-row code-row-tall">
+            <pre><code>{
+  "url": "https://YOUR_DGS_HOST/mcp"
+}</code></pre>
+            <button type="button" data-copy='{"url":"https://YOUR_DGS_HOST/mcp"}'>Copy</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <strong>Daily Growth Signals</strong>
+      <span>Evidence before opinion.</span>
+    </footer>
+  </body>
+</html>
