@@ -16,7 +16,7 @@ Inputs:
 - `keyword` — required seed query, 1–200 characters.
 - `domain` — required hostname without scheme or path.
 - `market` — required ISO 3166-1 alpha-2 country code.
-- `language` — required ISO language code.
+- `language` — required research-language code; it scopes provider data and does not select the user-facing response language.
 - `idempotency_key` — optional stable retry key.
 
 Expected response fields:
@@ -56,15 +56,17 @@ Expected response fields:
 A result can include:
 
 - normalized query fields;
-- demand metrics and related keywords;
-- search intent;
-- search-result observations and traceability links;
-- trend and audience evidence;
+- `keyword_overview`, including keyword metrics, properties, SERP summary, backlink summary, optional clickstream data, and embedded `search_intent_info`;
+- all related keywords;
+- all DataForSEO SERP observations and traceability links;
+- all Google Trends time, geography, and related-query evidence;
+- all X Recent Search posts and metrics;
 - evidence-linked synthesized signals;
 - limitations;
 - usage and cache metadata.
 
 Optional evidence nodes may be absent. A `partial` result remains usable only for the nodes that succeeded.
+Preserve every relevant returned item when presenting the result. A summary or top-N preview is additive and must not replace the complete data unless the user explicitly requests a subset.
 
 ## Polling Algorithm
 
