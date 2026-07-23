@@ -31,9 +31,25 @@ Expected response fields:
 
 Store the full ticket. Reusing the same idempotency key for the same logical request prevents accidental duplicate work. Do not reuse one key across different keywords, domains, markets, or languages.
 
+Use this aggregate tool only when the task needs multiple evidence families to be synthesized.
+
+## Tool: `submit_specific_seo_data`
+
+Submit one asynchronous request that executes only the selected data Capability.
+
+Inputs:
+
+- `data_scope` — required; one of `keyword_overview`, `related_keywords`, `serp`, `google_trends`, or `x_recent_search`.
+- `keyword`, `domain`, `market`, `language` — same validation rules as the aggregate submit tool.
+- `idempotency_key` — optional stable retry key; do not reuse one key across different scopes.
+
+The ticket fields and polling behavior are identical to `submit_keyword_research_signals`. The terminal result uses the same public response envelope but contains only the selected data family and its derived evidence/signals. Other intentionally unrequested families can be null or empty and are not limitations.
+
+Prefer this tool whenever one data family fully answers the request. It selects a single-Capability Workflow and avoids unrelated provider calls.
+
 ## Tool: `get_keyword_research_signals`
 
-Retrieve the current state and terminal result.
+Retrieve the current state and terminal result for either submit tool.
 
 Input:
 
@@ -71,7 +87,7 @@ Preserve every relevant returned item when presenting the result. A summary or t
 ## Polling Algorithm
 
 ```text
-ticket = submit(...)
+ticket = submit_specific(...) or submit_aggregate(...)
 request_id = ticket.request_id
 state = ticket
 

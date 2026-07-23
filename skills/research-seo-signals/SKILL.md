@@ -5,12 +5,12 @@ description: Research evidence-backed SEO demand signals for a keyword, domain, 
 
 # Research SEO Signals
 
-Turn a natural-language SEO research goal into one asynchronous Daily Growth Signals request, then return an organized, evidence-linked report. Use the MCP result as evidence, not as permission to invent facts or make the user's final prioritization decision. A short summary never replaces the complete returned data.
+Turn a natural-language SEO research goal into the smallest sufficient asynchronous Daily Growth Signals request, then return an organized, evidence-linked report. Use the MCP result as evidence, not as permission to invent facts or make the user's final prioritization decision. A short summary never replaces the complete returned data.
 
 ## Execution Contract
 
 - Use the Daily Growth Signals MCP tools for live demand-signal research.
-- Use only `submit_keyword_research_signals` and `get_keyword_research_signals` for this workflow.
+- Use `submit_specific_seo_data` for one concrete data family, `submit_keyword_research_signals` for a genuinely integrated multi-source request, and `get_keyword_research_signals` to query either job.
 - Treat the MCP tool schema and returned fields as the source of truth.
 
 - Preserve the submitted `request_id` until the task reaches a terminal state.
@@ -19,7 +19,7 @@ Turn a natural-language SEO research goal into one asynchronous Daily Growth Sig
 
 ## Hard Rules
 
-1. Submit once, then poll. Never create a second duplicate request merely because the first request is still `pending` or `running`.
+1. Select one submit tool, submit once, then poll. Never create a second duplicate request merely because the first request is still `pending` or `running`.
 2. Reuse a stable `idempotency_key` when retrying the same logical research request.
 3. Never invent metrics, evidence, URLs, timestamps, source availability, or successful nodes.
 4. Never cite an evidence ID that is absent from the terminal result.
@@ -29,6 +29,7 @@ Turn a natural-language SEO research goal into one asynchronous Daily Growth Sig
 8. Keep machine field names unchanged, but write the user-facing answer in the requested language.
 9. Never silently truncate, sample, or discard relevant returned data. Preserve every returned Keyword Overview field, related keyword, organic SERP result, Google Trends point/query/region, X post, evidence item, signal, limitation, and usage field.
 10. You may omit only null/empty fields and internal transport metadata that has no research meaning. State any deliberate omission and its rule.
+11. Never request the aggregate submit tool merely to obtain one data family. Use the narrowest `data_scope` that satisfies the user's goal.
 
 ## Workflow
 
@@ -38,15 +39,29 @@ Turn a natural-language SEO research goal into one asynchronous Daily Growth Sig
 4. If research language is absent, infer it from the target market and keyword only when unambiguous; otherwise default to `en`.
 5. Determine response language separately from research language: honor an explicit answer-language request, otherwise use the user's conversation language, and default to English only when neither is clear.
 6. Ask only for a missing keyword or domain that cannot be safely inferred. Do not ask for optional report preferences before starting.
-7. Create a stable `idempotency_key` for the logical request when the client supports retries. Do not include private or personal data in it.
-8. Call `submit_keyword_research_signals` once with `keyword`, `domain`, `market`, research `language`, and the optional `idempotency_key`.
-9. Store the returned `request_id`, `status`, `is_terminal`, `poll_after_seconds`, and `execution_deadline_at`.
-10. If `is_terminal` is false, wait for `poll_after_seconds` when provided, then call `get_keyword_research_signals` with the same `request_id`.
-11. Continue polling while status is `pending` or `running`. Do not resubmit.
-12. Stop when `is_terminal` is true or the client reaches a firm execution deadline.
-13. For `complete` or `partial`, validate the result before interpreting it.
-14. For `failed`, report the stable error and a safe next step. Retry only when the error is explicitly retryable or the user requests a new attempt.
-15. Return observations first, evidence second, limitations third, and optional follow-up research last.
+7. Inventory the data families needed to answer the request.
+8. If exactly one family is needed, call `submit_specific_seo_data` with the matching `data_scope`. If two or more families must be synthesized, call `submit_keyword_research_signals`. Do not use the aggregate tool as a default.
+9. Create a stable `idempotency_key` for the logical request when the client supports retries. Include the selected scope in the logical identity; do not include private or personal data.
+10. Call the selected submit tool once with `keyword`, `domain`, `market`, research `language`, and the optional `idempotency_key`.
+11. Store the returned `request_id`, `status`, `is_terminal`, `poll_after_seconds`, and `execution_deadline_at`.
+12. If `is_terminal` is false, wait for `poll_after_seconds` when provided, then call `get_keyword_research_signals` with the same `request_id`.
+13. Continue polling while status is `pending` or `running`. Do not resubmit.
+14. Stop when `is_terminal` is true or the client reaches a firm execution deadline.
+15. For `complete` or `partial`, validate the result before interpreting it.
+16. For `failed`, report the stable error and a safe next step. Retry only when the error is explicitly retryable or the user requests a new attempt.
+17. Return observations first, evidence second, limitations third, and optional follow-up research last.
+
+## Data Scope Selection
+
+Use the following exact mapping:
+
+- `keyword_overview`: keyword metrics, properties, backlink/SERP summaries, and embedded search intent.
+- `related_keywords`: related keyword discovery and their returned metrics.
+- `serp`: organic results, SERP features, target-domain presence, and traceability URL.
+- `google_trends`: interest timeline, geographic interest, and related top/rising queries.
+- `x_recent_search`: recent X posts and engagement evidence for the keyword.
+
+Use the aggregate submit only when the answer must compare or synthesize at least two of these families. If the user asks for several independent datasets but does not need synthesis, prefer separate scoped requests and state that each is separately billable.
 
 ## Input Model
 
@@ -87,7 +102,7 @@ Before writing the answer:
 1. Confirm the terminal envelope has the same `request_id` returned by submit.
 2. Confirm `result.query` matches the requested keyword, domain, market, and language.
 3. Read `status`, `limitations`, and `usage` before interpreting any signal.
-4. Inventory all returned families before summarizing: `keyword_overview`, `metrics`, `related_keywords`, `serp_snapshot`, `trends_snapshot`, `x_recent_search`, `evidence`, `signals`, `limitations`, and `usage`.
+4. Inventory all families expected for the selected request before summarizing. For a scoped request, require only its selected family plus `evidence`, `signals`, `limitations`, and `usage`; do not misreport intentionally unrequested families as missing.
 5. Count every array and verify the final report contains the same number of relevant items. Never replace a complete array with top-N examples unless the user explicitly asks for a subset.
 6. Build a set of available `evidence_id` values.
 7. Verify every `evidence_refs` and `counter_evidence_refs` item points to that set.
@@ -121,7 +136,7 @@ Before writing the answer:
 
 ## Response Format
 
-Keep the opening summary compact, then provide the complete organized data:
+Keep the opening summary compact, then provide every section relevant to the selected request. For scoped requests, omit unrequested family sections without treating them as truncation:
 
 1. `Summary`: two to four evidence-grounded observations.
 2. `Keyword overview`: include every returned overview field, including nested keyword metrics, keyword properties, SERP info, backlink info, clickstream info when present, and `search_intent_info`.
@@ -166,6 +181,12 @@ Evidence-focused follow-up:
 
 ```text
 Use $research-seo-signals to summarize only the strongest supported demand and intent observations, including counter-evidence and limitations.
+```
+
+Single-family request:
+
+```text
+Use $research-seo-signals to fetch only the organic SERP data for "AI SEO tools" for example.com in the US English market.
 ```
 
 ## Reference
