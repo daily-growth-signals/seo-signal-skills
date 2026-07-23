@@ -10,7 +10,7 @@ Turn a natural-language SEO research goal into the smallest sufficient asynchron
 ## Execution Contract
 
 - Use the Daily Growth Signals MCP tools for live demand-signal research.
-- Use `submit_specific_seo_data` for one concrete data family, `submit_keyword_research_signals` for a genuinely integrated multi-source request, and `get_keyword_research_signals` to query either job.
+- Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job.
 - Treat the MCP tool schema and returned fields as the source of truth.
 
 - Preserve the submitted `request_id` until the task reaches a terminal state.
@@ -40,9 +40,9 @@ Turn a natural-language SEO research goal into the smallest sufficient asynchron
 5. Determine response language separately from research language: honor an explicit answer-language request, otherwise use the user's conversation language, and default to English only when neither is clear.
 6. Ask only for a missing keyword or domain that cannot be safely inferred. Do not ask for optional report preferences before starting.
 7. Inventory the data families needed to answer the request.
-8. If exactly one family is needed, call `submit_specific_seo_data` with the matching `data_scope`. If two or more families must be synthesized, call `submit_keyword_research_signals`. Do not use the aggregate tool as a default.
-9. Create a stable `idempotency_key` for the logical request when the client supports retries. Include the selected scope in the logical identity; do not include private or personal data.
-10. Call the selected submit tool once with `keyword`, `domain`, `market`, research `language`, and the optional `idempotency_key`.
+8. If exactly one family is needed, call `submit_specific_seo_data` with the matching `data_scope`. If two or more families are needed, call `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported families are required.
+9. Create a stable `idempotency_key` for the logical request when the client supports retries. Include the selected scope combination in the logical identity; do not include private or personal data.
+10. Call the selected submit tool once with `keyword`, `domain`, `market`, research `language`, the selected `data_scope` or `data_scopes`, and the optional `idempotency_key`.
 11. Store the returned `request_id`, `status`, `is_terminal`, `poll_after_seconds`, and `execution_deadline_at`.
 12. If `is_terminal` is false, wait for `poll_after_seconds` when provided, then call `get_keyword_research_signals` with the same `request_id`.
 13. Continue polling while status is `pending` or `running`. Do not resubmit.
@@ -61,7 +61,7 @@ Use the following exact mapping:
 - `google_trends`: interest timeline, geographic interest, and related top/rising queries.
 - `x_recent_search`: recent X posts and engagement evidence for the keyword.
 
-Use the aggregate submit only when the answer must compare or synthesize at least two of these families. If the user asks for several independent datasets but does not need synthesis, prefer separate scoped requests and state that each is separately billable.
+Use one combined submit when the answer needs two or more families. Do not split one logical combination into several requests. Omit `data_scopes` only for a complete all-family research request.
 
 ## Input Model
 
@@ -71,6 +71,7 @@ Translate the user's request into these fields:
 - `domain`: the target hostname without scheme, path, query, or fragment.
 - `market`: a two-letter country code. Do not send city names or free-form country names.
 - `language`: the research language sent to the data service; it does not control the final answer language.
+- `data_scope` / `data_scopes`: the smallest single family or multi-family combination needed for the goal.
 - `idempotency_key`: a stable retry identifier for the same logical request.
 
 Use these defaults:
@@ -187,6 +188,12 @@ Single-family request:
 
 ```text
 Use $research-seo-signals to fetch only the organic SERP data for "AI SEO tools" for example.com in the US English market.
+```
+
+Combined request:
+
+```text
+Use $research-seo-signals to research only SERP patterns and Google Trends for "AI SEO tools" for example.com in the US English market.
 ```
 
 ## Reference

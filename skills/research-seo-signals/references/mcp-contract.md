@@ -17,6 +17,7 @@ Inputs:
 - `domain` — required hostname without scheme or path.
 - `market` — required ISO 3166-1 alpha-2 country code.
 - `language` — required research-language code; it scopes provider data and does not select the user-facing response language.
+- `data_scopes` — optional non-empty combination of `keyword_overview`, `related_keywords`, `serp`, `google_trends`, and `x_recent_search`; omission selects all families.
 - `idempotency_key` — optional stable retry key.
 
 Expected response fields:
@@ -31,7 +32,7 @@ Expected response fields:
 
 Store the full ticket. Reusing the same idempotency key for the same logical request prevents accidental duplicate work. Do not reuse one key across different keywords, domains, markets, or languages.
 
-Use this aggregate tool only when the task needs multiple evidence families to be synthesized.
+Use this tool with the smallest sufficient `data_scopes` combination whenever the task needs two or more families. Omit `data_scopes` only when every supported family is required.
 
 ## Tool: `submit_specific_seo_data`
 
@@ -43,9 +44,9 @@ Inputs:
 - `keyword`, `domain`, `market`, `language` — same validation rules as the aggregate submit tool.
 - `idempotency_key` — optional stable retry key; do not reuse one key across different scopes.
 
-The ticket fields and polling behavior are identical to `submit_keyword_research_signals`. The terminal result uses the same public response envelope but contains only the selected data family and its derived evidence/signals. Other intentionally unrequested families can be null or empty and are not limitations.
+The ticket fields and polling behavior are identical to `submit_keyword_research_signals`. Its functional behavior is equivalent to `submit_keyword_research_signals(data_scopes=[data_scope])`. The terminal result contains only the selected data family and its derived evidence/signals. Other intentionally unrequested families can be null or empty and are not limitations.
 
-Prefer this tool whenever one data family fully answers the request. It selects a single-Capability Workflow and avoids unrelated provider calls.
+Prefer this tool whenever one data family fully answers the request. 
 
 ## Tool: `get_keyword_research_signals`
 
