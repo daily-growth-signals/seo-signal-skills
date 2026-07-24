@@ -1,4 +1,4 @@
 interface:
   display_name: "SEO Signal Research"
   short_description: "Research traceable SEO demand signals"
-  default_prompt: "Use $research-seo-signals to research evidence-backed SEO demand signals for this keyword and domain."
+  default_prompt: "Use $research-seo-signals to research evidence-backed SEO demand signals for this keyword and domain. Reuse any prior request_id for the same keyword/domain/market/language/scopes; only submit when needed, with a stable idempotency_key."

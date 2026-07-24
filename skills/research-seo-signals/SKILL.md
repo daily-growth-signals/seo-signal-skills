@@ -1,11 +1,13 @@
 ---
 name: research-seo-signals
-description: Research evidence-backed SEO demand signals for a keyword, domain, market, and language through the Daily Growth Signals MCP server. Use for keyword validation, search-demand analysis, intent discovery, SERP pattern review, audience evidence, market comparison, opportunity briefs, and any request that needs traceable SEO evidence instead of unsupported recommendations.
+description: Research evidence-backed SEO demand signals for a keyword, domain, market, and language through the Daily Growth Signals MCP server. Use for keyword validation, search-demand analysis, intent discovery, SERP pattern review, audience evidence, market comparison, opportunity briefs, and any request that needs traceable SEO evidence instead of unsupported recommendations. Prefer reusing a prior request_id or the same idempotency_key before creating a duplicate submit.
 ---
 
 # Research SEO Signals
 
-Turn a natural-language SEO research goal into the smallest sufficient asynchronous Daily Growth Signals request, then return an organized, evidence-linked report. Use the MCP result as evidence, not as permission to invent facts or make the user's final prioritization decision. A short summary never replaces the complete returned data.
+Turn a natural-language SEO research goal into the smallest sufficient asynchronous Daily Growth Signals request, then return an organized, evidence-linked report. Use the MCP result as evidence, not as permission to invent facts or make the user's final prioritization decision.
+
+**Efficiency stance:** Prefer reuse of prior terminal results, narrow scopes, and a concise default report. Do not re-fetch the same logical research or re-dump full arrays unless the user asks for a refresh or a full export.
 
 ## Execution Contract
 
@@ -13,43 +15,77 @@ Turn a natural-language SEO research goal into the smallest sufficient asynchron
 - Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job.
 - Treat the MCP tool schema and returned fields as the source of truth.
 
-- Preserve the submitted `request_id` until the task reaches a terminal state.
+- Preserve every `request_id` and `idempotency_key` used in this conversation until the task is finished.
 - Separate observed evidence from interpretation in every answer.
 - If this Skill conflicts with the live MCP tool schema, follow the live schema.
 
 ## Hard Rules
 
-1. Select one submit tool, submit once, then poll. Never create a second duplicate request merely because the first request is still `pending` or `running`.
-2. Reuse a stable `idempotency_key` when retrying the same logical research request.
-3. Never invent metrics, evidence, URLs, timestamps, source availability, or successful nodes.
-4. Never cite an evidence ID that is absent from the terminal result.
-5. Never treat a `partial` result as fully complete. State exactly which evidence is unavailable.
-6. Never fetch or summarize the body of a search-result page as part of this Skill. Use only returned links and structured observations.
-7. Never turn signals into an automatic go/no-go SEO decision. Explain what the evidence supports and let the user decide.
-8. Keep machine field names unchanged, but write the user-facing answer in the requested language.
-9. Never silently truncate, sample, or discard relevant returned data. Preserve every returned Keyword Overview field, related keyword, organic SERP result, Google Trends point/query/region, X post, evidence item, signal, limitation, and usage field.
-10. You may omit only null/empty fields and internal transport metadata that has no research meaning. State any deliberate omission and its rule.
-11. Never request the aggregate submit tool merely to obtain one data family. Use the narrowest `data_scope` that satisfies the user's goal.
+1. **Reuse before submit.** Before any submit, search this conversation (and any memory the client keeps for the skill) for a prior job with the same logical research identity. If a matching `request_id` exists, call only `get_keyword_research_signals`. Do not create a new `request_id` for the same data.
+2. **Stable idempotency.** Always build and send a stable `idempotency_key` for a logical research request. On tool errors, client timeouts, ambiguous failures, or retries of the same logical request, reuse that exact key. Do not invent a new key for the same keyword/domain/market/language/scopes.
+3. Select one submit tool at most once per logical research need after reuse checks fail, then poll. Never create a second duplicate request merely because the first request is still `pending` or `running`.
+4. Never invent metrics, evidence, URLs, timestamps, source availability, or successful nodes.
+5. Never cite an evidence ID that is absent from the terminal result.
+6. Never treat a `partial` result as fully complete. State exactly which evidence is unavailable.
+7. Never fetch or summarize the body of a search-result page as part of this Skill. Use only returned links and structured observations.
+8. Never turn signals into an automatic go/no-go SEO decision. Explain what the evidence supports and let the user decide.
+9. Keep machine field names unchanged, but write the user-facing answer in the requested language.
+10. Never request the aggregate submit tool merely to obtain one data family. Use the narrowest `data_scope` that satisfies the user's goal.
+11. Default report depth is **concise**. Do not paste every array item unless the user explicitly asks for a full export or complete dump. When concise, still preserve exact metric values you do cite and disclose the full counts returned.
+12. Do not refresh live data just to rephrase an earlier answer. Reuse the prior terminal result unless the user asks for a refresh or the prior result is missing required scopes.
+
+## Logical Research Identity
+
+Treat two research goals as the same logical request when all of the following match after normalization:
+
+- `keyword` (exact seed string)
+- `domain` (hostname only)
+- `market` (ISO alpha-2)
+- `language` (research language)
+- selected `data_scope` / `data_scopes` set (order-independent)
+- optional user-declared refresh flag is absent
+
+Build:
+
+```text
+idempotency_key = "seo-signals:" + keyword + "|" + domain + "|" + market + "|" + language + "|" + sorted_scopes
+```
+
+Where `sorted_scopes` is the selected scopes joined by commas in stable sorted order, or `all` when the complete set is intentionally requested. Do not put secrets, API keys, or personal data into the key.
+
+Keep a session ledger (in agent working memory) shaped like:
+
+```text
+logical_id -> { idempotency_key, request_id, status, terminal_at, scopes }
+```
+
+Update the ledger after every successful submit or get.
 
 ## Workflow
 
-1. Identify the user's research goal, seed keyword, target domain, research language, response language, and desired answer depth.
+1. Identify the user's research goal, seed keyword, target domain, research language, response language, desired answer depth (`concise` default, `full` only if requested), and whether they asked to **refresh**.
 2. Normalize `market` to an ISO 3166-1 alpha-2 country code such as `US`.
 3. Normalize research `language` to an ISO language or supported BCP 47 code such as `en` or `zh-TW`.
 4. If research language is absent, infer it from the target market and keyword only when unambiguous; otherwise default to `en`.
 5. Determine response language separately from research language: honor an explicit answer-language request, otherwise use the user's conversation language, and default to English only when neither is clear.
 6. Ask only for a missing keyword or domain that cannot be safely inferred. Do not ask for optional report preferences before starting.
 7. Inventory the data families needed to answer the request.
-8. If exactly one family is needed, call `submit_specific_seo_data` with the matching `data_scope`. If two or more families are needed, call `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported families are required.
-9. Create a stable `idempotency_key` for the logical request when the client supports retries. Include the selected scope combination in the logical identity; do not include private or personal data.
-10. Call the selected submit tool once with `keyword`, `domain`, `market`, research `language`, the selected `data_scope` or `data_scopes`, and the optional `idempotency_key`.
-11. Store the returned `request_id`, `status`, `is_terminal`, `poll_after_seconds`, and `execution_deadline_at`.
-12. If `is_terminal` is false, wait for `poll_after_seconds` when provided, then call `get_keyword_research_signals` with the same `request_id`.
-13. Continue polling while status is `pending` or `running`. Do not resubmit.
-14. Stop when `is_terminal` is true or the client reaches a firm execution deadline.
-15. For `complete` or `partial`, validate the result before interpreting it.
-16. For `failed`, report the stable error and a safe next step. Retry only when the error is explicitly retryable or the user requests a new attempt.
-17. Return observations first, evidence second, limitations third, and optional follow-up research last.
+8. If exactly one family is needed, plan `submit_specific_seo_data`. If two or more families are needed, plan `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported families are required.
+9. Build the stable `idempotency_key` from the logical research identity.
+10. **Reuse gate (mandatory before submit):**
+    1. If the session ledger or conversation already has a `request_id` for this identity, call `get_keyword_research_signals(request_id)` only.
+    2. If status is `complete` or `partial` and the user did not ask to refresh, validate and answer from that result. Stop.
+    3. If status is `pending` or `running`, continue polling that `request_id` only. Do not submit again.
+    4. If status is `failed` and the user wants a retry, prefer **resubmit with the same `idempotency_key`** so the retry keeps the same logical identity.
+    5. If no prior `request_id` is known, still send the stable `idempotency_key` on first submit so client retries collapse to one run.
+11. Call the selected submit tool only when the reuse gate requires a new submit: pass `keyword`, `domain`, `market`, research `language`, scopes, and the same `idempotency_key`.
+12. Store the returned `request_id`, `status`, `is_terminal`, `poll_after_seconds`, and `execution_deadline_at` in the session ledger.
+13. If `is_terminal` is false, wait for `poll_after_seconds` when provided, then call `get_keyword_research_signals` with the same `request_id`.
+14. Continue polling while status is `pending` or `running`. Do not resubmit.
+15. Stop when `is_terminal` is true or the client reaches a firm execution deadline.
+16. For `complete` or `partial`, validate the result before interpreting it.
+17. For `failed`, report the stable error and a safe next step. Retry only when the error is explicitly retryable or the user requests a new attempt, always reusing the prior `idempotency_key` for that logical identity.
+18. Return observations first, evidence second, limitations third, and optional follow-up research last.
 
 ## Data Scope Selection
 
@@ -63,6 +99,10 @@ Use the following exact mapping:
 
 Use one combined submit when the answer needs two or more families. Do not split one logical combination into several requests. Omit `data_scopes` only for a complete all-family research request.
 
+When a prior terminal result already covers a **superset** of the needed scopes (for example prior `all` and now only `serp`), reuse that `request_id` and answer from the needed family only. Do not submit a narrower job just to re-fetch overlapping data.
+
+When a prior result is a **subset** of what is now needed, submit only for the missing scopes if the tools allow a scoped request; do not re-request families already present unless the user asks to refresh.
+
 ## Input Model
 
 Translate the user's request into these fields:
@@ -72,15 +112,16 @@ Translate the user's request into these fields:
 - `market`: a two-letter country code. Do not send city names or free-form country names.
 - `language`: the research language sent to the data service; it does not control the final answer language.
 - `data_scope` / `data_scopes`: the smallest single family or multi-family combination needed for the goal.
-- `idempotency_key`: a stable retry identifier for the same logical request.
+- `idempotency_key`: stable retry and reuse identifier for the same logical request.
 
 Use these defaults:
 
 - Default research language: `en` when no unambiguous market-specific language can be inferred.
 - Default response language: the user's conversation language, otherwise `en`.
-- Default output depth: concise.
+- Default output depth: **concise**.
 - Default polling behavior: follow `poll_after_seconds`.
 - Default decision stance: evidence summary, not recommendation.
+- Default freshness: reuse prior terminal result in-session; refresh only when the user asks.
 
 Do not silently replace an unsupported market-language pair with another country or language. Report the rejected pair and ask the user to choose a supported alternative.
 
@@ -88,11 +129,11 @@ Do not silently replace an unsupported market-language pair with another country
 
 Handle states exactly as follows:
 
-- `pending`: accepted but not started; wait and poll.
-- `running`: in progress; wait and poll.
-- `complete`: terminal result with all required nodes completed.
-- `partial`: terminal usable result with one or more limitations; report both usable evidence and missing coverage.
-- `failed`: terminal failure; report `error.code`, summarize `error.message`, and do not fabricate a result.
+- `pending`: accepted but not started; wait and poll the same `request_id`.
+- `running`: in progress; wait and poll the same `request_id`.
+- `complete`: terminal result with all required nodes completed; reuse via `get` for later questions.
+- `partial`: terminal usable result with one or more limitations; report both usable evidence and missing coverage; reuse unless the user asks to refresh or fill missing families.
+- `failed`: terminal failure; report `error.code`, summarize `error.message`, and do not fabricate a result. Retry only with the same `idempotency_key` when appropriate.
 
 Trust `is_terminal` as the primary stop signal. Use `status` to explain the outcome. A missing `result` in a non-terminal response is normal.
 
@@ -100,16 +141,17 @@ Trust `is_terminal` as the primary stop signal. Use `status` to explain the outc
 
 Before writing the answer:
 
-1. Confirm the terminal envelope has the same `request_id` returned by submit.
+1. Confirm the terminal envelope has the same `request_id` returned by submit or previously reused.
 2. Confirm `result.query` matches the requested keyword, domain, market, and language.
 3. Read `status`, `limitations`, and `usage` before interpreting any signal.
 4. Inventory all families expected for the selected request before summarizing. For a scoped request, require only its selected family plus `evidence`, `signals`, `limitations`, and `usage`; do not misreport intentionally unrequested families as missing.
-5. Count every array and verify the final report contains the same number of relevant items. Never replace a complete array with top-N examples unless the user explicitly asks for a subset.
-6. Build a set of available `evidence_id` values.
-7. Verify every `evidence_refs` and `counter_evidence_refs` item points to that set.
+5. For **full** depth only: count every array and include every relevant item. For **concise** depth: report counts and the strongest items, and state that more rows are available from the same `request_id`.
+6. Build a set of available `evidence_id` values for any claim you make.
+7. Verify every cited `evidence_refs` and `counter_evidence_refs` item points to that set.
 8. Treat metrics, intent, search observations, trend evidence, and audience evidence as separate evidence families.
 9. Mark stale timestamps, unavailable nodes, sparse results, and conflicting evidence explicitly.
 10. Do not infer absence of demand from absence of one optional evidence family.
+11. If `usage.cached` is true after a resubmit, treat it as reuse of an existing result and mention it only when freshness matters.
 
 ## Interpretation Rules
 
@@ -123,8 +165,8 @@ Before writing the answer:
 - Distinguish current observations from durable trends.
 - Use returned URLs only as traceability links; do not claim to have read their page bodies.
 - Mention usage metadata only when it is relevant to the user's requested methodology or freshness explanation.
-- Preserve values and units exactly. Do not round, merge, deduplicate, or translate keyword strings, URLs, timestamps, IDs, counts, ranks, or metric values unless the user explicitly requests a transformed view.
-- Organize large arrays into tables or clearly labeled sections, but include every item. If the client output limit prevents one response, continue in numbered parts without making another duplicate request.
+- Preserve values and units exactly for any figure you report. Do not round, merge, deduplicate, or translate keyword strings, URLs, timestamps, IDs, counts, ranks, or metric values unless the user explicitly requests a transformed view.
+- Prefer tables for arrays, but keep concise depth unless full export was requested.
 
 ## Language Rules
 
@@ -137,36 +179,55 @@ Before writing the answer:
 
 ## Response Format
 
-Keep the opening summary compact, then provide every section relevant to the selected request. For scoped requests, omit unrequested family sections without treating them as truncation:
+### Concise (default)
 
 1. `Summary`: two to four evidence-grounded observations.
-2. `Keyword overview`: include every returned overview field, including nested keyword metrics, keyword properties, SERP info, backlink info, clickstream info when present, and `search_intent_info`.
-3. `Related keywords`: include every returned item and all fields supplied for each item.
-4. `SERP`: include every returned organic result, SERP feature, context field, timestamp, and traceability URL.
-5. `Google Trends`: include every timeline point, geographic point, and related top/rising query returned.
-6. `X recent search`: include every returned post and its author, timestamp, language, URL, and metrics.
-7. `Evidence and signals`: include every returned item and preserve all reference IDs.
-8. `Limitations and usage`: include all limitations and the complete usage object.
-9. `Next steps`: optional follow-up investigations, never an automatic SEO decision.
+2. Key metrics / patterns needed for the goal, with exact values cited.
+3. A short evidence note with the strongest supporting IDs or URLs.
+4. `Limitations`: all limitations that affect the claim.
+5. `Source job`: `request_id` (and whether this answer reused a prior job).
+6. Optional next steps: offer full export or a scoped refresh only if useful.
 
-Before sending, compare section counts against the inventory. If anything relevant is not rendered, add it or explicitly disclose why it could not be included.
+### Full (only when the user asks for complete dump / full export)
 
-For a comparison request, use one row per keyword or market and keep definitions consistent across rows. Do not compare requests with different markets or languages without labeling that difference.
+Provide every section relevant to the selected request:
+
+1. `Summary`
+2. `Keyword overview` (all returned overview fields)
+3. `Related keywords` (every item)
+4. `SERP` (every organic result and feature)
+5. `Google Trends` (every returned point/query/region)
+6. `X recent search` (every returned post)
+7. `Evidence and signals` (every item and reference IDs)
+8. `Limitations and usage`
+9. `Next steps`
+
+For a comparison request, use one row per keyword or market and keep definitions consistent across rows. Reuse prior jobs per row when available. Do not compare requests with different markets or languages without labeling that difference.
 
 ## Failure Recovery
 
 - Unsupported market or language: report the exact normalized pair and ask for an alternative. Do not substitute silently.
-- Request not found: verify that the original `request_id` is being used in the same workspace.
+- Request not found: verify the original `request_id`. Do not immediately create a new request; retry `get` once, then resubmit only with the same `idempotency_key` if the user still needs the research.
 
 
 
-- Polling deadline reached: return the current status and `request_id`; do not submit again automatically.
-- Partial terminal result: use successful evidence and clearly isolate limitations.
+- Polling deadline reached: return the current status and `request_id`; do not submit again automatically. Later turns must resume with `get` on that `request_id`.
+- Partial terminal result: use successful evidence and clearly isolate limitations. Reuse this job for follow-ups that only need the successful families.
 - Unknown evidence reference: omit the unsupported claim and report the consistency issue.
+- Retry after failure: prefer the prior `idempotency_key` for the same logical identity. Create a new key only when the user changes keyword, domain, market, language, or scopes, or explicitly asks for a distinct new job.
 
 ## Examples
 
-Single-market research:
+Reuse prior job in the same conversation:
+
+```text
+User: Research "AI SEO tools" for example.com in US English.
+(agent submits once, stores request_id)
+User: Summarize the demand signals again more briefly.
+(agent calls get on the same request_id only; no new submit)
+```
+
+Single-market research (first time):
 
 ```text
 Use $research-seo-signals to research "AI SEO tools" for example.com in the US English market.
@@ -178,7 +239,7 @@ Localized research:
 Use $research-seo-signals to research "herramientas SEO con IA" for example.com in the US Spanish market and answer in Spanish.
 ```
 
-Evidence-focused follow-up:
+Evidence-focused follow-up (must reuse prior terminal job when available):
 
 ```text
 Use $research-seo-signals to summarize only the strongest supported demand and intent observations, including counter-evidence and limitations.
@@ -194,6 +255,12 @@ Combined request:
 
 ```text
 Use $research-seo-signals to research only SERP patterns and Google Trends for "AI SEO tools" for example.com in the US English market.
+```
+
+Explicit refresh:
+
+```text
+Use $research-seo-signals to refresh the SERP data for "AI SEO tools" for example.com in the US English market.
 ```
 
 ## Reference

@@ -18,11 +18,11 @@ Inputs:
 - `market` — required ISO 3166-1 alpha-2 country code.
 - `language` — required research-language code; it scopes provider data and does not select the user-facing response language.
 - `data_scopes` — optional non-empty combination of `keyword_overview`, `related_keywords`, `serp`, `google_trends`, and `x_recent_search`; omission selects all families.
-- `idempotency_key` — optional stable retry key.
+- `idempotency_key` — strongly recommended stable retry key for the logical research identity.
 
 Expected response fields:
 
-- `request_id` — stable request identifier used for every poll.
+- `request_id` — stable request identifier used for every poll and later reuse.
 - `status` — one of `pending`, `running`, `complete`, `partial`, or `failed`.
 - `is_terminal` — whether polling must stop.
 - `outcome` — `accepted` for a successful submission.
@@ -30,7 +30,7 @@ Expected response fields:
 - `result_path` — REST-compatible result path for diagnostics.
 - `execution_deadline_at` — server-side execution deadline when available.
 
-Store the full ticket. Reusing the same idempotency key for the same logical request prevents accidental duplicate work. Do not reuse one key across different keywords, domains, markets, or languages.
+Store the full ticket in the conversation/session ledger. Reusing the same idempotency key for the same logical request prevents accidental duplicate work and can return a cached terminal result. Do not reuse one key across different keywords, domains, markets, languages, or scope sets.
 
 Use this tool with the smallest sufficient `data_scopes` combination whenever the task needs two or more families. Omit `data_scopes` only when every supported family is required.
 
@@ -42,7 +42,7 @@ Inputs:
 
 - `data_scope` — required; one of `keyword_overview`, `related_keywords`, `serp`, `google_trends`, or `x_recent_search`.
 - `keyword`, `domain`, `market`, `language` — same validation rules as the aggregate submit tool.
-- `idempotency_key` — optional stable retry key; do not reuse one key across different scopes.
+- `idempotency_key` — strongly recommended; do not reuse one key across different scopes.
 
 The ticket fields and polling behavior are identical to `submit_keyword_research_signals`. Its functional behavior is equivalent to `submit_keyword_research_signals(data_scopes=[data_scope])`. The terminal result contains only the selected data family and its derived evidence/signals. Other intentionally unrequested families can be null or empty and are not limitations.
 
@@ -54,7 +54,7 @@ Retrieve the current state and terminal result for either submit tool.
 
 Input:
 
-- `request_id` — the exact identifier returned by the submit tool.
+- `request_id` — the exact identifier returned by the submit tool or stored from an earlier turn.
 
 Expected response fields:
 
@@ -68,6 +68,32 @@ Expected response fields:
 
 `result` can be absent while the request is not terminal. Polling a non-terminal request is not an error.
 
+Use `get` as the primary way to reuse historical jobs in the same conversation. Prefer `get(request_id)` over a new submit whenever the logical research identity already has a known `request_id`.
+
+## Reuse And Idempotency
+
+```text
+if known request_id for same logical identity:
+    state = get(request_id)
+    if complete/partial and no refresh requested:
+        answer from state.result
+    if pending/running:
+        keep polling request_id only
+    if failed and retry requested:
+        submit again with the SAME idempotency_key
+else:
+    submit once with stable idempotency_key
+    poll get(request_id)
+```
+
+Expected reuse behavior for the same logical request:
+
+- `complete` / `partial`: reuse the existing terminal result unless a refresh is requested.
+- `pending` / `running`: keep polling the existing ticket; do not open a second job.
+- `failed`: use the same key and inputs for a requested retry.
+
+Never mint a new `idempotency_key` for an identical keyword/domain/market/language/scopes retry.
+
 ## Terminal Result
 
 A result can include:
@@ -80,17 +106,20 @@ A result can include:
 - all X Recent Search posts and metrics;
 - evidence-linked synthesized signals;
 - limitations;
-- usage and cache metadata.
+- usage metadata, including whether an existing result was reused when that field is returned.
 
 Optional evidence nodes may be absent. A `partial` result remains usable only for the nodes that succeeded.
-Preserve every relevant returned item when presenting the result. A summary or top-N preview is additive and must not replace the complete data unless the user explicitly requests a subset.
+Default agent answers should be concise. A summary or top-N view is the default; full-array export is only required when the user explicitly asks for complete data.
 
 ## Polling Algorithm
 
 ```text
-ticket = submit_specific(...) or submit_aggregate(...)
-request_id = ticket.request_id
-state = ticket
+if known_request_id:
+    state = get(known_request_id)
+else:
+    ticket = submit_specific(...) or submit_aggregate(..., idempotency_key=stable_key)
+    request_id = ticket.request_id
+    state = ticket
 
 while state.is_terminal is false:
     wait(state.poll_after_seconds when present)
@@ -100,23 +129,33 @@ if state.status is complete or partial:
     validate and interpret state.result
 else:
     report state.error
+    # optional retry: submit with the same idempotency_key only
 ```
 
 Do not call submit inside the polling loop.
 
 ## Consistency Checks
 
-- The terminal `request_id` must equal the submitted `request_id`.
+- The terminal `request_id` must equal the submitted or reused `request_id`.
 - The terminal query must match the requested keyword, domain, market, and language.
-- Every signal reference must point to an evidence item present in the same result.
+- Every signal reference you cite must point to an evidence item present in the same result.
 - Limitations must be read before describing coverage as complete.
 - Machine codes and identifiers must remain unchanged when translating the user-facing answer.
+
+
+
+
+
+
+
+
 
 ## Common Failures
 
 - Unsupported market-language pair: preserve and report the normalized pair; do not substitute another market.
-- Request not found: verify the request identifier and workspace context.
+- Request not found: verify the original request identifier before deciding whether a new submit is necessary.
 
 
 
 - Client polling timeout: preserve `request_id` so polling can resume without resubmitting.
+- Need retry after failed terminal job: resubmit with the same `idempotency_key` for that logical identity.

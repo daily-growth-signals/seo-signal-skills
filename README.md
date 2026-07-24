@@ -4,10 +4,12 @@ Give AI agents a focused workflow for collecting traceable SEO demand signals th
 
 This repository intentionally provides one skill: [`research-seo-signals`](skills/research-seo-signals/SKILL.md). It guides an AI agent to:
 
-- submit a keyword, domain, market, and language;
+- submit a keyword, domain, market, and language only when no prior matching job exists;
+- reuse known `request_id` values via `get_keyword_research_signals` and stable `idempotency_key`s on retries;
 - poll asynchronous research at the suggested interval;
 - read metrics, search observations, evidence, and limitations together;
-- separate sourced facts from inference without making the final SEO decision.
+- separate sourced facts from inference without making the final SEO decision;
+- default to a concise report unless the user asks for a full export.
 
 ## Install
 
@@ -57,7 +59,7 @@ Configuration fields vary by client. Follow the client documentation and your Da
 Use $research-seo-signals to research "AI SEO tools" for example.com in the US English market.
 ```
 
-The skill submits the research request, preserves its `request_id`, and polls for the result until the request reaches a terminal state.
+The skill first checks for a prior job with the same logical identity, reuses `get_keyword_research_signals` when possible, otherwise submits once with a stable `idempotency_key`, preserves `request_id`, and polls until terminal.
 
 ## Project page
 
