@@ -1,0 +1,4 @@
+interface:
+  display_name: "Social Signal Research"
+  short_description: "Research traceable social-media conversations"
+  default_prompt: "Use $research-social-signals to find and synthesize traceable social-media conversations for this topic without claiming exhaustive coverage."
