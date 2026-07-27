@@ -143,7 +143,10 @@ Before writing the answer:
 
 1. Confirm the terminal envelope has the same `request_id` returned by submit or previously reused.
 2. Confirm `result.query` matches the requested keyword, domain, market, and language.
-3. Read `status`, `limitations`, and `usage` before interpreting any signal.
+3. Read `status`, `limitations`, `usage`, and `result.field_semantics` before
+   interpreting any raw or normalized result field. Apply each matching entry's
+   `unit`, `meaning`, and `caveats`; do not replace the live glossary with
+   remembered provider definitions.
 4. Inventory all families expected for the selected request before summarizing. For a scoped request, require only its selected family plus `evidence`, `signals`, `limitations`, and `usage`; do not misreport intentionally unrequested families as missing.
 5. For **full** depth only: count every array and include every relevant item. For **concise** depth: report counts and the strongest items, and state that more rows are available from the same `request_id`.
 6. Build a set of available `evidence_id` values for any claim you make.
@@ -166,6 +169,10 @@ Before writing the answer:
 - Use returned URLs only as traceability links; do not claim to have read their page bodies.
 - Mention usage metadata only when it is relevant to the user's requested methodology or freshness explanation.
 - Preserve values and units exactly for any figure you report. Do not round, merge, deduplicate, or translate keyword strings, URLs, timestamps, IDs, counts, ranks, or metric values unless the user explicitly requests a transformed view.
+- Derive the meaning and time range of `x_recent_search` from the matching
+  `result.field_semantics` entry. Do not assume that “recent” means the
+  provider's maximum supported lookback window or an exact collection-time
+  boundary.
 - Prefer tables for arrays, but keep concise depth unless full export was requested.
 
 ## Language Rules

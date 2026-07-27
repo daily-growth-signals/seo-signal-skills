@@ -104,12 +104,19 @@ A result can include:
 - all DataForSEO SERP observations and traceability links;
 - all Google Trends time, geography, and related-query evidence;
 - all X Recent Search posts and metrics;
+- `field_semantics`, containing the live units, meanings, and caveats for result
+  fields present in this response;
 - evidence-linked synthesized signals;
 - limitations;
 - usage metadata, including whether an existing result was reused when that field is returned.
 
 Optional evidence nodes may be absent. A `partial` result remains usable only for the nodes that succeeded.
 Default agent answers should be concise. A summary or top-N view is the default; full-array export is only required when the user explicitly asks for complete data.
+
+Read `result.field_semantics` before interpreting raw or normalized fields.
+For `x_recent_search`, use its matching semantic entry as the authority for the
+search window and boundary caveats; the field name “recent” alone does not
+define a duration.
 
 ## Polling Algorithm
 
@@ -140,6 +147,8 @@ Do not call submit inside the polling loop.
 - The terminal query must match the requested keyword, domain, market, and language.
 - Every signal reference you cite must point to an evidence item present in the same result.
 - Limitations must be read before describing coverage as complete.
+- Matching `field_semantics` entries must be applied before reporting units,
+  meanings, or time ranges.
 - Machine codes and identifiers must remain unchanged when translating the user-facing answer.
 
 
