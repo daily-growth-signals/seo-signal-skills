@@ -6,9 +6,9 @@
     <meta name="theme-color" content="#d8f238" />
     <meta
       name="description"
-      content="An Agent Skill for collecting traceable SEO demand signals through Daily Growth Signals MCP."
+      content="Agent Skills for collecting traceable SEO & social demand signals through Daily Growth Signals MCP."
     />
-    <title>Daily Growth Signals Skill</title>
+    <title>Daily Growth Signals — Agent Skills</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 fill=%22%23d8f238%22/><text x=%228%22 y=%2244%22 font-size=%2232%22 font-family=%22monospace%22 font-weight=%22700%22>D_</text></svg>" />
     <link rel="stylesheet" href="./styles.css" />
     <script src="./app.js" defer></script>
@@ -27,9 +27,9 @@
       <section class="hero">
         <div class="hero-copy">
           <h1>Give AI a clearer view<br />of SEO demand</h1>
-          <p>One skill. Two MCP tools.<br />Traceable evidence from request to result.</p>
+          <p>Two skills. Two data sources.<br />Traceable evidence from request to result.</p>
           <div class="actions">
-            <a class="button button-dark" href="#install">Install Skill</a>
+            <a class="button button-dark" href="#install">Install Skills</a>
             <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills">View on GitHub</a>
           </div>
         </div>
@@ -64,24 +64,42 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
       </section>
 
       <section id="install" class="section install">
-        <h2>Start in three steps</h2>
+        <h2>Copy the skill files manually</h2>
+        <p class="section-lede">
+          Clone the repo and copy the skill folders into your agent's skills directory.
+          Pick your agent platform below — each skill comes with SKILL.md, agent config, and MCP reference docs.
+        </p>
+
+        <!-- Step 1: Clone -->
         <div class="install-step">
-          <h3><span class="step">1</span>Clone the repository</h3>
+          <h3>Clone the repository</h3>
           <div class="code-row">
             <pre><code>git clone https://github.com/daily-growth-signals/seo-signal-skills.git</code></pre>
             <button type="button" data-copy="git clone https://github.com/daily-growth-signals/seo-signal-skills.git">Copy</button>
           </div>
         </div>
+
+        <!-- Step 2: Platform tabs + skill list -->
         <div class="install-step">
-          <h3><span class="step">2</span>Install the skill</h3>
-          <div class="code-row">
-            <pre><code>ln -s "$(pwd)/seo-signal-skills/skills/research-seo-signals" \
-  ~/.agents/skills/research-seo-signals</code></pre>
-            <button type="button" data-copy='ln -s "$(pwd)/seo-signal-skills/skills/research-seo-signals" ~/.agents/skills/research-seo-signals'>Copy</button>
+          <h3>Choose your agent &amp; copy the skills</h3>
+          <p class="step-hint">Select an agent platform to see the exact copy commands for each skill.</p>
+
+          <div class="platform-tabs" role="tablist" aria-label="Agent platform">
+            <button role="tab" aria-selected="true" data-platform="claude">Claude Code</button>
+            <button role="tab" aria-selected="false" data-platform="codex">Codex</button>
+            <button role="tab" aria-selected="false" data-platform="cursor">Cursor</button>
+            <button role="tab" aria-selected="false" data-platform="windsurf">Windsurf</button>
+          </div>
+
+          <!-- Skill cards rendered by JS -->
+          <div id="skill-cards" class="skill-cards">
+            <!-- JS populates this -->
           </div>
         </div>
+
+        <!-- Step 3: MCP config -->
         <div class="install-step">
-          <h3><span class="step">3</span>Connect the MCP server</h3>
+          <h3>Connect the MCP server</h3>
           <div class="code-row code-row-tall">
             <pre><code>{
   "url": "https://YOUR_DGS_HOST/mcp"
