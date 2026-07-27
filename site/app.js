@@ -25,6 +25,21 @@ const SKILLS = [
       { name: "  mcp-contract.md",   type: "file" },
     ],
   },
+  {
+    id: "decide-content-opportunities",
+    name: "Content Opportunity Decisions",
+    desc: "Turn completed SEO and social evidence into a recommended content direction with confidence, counter-evidence, alternatives, and a next test.",
+    files: [
+      { name: "SKILL.md",                       type: "file" },
+      { name: "agents/",                         type: "dir" },
+      { name: "  openai.yaml",                   type: "file" },
+      { name: "references/",                     type: "dir" },
+      { name: "  evidence-evaluation.md",         type: "file" },
+      { name: "  confidence-rubric.md",           type: "file" },
+      { name: "assets/",                          type: "dir" },
+      { name: "  content-decision-template.md",   type: "file" },
+    ],
+  },
 ];
 
 // ── Platform config ──

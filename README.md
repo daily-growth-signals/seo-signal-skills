@@ -1,8 +1,8 @@
 # Daily Growth Signals Skills
 
-Give AI agents focused workflows for collecting traceable SEO and social-media signals through the Daily Growth Signals MCP products.
+Give AI agents focused workflows for collecting traceable SEO and social-media signals through the Daily Growth Signals MCP products, then turning that evidence into content-opportunity decisions.
 
-This repository provides two product-specific skills:
+This repository provides three product-specific skills:
 
 [`research-seo-signals`](skills/research-seo-signals/SKILL.md) guides an AI agent to:
 
@@ -21,6 +21,14 @@ This repository provides two product-specific skills:
 - deduplicate overlapping searches by `post_id` while preserving source URLs and query context;
 - separate observations, synthesis, possible actions, and coverage limitations.
 
+[`decide-content-opportunities`](skills/decide-content-opportunities/SKILL.md) guides an AI agent to:
+
+- reuse completed SEO and social evidence without refreshing it unnecessarily;
+- compare materially different topics, audiences, angles, formats, or channels;
+- recommend one primary action with traceable rationale and counter-evidence;
+- express confidence as an explained qualitative judgment rather than a fabricated probability;
+- provide alternatives, tradeoffs, conditions, and the smallest useful next test.
+
 ## Install
 
 Clone the repository:
@@ -37,18 +45,24 @@ ln -s "$(pwd)/seo-signal-skills/skills/research-seo-signals" \
   ~/.codex/skills/research-seo-signals
 ln -s "$(pwd)/seo-signal-skills/skills/research-social-signals" \
   ~/.codex/skills/research-social-signals
+ln -s "$(pwd)/seo-signal-skills/skills/decide-content-opportunities" \
+  ~/.codex/skills/decide-content-opportunities
 
 # Claude Code
 ln -s "$(pwd)/seo-signal-skills/skills/research-seo-signals" \
   ~/.claude/skills/research-seo-signals
 ln -s "$(pwd)/seo-signal-skills/skills/research-social-signals" \
   ~/.claude/skills/research-social-signals
+ln -s "$(pwd)/seo-signal-skills/skills/decide-content-opportunities" \
+  ~/.claude/skills/decide-content-opportunities
 
 # Other compatible clients
 ln -s "$(pwd)/seo-signal-skills/skills/research-seo-signals" \
   ~/.agents/skills/research-seo-signals
 ln -s "$(pwd)/seo-signal-skills/skills/research-social-signals" \
   ~/.agents/skills/research-social-signals
+ln -s "$(pwd)/seo-signal-skills/skills/decide-content-opportunities" \
+  ~/.agents/skills/decide-content-opportunities
 ```
 
 Create the destination directory with `mkdir -p` if needed. Copying the skill directory also works, but copied installations do not update with the repository.
@@ -78,9 +92,11 @@ Configuration fields vary by client. Follow the client documentation and your Da
 Use $research-seo-signals to research "AI SEO tools" for example.com in the US English market.
 
 Use $research-social-signals to find recent X conversations about PDF translation tools that preserve layout, with source links and coverage limitations.
+
+Use $decide-content-opportunities to compare the opportunities in the completed SEO and social results and recommend one content direction, with confidence, counter-evidence, alternatives, and a next test.
 ```
 
-The SEO skill follows the asynchronous submit/get contract. The Social skill uses the synchronous `search_x_posts` contract and avoids duplicate searches or unnecessary pagination.
+The SEO skill follows the asynchronous submit/get contract. The Social skill uses the synchronous `search_x_posts` contract and avoids duplicate searches or unnecessary pagination. The decision skill consumes traceable results from either or both research skills and does not recollect data merely to produce a recommendation.
 
 ## Project page
 
