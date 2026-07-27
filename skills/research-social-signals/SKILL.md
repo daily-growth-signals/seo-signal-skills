@@ -13,7 +13,9 @@ Turn a social-research goal into a small set of focused X query expressions, ret
 - Treat the live MCP schema and returned fields as the source of truth.
 
 - Reuse results already present in the conversation before running the same query again.
-- Preserve the exact query, `sort_order`, pagination context, post URLs, timestamps, languages, and native public metrics.
+- Preserve the exact query, `sort_order`, time or Post ID boundaries, pagination context, post URLs, timestamps, languages, and native public metrics.
+
+- Reuse an `idempotency_key` only when safely retrying the same logical page. Use a new key when requesting another page or changing any search input.
 - Read [references/mcp-contract.md](references/mcp-contract.md) before the first live call or when diagnosing a tool error.
 - If this Skill conflicts with the live tool schema, follow the live schema.
 
@@ -55,15 +57,17 @@ Do not assume this example is suitable for every task. Build expressions from th
 ## Workflow
 
 1. Identify the research subject, user goal, relevant languages, desired freshness, and answer depth.
-2. Check whether the conversation already contains results for an identical query and sort order. Reuse them unless the user asks for a refresh.
+2. Check whether the conversation already contains results for the same query, sort order, time or Post ID boundaries, and page context. Reuse them unless the user asks for a refresh.
 3. Draft the smallest focused query set that can answer the goal.
-4. Use `recency` for current conversations or emerging issues. Use `relevancy` for stronger topical matches. When the distinction materially affects the goal, run both and label them separately.
-5. Call `search_x_posts` once per planned expression with a page size proportional to the task; default to `50`.
-6. Follow `next_token` only when broader coverage is necessary. Never modify or interpret the token.
-7. Normalize the collected evidence by `post_id`, retaining author, time, language, URL, metrics, and matching-query provenance.
-8. Inspect provider errors and coverage limitations before interpreting results.
-9. Extract recurring wording, questions, pain points, product feedback, objections, use cases, or campaign opportunities only when supported by returned posts.
-10. Report observations first, evidence second, interpretation third, and limitations last.
+4. Translate freshness into explicit `start_time` and, only when needed, `end_time` boundaries. For a current-window search, normally omit `end_time` so the provider can use its latest searchable boundary.
+5. Use `since_id` or `until_id` only when the task supplies a meaningful Post ID checkpoint. Do not invent or derive ID boundaries from timestamps.
+6. Use `recency` for current conversations or emerging issues. Use `relevancy` for stronger topical matches. When the distinction materially affects the goal, run both and label them separately.
+7. Call `search_x_posts` once per planned expression with a page size proportional to the task; default to `50`. Give the logical page a stable `idempotency_key` when the client supports one.
+8. Follow `next_token` only when broader coverage is necessary. Never modify or interpret the token. Keep `query`, `max_results`, `sort_order`, time boundaries, and Post ID boundaries unchanged, and use a new `idempotency_key` for the new page.
+9. Normalize the collected evidence by `post_id`, retaining author, time, language, URL, metrics, and matching-query provenance.
+10. Inspect provider errors and coverage limitations before interpreting results.
+11. Extract recurring wording, questions, pain points, product feedback, objections, use cases, or campaign opportunities only when supported by returned posts.
+12. Report observations first, evidence second, interpretation third, and limitations last.
 
 ## Interpretation
 
@@ -84,7 +88,7 @@ Use this concise structure by default:
 2. `Patterns`: recurring language, questions, pain points, feedback, or opportunities.
 3. `Evidence`: strongest post URLs with brief relevance notes and exact metrics only when useful.
 4. `Interpretation`: clearly marked implications or possible actions, with conditions and risks.
-5. `Limitations`: query expressions, sorting, pagination depth, provider errors, and coverage boundaries.
+5. `Limitations`: query expressions, sorting, effective time or Post ID boundaries, pagination depth, provider errors, and coverage boundaries.
 
 For a full export, include every unique returned post and its matching query provenance. Do not silently omit duplicates; state the raw match count and unique `post_id` count.
 
@@ -92,10 +96,12 @@ For a full export, include every unique returned post and its matching query pro
 
 - Tool unavailable: report that live X research could not be completed; do not guess at the cause or fabricate results.
 - Invalid query or page size: correct only an unambiguous formatting issue; otherwise show the rejected field and ask for direction.
+- Invalid time range or unsupported searchable boundary: preserve the rejected field, adjust only an unambiguous current-window `end_time` problem by omitting `end_time`, and otherwise ask for direction.
 
 
+- Retry conflict: retry only the same logical page with its original inputs; use a new key for a genuinely different page or search.
 - Provider error with partial results: use only returned evidence and state the missing coverage.
-- Pagination failure: retain the completed pages and the last opaque `next_token`; do not restart all queries automatically.
+- Pagination failure: retain the completed pages, their page-level context, and the last opaque `next_token`; do not restart all queries automatically.
 
 ## Examples
 
