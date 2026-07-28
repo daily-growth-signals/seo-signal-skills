@@ -10,7 +10,7 @@ Inputs:
 - `domain` — required hostname without scheme or path.
 - `market` — required ISO 3166-1 alpha-2 country code.
 - `language` — required research-language code; it scopes provider data and does not select the user-facing response language.
-- `data_scopes` — optional non-empty combination of `keyword_overview`, `related_keywords`, `serp`, `google_trends`, and `x_recent_search`; omission selects all families.
+- `data_scopes` — optional non-empty combination of `keyword_overview`, `related_keywords`, `serp`, and `google_trends`; omission selects all SEO families. Use the separate Social MCP for X evidence.
 - `idempotency_key` — strongly recommended stable retry key for the logical research identity.
 
 Expected response fields:
@@ -33,7 +33,7 @@ Submit one asynchronous request that executes only the selected data Capability.
 
 Inputs:
 
-- `data_scope` — required; one of `keyword_overview`, `related_keywords`, `serp`, `google_trends`, or `x_recent_search`.
+- `data_scope` — required; one of `keyword_overview`, `related_keywords`, `serp`, or `google_trends`.
 - `keyword`, `domain`, `market`, `language` — same validation rules as the aggregate submit tool.
 - `idempotency_key` — strongly recommended; do not reuse one key across different scopes.
 
@@ -96,7 +96,6 @@ A result can include:
 - all related keywords;
 - all DataForSEO SERP observations and traceability links;
 - all Google Trends time, geography, and related-query evidence;
-- all X Recent Search posts and metrics;
 - `field_semantics`, containing the live units, meanings, and caveats for result
   fields present in this response;
 - evidence-linked synthesized signals;
@@ -107,9 +106,6 @@ Optional evidence nodes may be absent. A `partial` result remains usable only fo
 Default agent answers should be concise. A summary or top-N view is the default; full-array export is only required when the user explicitly asks for complete data.
 
 Read `result.field_semantics` before interpreting raw or normalized fields.
-For `x_recent_search`, use its matching semantic entry as the authority for the
-search window and boundary caveats; the field name “recent” alone does not
-define a duration.
 
 ## Polling Algorithm
 

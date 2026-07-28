@@ -12,6 +12,9 @@ Turn a natural-language SEO research goal into the smallest sufficient asynchron
 ## Execution Contract
 
 - Use the Daily Growth Signals MCP tools for live demand-signal research.
+- Use only the SEO MCP product surface. Social evidence belongs to
+  `research-social-signals`; conditional recommendations belong to
+  `decide-content-opportunities` and the Decision MCP.
 - Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job.
 - Treat the MCP tool schema and returned fields as the source of truth.
 - Preserve every `request_id` and `idempotency_key` used in this conversation until the task is finished.
@@ -94,7 +97,6 @@ Use the following exact mapping:
 - `related_keywords`: related keyword discovery and their returned metrics.
 - `serp`: organic results, SERP features, target-domain presence, and traceability URL.
 - `google_trends`: interest timeline, geographic interest, and related top/rising queries.
-- `x_recent_search`: recent X posts and engagement evidence for the keyword.
 
 Use one combined submit when the answer needs two or more families; do not split one logical combination into several requests. Omit `data_scopes` only for a complete all-family research request.
 
@@ -168,10 +170,6 @@ Before writing the answer:
 - Use returned URLs only as traceability links; do not claim to have read their page bodies.
 - Mention usage metadata only when it is relevant to the user's requested methodology or freshness explanation.
 - Preserve values and units exactly for any figure you report. Do not round, merge, deduplicate, or translate keyword strings, URLs, timestamps, IDs, counts, ranks, or metric values unless the user explicitly requests a transformed view.
-- Derive the meaning and time range of `x_recent_search` from the matching
-  `result.field_semantics` entry. Do not assume that “recent” means the
-  provider's maximum supported lookback window or an exact collection-time
-  boundary.
 - Prefer tables for arrays, but keep concise depth unless full export was requested.
 
 ## Language Rules

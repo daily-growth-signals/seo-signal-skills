@@ -96,7 +96,11 @@ Use $research-social-signals to find recent X conversations about PDF translatio
 Use $decide-content-opportunities to compare the opportunities in the completed SEO and social results and recommend one content direction, with confidence, counter-evidence, alternatives, and a next test.
 ```
 
-The SEO skill follows the asynchronous submit/get contract. The Social skill uses the synchronous `search_x_posts` contract and avoids duplicate searches or unnecessary pagination. The decision skill consumes traceable results from either or both research skills and does not recollect data merely to produce a recommendation.
+The SEO skill follows the SEO MCP asynchronous submit/get contract. The Social
+skill uses the separate synchronous `search_x_posts` contract. The decision
+skill follows the Decision MCP asynchronous
+`submit_keyword_decision_report` / `get_keyword_decision_report` contract and
+returns evidence-constrained keyword decision information.
 
 ## Project page
 

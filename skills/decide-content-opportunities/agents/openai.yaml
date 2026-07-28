@@ -1,4 +1,4 @@
 interface:
   display_name: "Content Opportunity Decisions"
   short_description: "Turn traceable signals into content decisions"
-  default_prompt: "Use $decide-content-opportunities to compare content opportunities from existing SEO and social evidence, with confidence, counter-evidence, alternatives, and a recommended next test."
+  default_prompt: "Use $decide-content-opportunities and the Decision MCP to generate an evidence-constrained keyword decision with confidence, counter-evidence, conditions, risks, and a recommended next test."
