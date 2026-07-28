@@ -14,23 +14,22 @@ Turn a natural-language SEO research goal into the smallest sufficient asynchron
 - Use the Daily Growth Signals MCP tools for live demand-signal research.
 - Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job.
 - Treat the MCP tool schema and returned fields as the source of truth.
-
 - Preserve every `request_id` and `idempotency_key` used in this conversation until the task is finished.
 - Separate observed evidence from interpretation in every answer.
 - If this Skill conflicts with the live MCP tool schema, follow the live schema.
 
 ## Hard Rules
 
-1. **Reuse before submit.** Before any submit, search this conversation (and any memory the client keeps for the skill) for a prior job with the same logical research identity. If a matching `request_id` exists, call only `get_keyword_research_signals`. Do not create a new `request_id` for the same data.
+1. **Reuse before submit.** Before any submit, search this conversation for a prior job with the same logical research identity. If a matching `request_id` exists, call only `get_keyword_research_signals`. Do not create a new request for the same data.
 2. **Stable idempotency.** Always build and send a stable `idempotency_key` for a logical research request. On tool errors, client timeouts, ambiguous failures, or retries of the same logical request, reuse that exact key. Do not invent a new key for the same keyword/domain/market/language/scopes.
-3. Select one submit tool at most once per logical research need after reuse checks fail, then poll. Never create a second duplicate request merely because the first request is still `pending` or `running`.
+3. Select one submit tool at most once per logical research need after reuse checks fail, then poll. Never create a second request merely because the first request is still `pending` or `running`.
 4. Never invent metrics, evidence, URLs, timestamps, source availability, or successful nodes.
 5. Never cite an evidence ID that is absent from the terminal result.
 6. Never treat a `partial` result as fully complete. State exactly which evidence is unavailable.
 7. Never fetch or summarize the body of a search-result page as part of this Skill. Use only returned links and structured observations.
 8. Never turn signals into an automatic go/no-go SEO decision. Explain what the evidence supports and let the user decide.
 9. Keep machine field names unchanged, but write the user-facing answer in the requested language.
-10. Never request the aggregate submit tool merely to obtain one data family. Use the narrowest `data_scope` that satisfies the user's goal.
+10. Never use the aggregate submit tool merely to obtain one data family. Use the narrowest `data_scope` that satisfies the user's goal.
 11. Default report depth is **concise**. Do not paste every array item unless the user explicitly asks for a full export or complete dump. When concise, still preserve exact metric values you do cite and disclose the full counts returned.
 12. Do not refresh live data just to rephrase an earlier answer. Reuse the prior terminal result unless the user asks for a refresh or the prior result is missing required scopes.
 
@@ -51,7 +50,7 @@ Build:
 idempotency_key = "seo-signals:" + keyword + "|" + domain + "|" + market + "|" + language + "|" + sorted_scopes
 ```
 
-Where `sorted_scopes` is the selected scopes joined by commas in stable sorted order, or `all` when the complete set is intentionally requested. Do not put secrets, API keys, or personal data into the key.
+Where `sorted_scopes` is the selected scopes joined by commas in stable sorted order, or `all` when the complete set is intentionally requested. Do not put personal or confidential data into the key.
 
 Keep a session ledger (in agent working memory) shaped like:
 
@@ -97,7 +96,7 @@ Use the following exact mapping:
 - `google_trends`: interest timeline, geographic interest, and related top/rising queries.
 - `x_recent_search`: recent X posts and engagement evidence for the keyword.
 
-Use one combined submit when the answer needs two or more families. Do not split one logical combination into several requests. Omit `data_scopes` only for a complete all-family research request.
+Use one combined submit when the answer needs two or more families; do not split one logical combination into several requests. Omit `data_scopes` only for a complete all-family research request.
 
 When a prior terminal result already covers a **superset** of the needed scopes (for example prior `all` and now only `serp`), reuse that `request_id` and answer from the needed family only. Do not submit a narrower job just to re-fetch overlapping data.
 
@@ -215,9 +214,7 @@ For a comparison request, use one row per keyword or market and keep definitions
 
 - Unsupported market or language: report the exact normalized pair and ask for an alternative. Do not substitute silently.
 - Request not found: verify the original `request_id`. Do not immediately create a new request; retry `get` once, then resubmit only with the same `idempotency_key` if the user still needs the research.
-
-
-
+- Tool unavailable: report that live research could not be completed; do not guess at internal causes or fabricate results.
 - Polling deadline reached: return the current status and `request_id`; do not submit again automatically. Later turns must resume with `get` on that `request_id`.
 - Partial terminal result: use successful evidence and clearly isolate limitations. Reuse this job for follow-ups that only need the successful families.
 - Unknown evidence reference: omit the unsupported claim and report the consistency issue.

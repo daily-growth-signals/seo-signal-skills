@@ -11,10 +11,8 @@ Turn a social-research goal into a small set of focused X query expressions, ret
 
 - Use the Daily Growth Signals Social MCP `search_x_posts` tool for live X research.
 - Treat the live MCP schema and returned fields as the source of truth.
-
 - Reuse results already present in the conversation before running the same query again.
 - Preserve the exact query, `sort_order`, time or Post ID boundaries, pagination context, post URLs, timestamps, languages, and native public metrics.
-
 - Reuse an `idempotency_key` only when safely retrying the same logical page. Use a new key when requesting another page or changing any search input.
 - Read [references/mcp-contract.md](references/mcp-contract.md) before the first live call or when diagnosing a tool error.
 - If this Skill conflicts with the live tool schema, follow the live schema.
@@ -45,6 +43,7 @@ X search is primarily literal. Expand only along dimensions relevant to the user
 - useful native operators such as `-is:retweet` and `lang:`.
 
 Prefer several focused expressions over one over-broad expression. Keep each query within the live tool limit and avoid unrelated OR terms that make the evidence hard to interpret.
+Use the operator table and API-specific time guidance in [references/mcp-contract.md](references/mcp-contract.md#common-x-query-operators). In particular, express time windows through `start_time` and `end_time`, not web-search `since:` or `until:` syntax.
 
 Example:
 
@@ -97,8 +96,6 @@ For a full export, include every unique returned post and its matching query pro
 - Tool unavailable: report that live X research could not be completed; do not guess at the cause or fabricate results.
 - Invalid query or page size: correct only an unambiguous formatting issue; otherwise show the rejected field and ask for direction.
 - Invalid time range or unsupported searchable boundary: preserve the rejected field, adjust only an unambiguous current-window `end_time` problem by omitting `end_time`, and otherwise ask for direction.
-
-
 - Retry conflict: retry only the same logical page with its original inputs; use a new key for a genuinely different page or search.
 - Provider error with partial results: use only returned evidence and state the missing coverage.
 - Pagination failure: retain the completed pages, their page-level context, and the last opaque `next_token`; do not restart all queries automatically.

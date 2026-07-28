@@ -1,11 +1,4 @@
-# Daily Growth Signals MCP Contract
-
-
-
-
-
-
-
+# SEO Research Functional Contract
 
 ## Tool: `submit_keyword_research_signals`
 
@@ -28,9 +21,9 @@ Expected response fields:
 - `outcome` — `accepted` for a successful submission.
 - `poll_after_seconds` — suggested minimum delay before polling.
 - `result_path` — REST-compatible result path for diagnostics.
-- `execution_deadline_at` — server-side execution deadline when available.
+- `execution_deadline_at` — execution deadline when available.
 
-Store the full ticket in the conversation/session ledger. Reusing the same idempotency key for the same logical request prevents accidental duplicate work and can return a cached terminal result. Do not reuse one key across different keywords, domains, markets, languages, or scope sets.
+Store the full ticket in the conversation/session ledger. Reusing the same idempotency key for the same logical request prevents accidental duplicate work and can return an existing terminal result. Do not reuse one key across different keywords, domains, markets, languages, or scope sets.
 
 Use this tool with the smallest sufficient `data_scopes` combination whenever the task needs two or more families. Omit `data_scopes` only when every supported family is required.
 
@@ -46,7 +39,7 @@ Inputs:
 
 The ticket fields and polling behavior are identical to `submit_keyword_research_signals`. Its functional behavior is equivalent to `submit_keyword_research_signals(data_scopes=[data_scope])`. The terminal result contains only the selected data family and its derived evidence/signals. Other intentionally unrequested families can be null or empty and are not limitations.
 
-Prefer this tool whenever one data family fully answers the request. 
+Prefer this tool whenever one data family fully answers the request.
 
 ## Tool: `get_keyword_research_signals`
 
@@ -151,20 +144,10 @@ Do not call submit inside the polling loop.
   meanings, or time ranges.
 - Machine codes and identifiers must remain unchanged when translating the user-facing answer.
 
-
-
-
-
-
-
-
-
 ## Common Failures
 
 - Unsupported market-language pair: preserve and report the normalized pair; do not substitute another market.
 - Request not found: verify the original request identifier before deciding whether a new submit is necessary.
-
-
-
+- Tool unavailable: report the missing live coverage without guessing at internal causes.
 - Client polling timeout: preserve `request_id` so polling can resume without resubmitting.
 - Need retry after failed terminal job: resubmit with the same `idempotency_key` for that logical identity.
