@@ -1,5 +1,19 @@
 # Social Search Functional Contract
 
+## Tool: `get_x_trends`
+
+Return current X trending topics for one geographic location using Trends by WOEID.
+
+Inputs:
+
+- `location`: optional positive integer WOEID, numeric string, ISO country code, or supported place name. Omit it to use worldwide WOEID `1`.
+- `country_code`: optional ISO 3166-1 alpha-2 code used to disambiguate duplicate place names.
+- `max_trends`: number of trends from 1 to 50; default `20`.
+
+Expected result content includes the resolved `woeid`, `captured_at`, trend `items`, native `post_count` where X provides it, and safe provider `errors`.
+
+Use the tool once for the requested location. Do not interpret the result as personalized trends, a representative opinion sample, or evidence that an unlisted topic is absent. If a place name is ambiguous, add `country_code`; do not guess the country.
+
 ## Tool: `search_x_posts`
 
 Search the X Recent Search window using one raw X API v2 expression. Recent Search currently retrieves matching Posts from the previous seven days; always treat the live tool boundary as authoritative if X changes that window.

@@ -1,6 +1,6 @@
 ---
 name: research-social-signals
-description: Research traceable public social-media conversations through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, and recent X discussion where literal-query coverage, source links, and clear evidence boundaries matter. Do not use it for SEO metrics or when the user only needs analysis of social data already present in the conversation.
+description: Research traceable public social-media conversations and current regional X trends through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, recent X discussion, or requests asking what is trending on X worldwide or in a country or city. Do not use it for SEO metrics or when the user only needs analysis of social data already present in the conversation.
 ---
 
 # Research Social Signals
@@ -9,7 +9,8 @@ Turn a social-research goal into a small set of focused X query expressions, ret
 
 ## Execution Contract
 
-- Use the Daily Growth Signals Social MCP `search_x_posts` tool for live X research.
+- Use `search_x_posts` for query-bounded recent X conversations.
+- Use `get_x_trends` for current X trending topics in a geographic location; omit `location` for worldwide trends.
 - Treat the live MCP schema and returned fields as the source of truth.
 - Reuse results already present in the conversation before running the same query again.
 - Preserve the exact query, `sort_order`, time or Post ID boundaries, pagination context, post URLs, timestamps, languages, and native public metrics.
@@ -31,6 +32,14 @@ Turn a social-research goal into a small set of focused X query expressions, ret
 10. Keep the default answer concise. Do not dump every returned post unless the user asks for a full export.
 11. Separate observed evidence, synthesis, and limitations in every answer.
 12. Do not make the user's final marketing decision or automatically post, contact users, allocate budget, or launch a campaign.
+13. Do not describe a regional trends response as personalized trends or as proof of broader public opinion.
+
+## Tool Selection
+
+- Choose `get_x_trends` when the user asks what is currently trending or hot on X without supplying a search topic.
+- Choose `search_x_posts` when the user supplies a topic, product, query, audience question, or discussion-research goal.
+- Use both only when the user needs the current regional trend list and supporting recent conversations about selected trends.
+- For `get_x_trends`, pass the user's WOEID, ISO country code, or supported place name unchanged. Add `country_code` when a city name may be ambiguous. If the user provides no location, omit `location` so the tool uses worldwide WOEID `1`.
 
 ## Query Planning
 
@@ -68,6 +77,13 @@ Do not assume this example is suitable for every task. Build expressions from th
 11. Extract recurring wording, questions, pain points, product feedback, objections, use cases, or campaign opportunities only when supported by returned posts.
 12. Report observations first, evidence second, interpretation third, and limitations last.
 
+For a current regional-trends request, use this shorter workflow:
+
+1. Identify the requested country, city, WOEID, or worldwide scope.
+2. Call `get_x_trends` once, omitting `location` when no place was requested.
+3. Report the resolved WOEID, capture time, trend names, and native post counts only where returned.
+4. Do not run `search_x_posts` for every trend unless the user asks for discussion evidence or deeper analysis.
+
 ## Interpretation
 
 - Label direct post content and metrics as observations.
@@ -99,6 +115,7 @@ For a full export, include every unique returned post and its matching query pro
 - Retry conflict: retry only the same logical page with its original inputs; use a new key for a genuinely different page or search.
 - Provider error with partial results: use only returned evidence and state the missing coverage.
 - Pagination failure: retain the completed pages, their page-level context, and the last opaque `next_token`; do not restart all queries automatically.
+- Ambiguous trend location: preserve the requested place name and add the user's ISO country code when known; otherwise ask for the country rather than guessing.
 
 ## Examples
 
@@ -112,4 +129,8 @@ Use $research-social-signals to compare recent and relevant X discussions mentio
 
 ```text
 Use $research-social-signals to identify recurring user questions and complaints about AI meeting assistants. Do not generate an SEO report.
+```
+
+```text
+Use $research-social-signals to show what is currently trending on X in Japan.
 ```
