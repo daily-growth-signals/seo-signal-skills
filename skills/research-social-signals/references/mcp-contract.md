@@ -2,17 +2,16 @@
 
 ## Tool: `get_x_trends`
 
-Return current X trending topics for one geographic location using Trends by WOEID.
+Return current X trending topics for one country using Trends by WOEID.
 
 Inputs:
 
-- `location`: optional positive integer WOEID, numeric string, ISO country code, or supported place name. Omit it to use worldwide WOEID `1`.
-- `country_code`: optional ISO 3166-1 alpha-2 code used to disambiguate duplicate place names.
+- `country_name`: optional canonical English country name supported by X. Omit it to use worldwide WOEID `1`.
 - `max_trends`: number of trends from 1 to 50; default `20`.
 
 Expected result content includes the resolved `woeid`, `captured_at`, trend `items`, native `post_count` where X provides it, and safe provider `errors`.
 
-Use the tool once for the requested location. Do not interpret the result as personalized trends, a representative opinion sample, or evidence that an unlisted topic is absent. If a place name is ambiguous, add `country_code`; do not guess the country.
+Convert a localized user country name to the canonical English name before calling the tool. Do not pass an ISO code, WOEID, or city name. If the tool rejects the country, preserve the user's original wording and return `unsupported country name: <original user input>` without guessing or falling back to worldwide. Do not interpret the result as personalized trends, a representative opinion sample, or evidence that an unlisted topic is absent.
 
 ## Tool: `search_x_posts`
 

@@ -1,6 +1,6 @@
 ---
 name: research-social-signals
-description: Research traceable public social-media conversations and current regional X trends through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, recent X discussion, or requests asking what is trending on X worldwide or in a country or city. Do not use it for SEO metrics or when the user only needs analysis of social data already present in the conversation.
+description: Research traceable public social-media conversations and current country-level X trends through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, recent X discussion, or requests asking what is trending on X worldwide or in a country. Do not use it for SEO metrics or when the user only needs analysis of social data already present in the conversation.
 ---
 
 # Research Social Signals
@@ -10,7 +10,7 @@ Turn a social-research goal into a small set of focused X query expressions, ret
 ## Execution Contract
 
 - Use `search_x_posts` for query-bounded recent X conversations.
-- Use `get_x_trends` for current X trending topics in a geographic location; omit `location` for worldwide trends.
+- Use `get_x_trends` for current X trending topics in a country; omit `country_name` for worldwide trends.
 - Treat the live MCP schema and returned fields as the source of truth.
 - Reuse results already present in the conversation before running the same query again.
 - Preserve the exact query, `sort_order`, time or Post ID boundaries, pagination context, post URLs, timestamps, languages, and native public metrics.
@@ -39,7 +39,8 @@ Turn a social-research goal into a small set of focused X query expressions, ret
 - Choose `get_x_trends` when the user asks what is currently trending or hot on X without supplying a search topic.
 - Choose `search_x_posts` when the user supplies a topic, product, query, audience question, or discussion-research goal.
 - Use both only when the user needs the current regional trend list and supporting recent conversations about selected trends.
-- For `get_x_trends`, pass the user's WOEID, ISO country code, or supported place name unchanged. Add `country_code` when a city name may be ambiguous. If the user provides no location, omit `location` so the tool uses worldwide WOEID `1`.
+- For `get_x_trends`, convert the user's country name from any language into the canonical English country name used by X, then pass it as `country_name`. Do not convert it to an ISO code or WOEID. If the user provides no country, omit `country_name` so the tool uses worldwide WOEID `1`.
+- Preserve the user's original country wording. If the tool rejects the converted name, return `unsupported country name: <original user input>` and do not substitute another country.
 
 ## Query Planning
 
@@ -79,10 +80,12 @@ Do not assume this example is suitable for every task. Build expressions from th
 
 For a current regional-trends request, use this shorter workflow:
 
-1. Identify the requested country, city, WOEID, or worldwide scope.
-2. Call `get_x_trends` once, omitting `location` when no place was requested.
-3. Report the resolved WOEID, capture time, trend names, and native post counts only where returned.
-4. Do not run `search_x_posts` for every trend unless the user asks for discussion evidence or deeper analysis.
+1. Identify the requested country or worldwide scope and preserve the original country wording.
+2. Convert a localized country name to its canonical English name, such as `日本` to `Japan` or `美国` to `United States`.
+3. Call `get_x_trends` once with `country_name`; omit it when no country was requested.
+4. If the tool returns `unsupported country name`, report `unsupported country name: <original user input>` without guessing or falling back to worldwide.
+5. Report the resolved WOEID, capture time, trend names, and native post counts only where returned.
+6. Do not run `search_x_posts` for every trend unless the user asks for discussion evidence or deeper analysis.
 
 ## Interpretation
 
@@ -115,7 +118,7 @@ For a full export, include every unique returned post and its matching query pro
 - Retry conflict: retry only the same logical page with its original inputs; use a new key for a genuinely different page or search.
 - Provider error with partial results: use only returned evidence and state the missing coverage.
 - Pagination failure: retain the completed pages, their page-level context, and the last opaque `next_token`; do not restart all queries automatically.
-- Ambiguous trend location: preserve the requested place name and add the user's ISO country code when known; otherwise ask for the country rather than guessing.
+- Unsupported trend country: return `unsupported country name: <original user input>`; do not guess a nearby country or silently use worldwide trends.
 
 ## Examples
 
