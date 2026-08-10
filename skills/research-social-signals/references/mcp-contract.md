@@ -17,7 +17,7 @@ Inputs:
 - `vertical_info`: opaque source value; default empty string.
 - `idempotency_key`: optional stable key for safely retrying the same logical page.
 
-Expected results retain the complete parameter object plus capture time, result count, and normalized items with stable content ID/type, URL, title, excerpt, author, creation/update time, and native vote/comment counts when returned. Treat highlighting markup as source text and do not infer that the result is article-only unless `vertical="article"` was supplied. Use a new idempotency key when any parameter changes, and never invent continuation values.
+Expected results retain the complete parameter object plus capture time, result count, and normalized items with stable content ID/type, URL, title, excerpt, author, creation/update time, and native vote/comment counts when returned. Text fields are cleaned to visible core text: HTML tags and non-visible script/style noise are removed, entities are decoded, and redundant whitespace is collapsed. Do not infer that the result is article-only unless `vertical="article"` was supplied. Use a new idempotency key when any parameter changes, and never invent continuation values.
 
 ## Tool: `search_reddit_posts`
 
