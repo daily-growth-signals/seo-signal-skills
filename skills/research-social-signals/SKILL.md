@@ -1,6 +1,6 @@
 ---
 name: research-social-signals
-description: Research traceable public social-media conversations and current country-level X trends through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, Reddit community posts, recent X discussion, or requests asking what is trending on X worldwide or in a country. Do not use it for SEO metrics or when the user only needs analysis of social data already present in the conversation.
+description: Research traceable public Reddit community posts, recent X conversations, and current country-level X trends through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, subreddit context, or X trend research. Use `search_reddit_posts` when Reddit community evidence matters; use X tools for recent X discussion or X trends. Do not use this Skill for SEO metrics, keyword research, or analysis of social data already present in the conversation.
 ---
 
 # Research Social Signals
