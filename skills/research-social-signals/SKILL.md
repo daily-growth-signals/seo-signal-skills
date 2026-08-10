@@ -1,21 +1,22 @@
 ---
 name: research-social-signals
-description: Research traceable public Reddit posts, X conversations, Xiaohongshu notes, and country-level X trends through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, subreddit context, image-rich Xiaohongshu note research, or X trend research. Choose the matching Social MCP tool for Reddit, X, Xiaohongshu, or X trends. Do not use this Skill for SEO metrics, keyword research, or analysis of social data already present in the conversation.
+description: Research traceable public Reddit posts, X conversations, Xiaohongshu notes, Zhihu content, and country-level X trends through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, subreddit context, image-rich Xiaohongshu note research, Zhihu article discovery, or X trend research. Choose the matching Social MCP tool for Reddit, X, Xiaohongshu, Zhihu, or X trends. Do not use this Skill for SEO metrics, keyword research, or analysis of social data already present in the conversation.
 ---
 
 # Research Social Signals
 
-Turn a social-research goal into focused Reddit, X, or Xiaohongshu retrievals, retrieve only the evidence needed, and report observations separately from interpretation. The Social MCP has four tools: X posts, Reddit posts, Xiaohongshu notes, and X trends. Treat returned content as query-bounded public observations, not a representative census of any platform.
+Turn a social-research goal into focused Reddit, X, Xiaohongshu, or Zhihu retrievals, retrieve only the evidence needed, and report observations separately from interpretation. The Social MCP has five tools: X posts, Reddit posts, Xiaohongshu notes, Zhihu content, and X trends. Treat returned content as query-bounded public observations, not a representative census of any platform.
 
 ## Execution Contract
 
 - Use `search_x_posts` for query-bounded recent X conversations.
 - Use `search_reddit_posts` for query-bounded public Reddit community posts.
 - Use `search_xiaohongshu_notes` for query-bounded public Xiaohongshu notes and their returned image evidence.
+- Use `search_zhihu_articles` for query-bounded public Zhihu articles or another explicitly selected Zhihu vertical.
 - Use `get_x_trends` for current X trending topics in a country; omit `country_name` for worldwide trends.
 - Treat the live MCP schema and returned fields as the source of truth.
 - Reuse results already present in the conversation before running the same query again.
-- Preserve the exact query, platform, source URLs, timestamps, languages when returned, and native public metrics. For X, also preserve `sort_order`, time or Post ID boundaries, and pagination context; for Xiaohongshu, preserve `note_id`, page, search session identifiers, and complete ordered image lists.
+- Preserve the exact query, platform, source URLs, timestamps, languages when returned, and native public metrics. For X, also preserve `sort_order`, time or Post ID boundaries, and pagination context; for Xiaohongshu, preserve `note_id`, page, search session identifiers, and complete ordered image lists; for Zhihu, preserve every user-supplied search parameter exactly, including whitespace and leading zeros in string parameters.
 - Reuse an `idempotency_key` only when safely retrying the same logical page. Use a new key when requesting another page or changing any search input.
 - Read [references/mcp-contract.md](references/mcp-contract.md) before the first live call or when diagnosing a tool error.
 - If this Skill conflicts with the live tool schema, follow the live schema.
@@ -42,6 +43,7 @@ Turn a social-research goal into focused Reddit, X, or Xiaohongshu retrievals, r
 - Choose `search_x_posts` when the user supplies a topic, product, query, audience question, or discussion-research goal.
 - Choose `search_reddit_posts` when the user needs public Reddit community posts, subreddit context, user wording, questions, or feedback about a topic.
 - Choose `search_xiaohongshu_notes` when the user needs public Xiaohongshu notes, Chinese lifestyle or consumer discussion, creator phrasing, or returned image evidence.
+- Choose `search_zhihu_articles` when the user needs public Zhihu long-form content, author wording, questions/answers via an explicit vertical, or native vote/comment evidence.
 - Use both only when the user needs the current regional trend list and supporting recent conversations about selected trends.
 - Use multiple platform tools only when the user requests cross-platform coverage or the answer needs explicitly labelled platform comparison. Do not silently treat one platform as a substitute for another.
 - For `get_x_trends`, convert the user's country name from any language into the canonical English country name used by X, then pass it as `country_name`. Do not convert it to an ISO code or WOEID. If the user provides no country, omit `country_name` so the tool uses worldwide WOEID `1`.
@@ -71,6 +73,8 @@ Do not assume this example is suitable for every task. Build expressions from th
 For Reddit, pass a focused natural-language query to `search_reddit_posts`. Do not copy X-only operators, X time syntax, or X pagination tokens into a Reddit request. The current Reddit Workflow has no exposed sort, time-range, or pagination inputs; describe the result as the provider's default query result rather than a controlled time-window sample.
 
 For Xiaohongshu, pass a focused query to `search_xiaohongshu_notes`. Use its native `sort_type`, `note_type`, and `time_filter` only when they materially answer the user's request. Do not invent `search_id` or `search_session_id`; retain and reuse those returned values only when the user asks for another page. Keep returned image URLs in their original order and do not claim to have inspected an image unless it was actually provided for inspection.
+
+For Zhihu, pass `keyword` and all requested filters to `search_zhihu_articles` exactly as supplied. Do not trim, normalize, translate, or rewrite `keyword`, `offset`, `limit`, `search_hash_id`, or `vertical_info`. Use `vertical="article"` only when article-only results are required; otherwise preserve the user's explicit vertical or the tool default. Never invent pagination values.
 
 ## Workflow
 
@@ -102,6 +106,14 @@ For a Xiaohongshu note request, use this shorter workflow:
 3. Preserve `note_id`, title, description, URL, author, publication time, native engagement metrics, and the complete ordered image list including cover markers.
 4. Do not infer product use, sentiment, demographics, or visual details from an image URL alone.
 5. Report returned note evidence separately from cross-note patterns and state the page and filters used.
+
+For a Zhihu content request, use this shorter workflow:
+
+1. Identify the exact keyword, desired vertical, sort, time interval, and page parameters.
+2. Call `search_zhihu_articles` without modifying any user-supplied parameter value.
+3. Preserve the returned parameter object, content IDs, content types, URLs, titles, excerpts, authors, timestamps, and native vote/comment metrics.
+4. For another page, reuse only continuation values actually returned or explicitly supplied by the user, and use a new `idempotency_key`.
+5. State the vertical, sort, time interval, and page boundary used; do not describe the results as exhaustive Zhihu coverage.
 
 For a current regional-trends request, use this shorter workflow:
 

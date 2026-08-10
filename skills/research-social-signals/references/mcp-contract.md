@@ -1,5 +1,24 @@
 # Social Search Functional Contract
 
+## Tool: `search_zhihu_articles`
+
+Search public Zhihu content while preserving every supplied search value exactly.
+
+Inputs:
+
+- `keyword`: required raw keyword; do not trim, translate, normalize, or rewrite it.
+- `offset` and `limit`: string pagination values; defaults are `"0"` and `"20"`. Preserve leading zeros.
+- `show_all_topics`: `0` or `1`; default `0`.
+- `search_source`: `Normal` or `Filter`; default `Normal`.
+- `search_hash_id`: optional continuation identifier; default empty string.
+- `vertical`: empty string, `answer`, `article`, or `zvideo`; default empty string.
+- `sort`: empty string, `upvoted_count`, or `created_time`; default empty string.
+- `time_interval`: empty string, `a_day`, `a_week`, `a_month`, `three_months`, `half_a_year`, or `a_year`; default empty string.
+- `vertical_info`: opaque source value; default empty string.
+- `idempotency_key`: optional stable key for safely retrying the same logical page.
+
+Expected results retain the complete parameter object plus capture time, result count, and normalized items with stable content ID/type, URL, title, excerpt, author, creation/update time, and native vote/comment counts when returned. Treat highlighting markup as source text and do not infer that the result is article-only unless `vertical="article"` was supplied. Use a new idempotency key when any parameter changes, and never invent continuation values.
+
 ## Tool: `search_reddit_posts`
 
 Search public Reddit posts through the standalone `reddit-posts-search` social Workflow. Use it for community research, user wording, pain points, questions, and feedback; it is not part of SEO keyword research.

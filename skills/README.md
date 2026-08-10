@@ -74,11 +74,13 @@ Unlike raw data providers that return numbers without context, this service:
 - **X (Twitter)**: Real-time conversations, trending topics
 - **Reddit**: Community discussions, user feedback, pain points
 - **Xiaohongshu (Little Red Book)**: Chinese lifestyle content, consumer discussions
+- **Zhihu**: Chinese long-form articles, answers, and author perspectives
 
 **Tools Available**:
 - `search_x_posts` – Query-bounded X/Twitter post retrieval
 - `search_reddit_posts` – Reddit community post discovery
 - `search_xiaohongshu_notes` – Xiaohongshu note search with image support
+- `search_zhihu_articles` – Zhihu content search with exact parameter preservation
 - `get_x_trends` – Current X trending topics by country/region
 
 **Use Cases**:
@@ -259,12 +261,14 @@ SEO Signal Skills 是一套结构化的技能集，旨在通过 MCP（模型上�
 **覆盖平台**：
 - **X (Twitter)**：实时对话、热门话题
 - **Reddit**：社区讨论、用户反馈、痛点挖掘
+- **知乎**：中文长文、回答与作者观点研究
 - **小红书**：中文生活方式内容、消费者讨论
 
 **可用工具**：
 - `search_x_posts` – 有界查询的 X/Twitter 帖子检索
 - `search_reddit_posts` – Reddit 社区帖子发现
 - `search_xiaohongshu_notes` – 小红书笔记搜索（支持图片）
+- `search_zhihu_articles` – 知乎内容搜索（原样保留搜索参数）
 - `get_x_trends` – 按国家/地区获取当前 X 热门话题
 
 **适用场景**：
