@@ -1,5 +1,18 @@
 # Social Search Functional Contract
 
+## Tool: `search_reddit_posts`
+
+Search public Reddit posts through the standalone `reddit-posts-search` social Workflow. Use it for community research, user wording, pain points, questions, and feedback; it is not part of SEO keyword research.
+
+Inputs:
+
+- `query`: required focused search query, 1–512 characters.
+- `idempotency_key`: optional stable key for safely retrying the same logical search.
+
+Expected result content includes the query, `result_count`, and normalized posts with stable `post_id`, title, URL, subreddit, creation time, author when public, body when returned, language, and native score/comment/upvote metrics where available. Follow the live structured schema when exact field names differ.
+
+The current public tool exposes no sort, time-range, safe-search, or pagination parameter. Do not claim a time window, a ranking mode, exhaustive coverage, or platform-wide prevalence from its result. Do not pass X query operators, X date syntax, X Post IDs, or X `next_token` values to this tool. Do not fall back to X on failure unless the user explicitly requested cross-platform research.
+
 ## Tool: `get_x_trends`
 
 Return current X trending topics for one country using Trends by WOEID.
