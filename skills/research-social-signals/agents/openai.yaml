@@ -1,4 +1,4 @@
 interface:
   display_name: "Social Signal Research"
-  short_description: "Research Reddit, X conversations, and X trends"
-  default_prompt: "Use $research-social-signals to research traceable Reddit or X conversations, or current country-level X trends, without overstating coverage."
+  short_description: "Research Reddit, X, Xiaohongshu, and X trends"
+  default_prompt: "Use $research-social-signals to research traceable Reddit, X, or Xiaohongshu evidence, or current country-level X trends, without overstating coverage."

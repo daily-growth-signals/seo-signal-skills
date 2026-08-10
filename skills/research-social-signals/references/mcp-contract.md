@@ -13,6 +13,24 @@ Expected result content includes the query, `result_count`, and normalized posts
 
 The current public tool exposes no sort, time-range, safe-search, or pagination parameter. Do not claim a time window, a ranking mode, exhaustive coverage, or platform-wide prevalence from its result. Do not pass X query operators, X date syntax, X Post IDs, or X `next_token` values to this tool. Do not fall back to X on failure unless the user explicitly requested cross-platform research.
 
+## Tool: `search_xiaohongshu_notes`
+
+Search public Xiaohongshu notes through the standalone `xiaohongshu-notes-search` social Workflow. Use it for public note research, creator wording, Chinese lifestyle or consumer discussion, and returned image evidence; it is not part of SEO keyword research.
+
+Inputs:
+
+- `query`: required search query, 1–256 characters.
+- `page`: one-based page number; default `1`.
+- `sort_type`: `general`, `time_descending`, `popularity_descending`, `comment_descending`, `collect_descending`, or `english_preferred`; default `general`.
+- `note_type`: `不限`, `视频笔记`, `普通笔记`, or `直播笔记`; default `不限`.
+- `time_filter`: `不限`, `一天内`, `一周内`, or `半年内`; default `不限`.
+- `search_id` and `search_session_id`: optional identifiers returned by a previous page; never invent them.
+- `idempotency_key`: optional stable key for safely retrying the same logical page.
+
+Expected result content includes `query`, `page`, `captured_at`, `result_count`, optional continuation identifiers, and normalized notes. Each note retains `note_id`, URL, note type, title, description, author, publication time, native like/collect/comment/share counts, and its complete ordered image list with cover markers and source URLs where returned. Follow the live structured schema when exact field names differ.
+
+Use a new `idempotency_key` for a different page or any changed filter. Do not auto-paginate. Do not infer image content from an image URL alone, claim that returned source images are archived, or conflate collect, like, comment, and share counts.
+
 ## Tool: `get_x_trends`
 
 Return current X trending topics for one country using Trends by WOEID.

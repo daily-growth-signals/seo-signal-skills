@@ -1,20 +1,21 @@
 ---
 name: research-social-signals
-description: Research traceable public Reddit community posts, recent X conversations, and current country-level X trends through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, subreddit context, or X trend research. Use `search_reddit_posts` when Reddit community evidence matters; use X tools for recent X discussion or X trends. Do not use this Skill for SEO metrics, keyword research, or analysis of social data already present in the conversation.
+description: Research traceable public Reddit posts, X conversations, Xiaohongshu notes, and country-level X trends through the Daily Growth Signals Social MCP. Use for social listening, user-language discovery, pain points, questions, product or competitor mentions, feedback, campaign research, subreddit context, image-rich Xiaohongshu note research, or X trend research. Choose the matching Social MCP tool for Reddit, X, Xiaohongshu, or X trends. Do not use this Skill for SEO metrics, keyword research, or analysis of social data already present in the conversation.
 ---
 
 # Research Social Signals
 
-Turn a social-research goal into focused Reddit or X retrievals, retrieve only the evidence needed, and report observations separately from interpretation. Treat returned posts as query-bounded public observations, not a representative census of either platform.
+Turn a social-research goal into focused Reddit, X, or Xiaohongshu retrievals, retrieve only the evidence needed, and report observations separately from interpretation. The Social MCP has four tools: X posts, Reddit posts, Xiaohongshu notes, and X trends. Treat returned content as query-bounded public observations, not a representative census of any platform.
 
 ## Execution Contract
 
 - Use `search_x_posts` for query-bounded recent X conversations.
 - Use `search_reddit_posts` for query-bounded public Reddit community posts.
+- Use `search_xiaohongshu_notes` for query-bounded public Xiaohongshu notes and their returned image evidence.
 - Use `get_x_trends` for current X trending topics in a country; omit `country_name` for worldwide trends.
 - Treat the live MCP schema and returned fields as the source of truth.
 - Reuse results already present in the conversation before running the same query again.
-- Preserve the exact query, platform, post URLs, timestamps, languages, and native public metrics. For X, also preserve `sort_order`, time or Post ID boundaries, and pagination context.
+- Preserve the exact query, platform, source URLs, timestamps, languages when returned, and native public metrics. For X, also preserve `sort_order`, time or Post ID boundaries, and pagination context; for Xiaohongshu, preserve `note_id`, page, search session identifiers, and complete ordered image lists.
 - Reuse an `idempotency_key` only when safely retrying the same logical page. Use a new key when requesting another page or changing any search input.
 - Read [references/mcp-contract.md](references/mcp-contract.md) before the first live call or when diagnosing a tool error.
 - If this Skill conflicts with the live tool schema, follow the live schema.
@@ -26,11 +27,11 @@ Turn a social-research goal into focused Reddit or X retrievals, retrieve only t
 3. Never treat missing matches as proof that a need, complaint, or trend does not exist.
 4. Never convert engagement counts into sentiment, demand, market size, or purchase intent without explicit supporting evidence.
 5. Never merge different authors or posts merely because their text is similar.
-6. Deduplicate overlapping results within the same platform by stable `post_id`; preserve which queries found the post when useful.
+6. Deduplicate overlapping results within the same platform by stable `post_id` or `note_id`; preserve which queries found the result when useful.
 7. Do not repeat an identical live query merely to rephrase or summarize its existing result.
 8. Do not paginate automatically unless the user requests broader coverage or the first page is insufficient for the stated research goal.
 9. Do not use SEO-only inputs such as domain, market, or keyword-volume assumptions unless the user separately asks for SEO research. Reddit is a social-data Workflow, not a keyword-research scope.
-10. Keep the default answer concise. Do not dump every returned post unless the user asks for a full export.
+10. Keep the default answer concise. Do not dump every returned post or note unless the user asks for a full export.
 11. Separate observed evidence, synthesis, and limitations in every answer.
 12. Do not make the user's final marketing decision or automatically post, contact users, allocate budget, or launch a campaign.
 13. Do not describe a regional trends response as personalized trends or as proof of broader public opinion.
@@ -40,8 +41,9 @@ Turn a social-research goal into focused Reddit or X retrievals, retrieve only t
 - Choose `get_x_trends` when the user asks what is currently trending or hot on X without supplying a search topic.
 - Choose `search_x_posts` when the user supplies a topic, product, query, audience question, or discussion-research goal.
 - Choose `search_reddit_posts` when the user needs public Reddit community posts, subreddit context, user wording, questions, or feedback about a topic.
+- Choose `search_xiaohongshu_notes` when the user needs public Xiaohongshu notes, Chinese lifestyle or consumer discussion, creator phrasing, or returned image evidence.
 - Use both only when the user needs the current regional trend list and supporting recent conversations about selected trends.
-- Use Reddit and X together only when the user requests cross-platform coverage or the answer needs explicitly labelled platform comparison. Do not silently treat either platform as a substitute for the other.
+- Use multiple platform tools only when the user requests cross-platform coverage or the answer needs explicitly labelled platform comparison. Do not silently treat one platform as a substitute for another.
 - For `get_x_trends`, convert the user's country name from any language into the canonical English country name used by X, then pass it as `country_name`. Do not convert it to an ISO code or WOEID. If the user provides no country, omit `country_name` so the tool uses worldwide WOEID `1`.
 - Preserve the user's original country wording. If the tool rejects the converted name, return `unsupported country name: <original user input>` and do not substitute another country.
 
@@ -68,6 +70,8 @@ Do not assume this example is suitable for every task. Build expressions from th
 
 For Reddit, pass a focused natural-language query to `search_reddit_posts`. Do not copy X-only operators, X time syntax, or X pagination tokens into a Reddit request. The current Reddit Workflow has no exposed sort, time-range, or pagination inputs; describe the result as the provider's default query result rather than a controlled time-window sample.
 
+For Xiaohongshu, pass a focused query to `search_xiaohongshu_notes`. Use its native `sort_type`, `note_type`, and `time_filter` only when they materially answer the user's request. Do not invent `search_id` or `search_session_id`; retain and reuse those returned values only when the user asks for another page. Keep returned image URLs in their original order and do not claim to have inspected an image unless it was actually provided for inspection.
+
 ## Workflow
 
 1. Identify the research subject, user goal, relevant languages, desired freshness, and answer depth.
@@ -91,6 +95,14 @@ For a Reddit community-post request, use this shorter workflow:
 4. Do not invent a result time window, ranking mode, pagination state, or coverage count beyond the returned `result_count`.
 5. Report subreddit context and direct user wording as evidence; label broader patterns as synthesis.
 
+For a Xiaohongshu note request, use this shorter workflow:
+
+1. Identify the topic, desired note type, sort, time filter, and whether image evidence is relevant.
+2. Call `search_xiaohongshu_notes` with `page=1` unless the user explicitly requests a later page with prior `search_id` and `search_session_id`.
+3. Preserve `note_id`, title, description, URL, author, publication time, native engagement metrics, and the complete ordered image list including cover markers.
+4. Do not infer product use, sentiment, demographics, or visual details from an image URL alone.
+5. Report returned note evidence separately from cross-note patterns and state the page and filters used.
+
 For a current regional-trends request, use this shorter workflow:
 
 1. Identify the requested country or worldwide scope and preserve the original country wording.
@@ -98,7 +110,7 @@ For a current regional-trends request, use this shorter workflow:
 3. Call `get_x_trends` once with `country_name`; omit it when no country was requested.
 4. If the tool returns `unsupported country name`, report `unsupported country name: <original user input>` without guessing or falling back to worldwide.
 5. Report the resolved WOEID, capture time, trend names, and native post counts only where returned.
-6. Do not run `search_x_posts` or `search_reddit_posts` for every trend unless the user asks for discussion evidence or deeper analysis.
+6. Do not run `search_x_posts`, `search_reddit_posts`, or `search_xiaohongshu_notes` for every trend unless the user asks for discussion evidence or deeper analysis.
 
 ## Interpretation
 
@@ -117,7 +129,7 @@ Use this concise structure by default:
 
 1. `Summary`: two to four evidence-grounded observations.
 2. `Patterns`: recurring language, questions, pain points, feedback, or opportunities.
-3. `Evidence`: strongest post URLs with platform and subreddit when applicable, brief relevance notes, and exact metrics only when useful.
+3. `Evidence`: strongest source URLs with platform, subreddit or note author when applicable, brief relevance notes, and exact metrics only when useful.
 4. `Interpretation`: clearly marked implications or possible actions, with conditions and risks.
 5. `Limitations`: query expressions, sorting, effective time or Post ID boundaries, pagination depth, provider errors, and coverage boundaries.
 
@@ -133,6 +145,7 @@ For a full export, include every unique returned post and its matching query pro
 - Pagination failure: retain the completed pages, their page-level context, and the last opaque `next_token`; do not restart all queries automatically.
 - Unsupported trend country: return `unsupported country name: <original user input>`; do not guess a nearby country or silently use worldwide trends.
 - Reddit provider error: retain any returned Reddit evidence, state that the requested community coverage is unavailable, and do not fall back to X unless the user requested cross-platform research.
+- Xiaohongshu page continuation: retain the returned `search_id` and `search_session_id`; do not guess them or increment page automatically. If they are absent, report that no safe continuation token is available.
 
 ## Examples
 
@@ -146,6 +159,10 @@ Use $research-social-signals to compare recent and relevant X discussions mentio
 
 ```text
 Use $research-social-signals to find Reddit posts about the pain points of translating PDF files while preserving layout. Include subreddit context and source links; do not make an SEO report.
+```
+
+```text
+Use $research-social-signals to find Xiaohongshu notes about portable coffee makers. Preserve note IDs, source links, and returned image order; do not infer image content from URLs alone.
 ```
 
 ```text
