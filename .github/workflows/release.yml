@@ -1,0 +1,60 @@
+name: Release Skills Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create skills zip package
+        run: |
+          cd skills
+          zip -r "../seo-signal-skills-${{ steps.version.outputs.VERSION }}.zip" \
+              research-seo-signals/ \
+              research-social-signals/ \
+              decide-content-opportunities/ \
+              -x "*.DS_Store"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: SEO Signal Skills ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## Release ${{ steps.version.outputs.VERSION }}
+
+            ### 包含技能 (Included Skills)
+            
+            - **research-seo-signals** - SEO 信号研究与数据采集
+            - **research-social-signals** - 社交媒体信号监听
+            - **decide-content-opportunities** - 内容机会决策建议
+            
+            ### 安装 (Installation)
+            
+            解压后将 `skills` 子文件夹链接到您的 AI 客户端：
+            
+            ```bash
+            # Claude Code 示例
+            ln -s "$(pwd)/research-seo-signals" ~/.claude/skills/
+            ln -s "$(pwd)/research-social-signals" ~/.claude/skills/
+            ln -s "$(pwd)/decide-content-opportunities" ~/.claude/skills/
+            ```
+            
+            ### MCP 配置 (MCP Configuration)
+            
+            请参考 [README.md](https://github.com/daily-growth-signals/seo-signal-skills/blob/main/README.md) 配置 MCP 服务。
+          files: seo-signal-skill*.zip
+          draft: false
+          prerelease: false

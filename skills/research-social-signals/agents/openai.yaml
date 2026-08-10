@@ -1,4 +1,7 @@
 interface:
   display_name: "Social Signal Research"
   short_description: "Research Reddit, X, Xiaohongshu, and X trends"
+  icon_small: "./assets/small-logo.svg"
+  icon_large: "./assets/large-logo.png"
+  brand_color: "#EF4444"
   default_prompt: "Use $research-social-signals to research traceable Reddit, X, or Xiaohongshu evidence, or current country-level X trends, without overstating coverage."

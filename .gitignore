@@ -1,2 +1,5 @@
 .DS_Store
 .playwright-cli/
+dist/
+*.zip
+.AGENT_GUIDE.md

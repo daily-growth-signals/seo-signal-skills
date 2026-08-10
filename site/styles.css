@@ -28,9 +28,37 @@ a { color: inherit; }
 }
 
 .brand { font-family: var(--mono); font-size: 30px; font-weight: 900; text-decoration: none; letter-spacing: -0.08em; }
-nav { display: flex; gap: clamp(20px, 3vw, 44px); }
+nav { display: flex; gap: clamp(20px, 3vw, 44px); align-items: center; }
 nav a { font-size: 15px; font-weight: 700; text-decoration: none; }
 nav a:hover, nav a:focus-visible { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+
+/* ── Language Switch ── */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+}
+
+.lang-switch button {
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  font: 600 13px var(--sans);
+  cursor: pointer;
+  transition: all 120ms;
+}
+
+.lang-switch button:hover { color: var(--ink); }
+.lang-switch button.lang-active { 
+  color: var(--ink); 
+  background: var(--acid);
+  border-radius: 3px;
+}
+.lang-switch span { color: var(--muted); font-size: 12px; }
 
 .hero {
   display: grid;
@@ -47,7 +75,17 @@ h1, h2, h3, p { margin-top: 0; }
 h1 { margin-bottom: 30px; font-size: clamp(48px, 6vw, 82px); line-height: 1.08; letter-spacing: -0.055em; }
 .hero-copy > p { margin-bottom: 38px; font-size: clamp(18px, 2vw, 23px); line-height: 1.65; }
 .actions { display: flex; flex-wrap: wrap; gap: 22px; }
-.button { display: inline-flex; min-height: 58px; align-items: center; padding: 0 26px; border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); font-weight: 800; text-decoration: none; transition: transform 140ms ease, box-shadow 140ms ease; }
+.button { 
+  display: inline-flex; 
+  min-height: 58px; 
+  align-items: center; 
+  padding: 0 26px; 
+  border: 2px solid var(--ink); 
+  box-shadow: 6px 6px 0 var(--ink); 
+  font-weight: 800; 
+  text-decoration: none; 
+  transition: transform 140ms ease, box-shadow 140ms ease; 
+}
 .button:hover, .button:focus-visible { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--ink); }
 .button-dark { color: white; background: var(--ink); box-shadow: 6px 6px 0 #65711f; }
 .button-light { background: white; }
@@ -66,6 +104,83 @@ h1 { margin-bottom: 30px; font-size: clamp(48px, 6vw, 82px); line-height: 1.08; 
 .workflow code, .workflow p { color: var(--muted); font: 14px/1.55 var(--mono); overflow-wrap: anywhere; }
 .connector { font-size: 48px; font-weight: 300; }
 
+/* ── User Type Selection ── */
+.user-type-section { background: linear-gradient(135deg, var(--paper) 0%, #eef5d8 100%); }
+
+.user-type-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.user-type-card {
+  padding: 40px 32px;
+  border: 2px solid var(--ink);
+  background: var(--surface);
+  box-shadow: 8px 8px 0 var(--ink);
+  transition: transform 200ms, box-shadow 200ms;
+}
+
+.user-type-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0 var(--ink);
+}
+
+.user-type-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.user-type-card h3 {
+  font-size: 24px;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.user-type-card > p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.user-type-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px 0;
+}
+
+.user-type-card li {
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.user-type-card li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--acid);
+  background: var(--ink);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.select-user-btn {
+  width: 100%;
+  justify-content: center;
+}
+
 /* ── Install Section ── */
 .install { background: var(--surface); }
 .section-lede { max-width: 680px; margin-bottom: 56px; font-size: 18px; line-height: 1.7; color: var(--muted); }
@@ -75,11 +190,33 @@ h1 { margin-bottom: 30px; font-size: clamp(48px, 6vw, 82px); line-height: 1.08; 
 .step-hint { margin-bottom: 20px; font-size: 14px; color: var(--muted); }
 
 /* ── Code Row (reusable) ── */
-.code-row { position: relative; display: flex; align-items: stretch; border: 2px solid var(--ink); box-shadow: 7px 7px 0 var(--ink); color: white; background: #151812; }
+.code-row { 
+  position: relative; 
+  display: flex; 
+  align-items: stretch; 
+  border: 2px solid var(--ink); 
+  box-shadow: 7px 7px 0 var(--ink); 
+  color: white; 
+  background: #151812; 
+}
 .code-row pre { flex: 1; margin: 0; padding: 24px; overflow-x: auto; font: 14px/1.65 var(--mono); }
-.code-row button { align-self: center; min-width: 76px; min-height: 42px; margin: 14px; border: 1px solid white; color: white; background: transparent; font: 700 14px var(--sans); cursor: pointer; transition: background 120ms, color 120ms; }
+.code-row button { 
+  align-self: center; 
+  min-width: 76px; 
+  min-height: 42px; 
+  margin: 14px; 
+  border: 1px solid white; 
+  color: white; 
+  background: transparent; 
+  font: 700 14px var(--sans); 
+  cursor: pointer; 
+  transition: background 120ms, color 120ms; 
+}
 .code-row button:hover, .code-row button:focus-visible { color: var(--ink); background: var(--acid); border-color: var(--acid); }
 .code-row-tall pre { min-height: 140px; }
+.code-row-small { box-shadow: 4px 4px 0 var(--ink); }
+.code-row-small pre { font-size: 12px; padding: 16px; min-height: 100px; }
+.code-row-small button { min-width: 70px; min-height: 34px; margin: 10px; font-size: 12px; }
 
 /* ── Platform Tabs ── */
 .platform-tabs {
@@ -187,13 +324,239 @@ h1 { margin-bottom: 30px; font-size: clamp(48px, 6vw, 82px); line-height: 1.08; 
   font-size: 12px;
 }
 
+/* ── MCP Services Grid ── */
+.mcp-note {
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border-left: 4px solid var(--acid);
+  background: #f9fceb;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.mcp-note code {
+  background: rgba(17, 19, 14, 0.08);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.mcp-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.mcp-service-card {
+  padding: 24px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+}
+
+.mcp-service-card h4 {
+  margin: 0 0 8px 0;
+  font-family: var(--mono);
+  font-size: 15px;
+}
+
+.mcp-service-desc {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.api-key-note {
+  padding: 14px 20px;
+  border: 1px dashed var(--line);
+  background: #fafaf8;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ── Download Box (Non-Developer) ── */
+.download-box {
+  text-align: center;
+  padding: 40px;
+  border: 2px dashed var(--ink);
+  background: linear-gradient(135deg, var(--acid) 0%, #c8e42f 100%);
+}
+
+.download-btn {
+  font-size: 18px;
+  padding: 20px 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.download-arrow {
+  font-size: 24px;
+  animation: bounce 1.5s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+.download-hint {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ── Extract Steps ── */
+.extract-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.extract-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.extract-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--acid);
+  font: 700 14px var(--mono);
+}
+
+.extract-step-item p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.extract-step-item code {
+  background: rgba(17, 19, 14, 0.06);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+/* ── Agent Paths ── */
+.agent-paths {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.agent-path-card {
+  padding: 20px;
+  border: 2px solid var(--line);
+  background: var(--paper);
+  text-align: center;
+}
+
+.agent-path-card h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+}
+
+.agent-path-card code {
+  display: block;
+  font: 13px var(--mono);
+  color: var(--muted);
+  word-break: break-all;
+}
+
+/* ── Visual Guide ── */
+.visual-guide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  flex-wrap: wrap;
+}
+
+.guide-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  max-width: 140px;
+}
+
+.guide-icon {
+  font-size: 32px;
+}
+
+.guide-step p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted);
+}
+
+.guide-arrow {
+  font-size: 24px;
+  color: var(--muted);
+}
+
+/* ── MCP Simple Config (Non-Dev) ── */
+.mcp-simple-config {
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  text-align: center;
+}
+
+.mcp-simple-config p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ── Back to Selection ── */
+.back-to-selection {
+  text-align: center;
+  padding: 32px;
+  background: var(--paper);
+}
+
+.text-btn {
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  font: 600 15px var(--sans);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 120ms;
+}
+
+.text-btn:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
 /* ── Footer ── */
 footer { display: flex; justify-content: space-between; gap: 20px; padding: 42px clamp(24px, 5vw, 76px); color: white; background: var(--ink); }
 footer span { color: #b6bcaf; }
 
 /* ── Responsive ── */
 @media (max-width: 800px) {
-  .site-header { min-height: 68px; }
+  .site-header { min-height: 68px; flex-wrap: wrap; gap: 12px; padding: 12px 20px; }
   nav { gap: 16px; }
   nav a { font-size: 13px; }
   .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 64px; }
@@ -204,19 +567,47 @@ footer span { color: #b6bcaf; }
   .code-row button { margin-top: 0; }
   .skill-cards { grid-template-columns: 1fr; }
   footer { flex-direction: column; }
+  
+  /* User type cards responsive */
+  .user-type-cards { grid-template-columns: 1fr; }
+  
+  /* MCP services responsive */
+  .mcp-services-grid { grid-template-columns: 1fr; }
+  
+  /* Visual guide responsive */
+  .visual-guide { flex-direction: column; }
+  .guide-arrow { transform: rotate(90deg); }
+  
+  /* Agent paths responsive */
+  .agent-paths { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 520px) {
   .brand { font-size: 24px; }
-  nav a:nth-child(2) { display: none; }
+  nav a:nth-child(n+3) { display: none; }
   h1 { font-size: 44px; }
   .actions { display: grid; }
   .button { justify-content: center; }
   .platform-tabs { gap: 4px; }
   .platform-tabs button { padding: 8px 14px; font-size: 13px; }
+  
+  /* Download button responsive */
+  .download-btn { 
+    width: 100%; 
+    justify-content: center; 
+    font-size: 16px;
+    padding: 16px 24px;
+  }
+  
+  /* Agent paths mobile */
+  .agent-paths { grid-template-columns: 1fr; }
+  
+  /* User type card mobile */
+  .user-type-card { padding: 28px 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .button { transition: none; }
+  .download-arrow { animation: none; }
 }

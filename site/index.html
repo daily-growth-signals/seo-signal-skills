@@ -17,8 +17,13 @@
     <header class="site-header">
       <a class="brand" href="#top" aria-label="Daily Growth Signals home">DGS_</a>
       <nav aria-label="Primary navigation">
-        <a href="#install">Install</a>
-        <a href="#workflow">Workflow</a>
+        <div class="lang-switch">
+          <button data-lang="en" class="lang-active">EN</button>
+          <span>/</span>
+          <button data-lang="zh">中文</button>
+        </div>
+        <a href="#install" data-i18n="nav.install">Install</a>
+        <a href="#workflow" data-i18n="nav.workflow">Workflow</a>
         <a href="https://github.com/daily-growth-signals/seo-signal-skills">GitHub</a>
       </nav>
     </header>
@@ -26,10 +31,11 @@
     <main id="top">
       <section class="hero">
         <div class="hero-copy">
-          <h1>Turn traceable signals<br />into content decisions</h1>
-          <p>Three focused skills.<br />From research evidence to a testable recommendation.</p>
+          <h1 data-i18n="hero.title">Turn traceable signals<br />into content decisions</h1>
+          <p data-i18n="hero.subtitle">Three focused skills.<br />From research evidence to a testable recommendation.</p>
           <div class="actions">
-            <a class="button button-dark" href="#install">Install Skills</a>
+            <a class="button button-dark" href="#install" data-i18n="hero.btnInstall">Install Skills</a>
+            <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills/releases/latest" data-i18n="hero.btnDownload">Download Release</a>
             <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills">View on GitHub</a>
           </div>
         </div>
@@ -40,39 +46,72 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
         </div>
       </section>
 
+      <!-- User Type Selection -->
+      <section id="user-type" class="section user-type-section">
+        <h2 data-i18n="userType.title">Choose Your Installation Method</h2>
+        <p class="section-lede" data-i18n="userType.subtitle">Select your user type to get the right installation guide for you.</p>
+        
+        <div class="user-type-cards">
+          <article class="user-type-card" data-user="developer">
+            <div class="user-type-icon">⚡</div>
+            <h3 data-i18n="userType.dev.title">Developer / 开发者</h3>
+            <p data-i18n="userType.desc">Git clone & symbolic link installation. Best for users comfortable with command line.</p>
+            <ul data-i18n="userType.dev.features">
+              <li>Latest development version</li>
+              <li>Easy updates via `git pull`</li>
+              <li>Full source code access</li>
+            </ul>
+            <button class="button button-dark select-user-btn" data-select="developer" data-i18n="userType.btnSelect">Select This Method</button>
+          </article>
+
+          <article class="user-type-card" data-user="non-developer">
+            <div class="user-type-icon">📦</div>
+            <h3 data-i18n="userType.nondev.title">Non-Developer / 非开发者</h3>
+            <p data-i18n="userType.desc">Direct download from GitHub Releases. No Git or command line required.</p>
+            <ul data-i18n="userType.nondev.features">
+              <li>Pre-packaged stable release</li>
+              <li>Simple download & extract</li>
+              <li>Ready to use immediately</li>
+            </ul>
+            <button class="button button-light select-user-btn" data-select="non-developer" data-i18n="userType.btnSelect">Select This Method</button>
+          </article>
+        </div>
+      </section>
+
       <section id="workflow" class="section workflow">
-        <h2>Research first. Decide from evidence.</h2>
+        <h2 data-i18n="workflow.title">Research first. Decide from evidence.</h2>
         <div class="workflow-track">
           <article>
             <span class="step">01</span>
-            <h3>Submit research</h3>
+            <h3 data-i18n="workflow.step1.title">Submit research</h3>
             <code>submit_keyword_research_signals</code>
           </article>
           <span class="connector" aria-hidden="true">→</span>
           <article>
             <span class="step">02</span>
-            <h3>Poll the result</h3>
+            <h3 data-i18n="workflow.step2.title">Poll the result</h3>
             <code>get_keyword_research_signals</code>
           </article>
           <span class="connector" aria-hidden="true">→</span>
           <article>
             <span class="step">03</span>
-            <h3>Decide and test</h3>
+            <h3 data-i18n="workflow.step3.title">Decide and test</h3>
             <p>Evidence · confidence · alternatives · next test</p>
           </article>
         </div>
       </section>
 
-      <section id="install" class="section install">
-        <h2>Copy the skill files manually</h2>
-        <p class="section-lede">
-          Clone the repo and copy the skill folders into your agent's skills directory.
-          Pick your agent platform below — each skill includes its own instructions, agent metadata, and only the references or templates it needs.
+      <!-- Developer Installation -->
+      <section id="install-dev" class="section install install-dev-section" style="display: none;">
+        <h2 data-i18n="install.dev.title">Developer Installation</h2>
+        <p class="section-lede" data-i18n="install.dev.subtitle">
+          Clone the repo and create symbolic links to your agent's skills directory.
+          Each skill includes its own instructions, agent metadata, and only the references or templates it needs.
         </p>
 
         <!-- Step 1: Clone -->
         <div class="install-step">
-          <h3>Clone the repository</h3>
+          <h3 data-i18n="install.step1">Step 1: Clone the repository</h3>
           <div class="code-row">
             <pre><code>git clone https://github.com/daily-growth-signals/seo-signal-skills.git</code></pre>
             <button type="button" data-copy="git clone https://github.com/daily-growth-signals/seo-signal-skills.git">Copy</button>
@@ -81,8 +120,8 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
 
         <!-- Step 2: Platform tabs + skill list -->
         <div class="install-step">
-          <h3>Choose your agent &amp; copy the skills</h3>
-          <p class="step-hint">Select an agent platform to see the exact copy commands for each skill.</p>
+          <h3 data-i18n="install.step2">Step 2: Choose your agent & create symlinks</h3>
+          <p class="step-hint" data-i18n="install.step2.hint">Select an agent platform to see the exact commands for each skill.</p>
 
           <div class="platform-tabs" role="tablist" aria-label="Agent platform">
             <button role="tab" aria-selected="true" data-platform="claude">Claude Code</button>
@@ -99,20 +138,174 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
 
         <!-- Step 3: MCP config -->
         <div class="install-step">
-          <h3>Connect the MCP server</h3>
-          <div class="code-row code-row-tall">
-            <pre><code>{
-  "url": "https://YOUR_DGS_HOST/mcp"
+          <h3 data-i18n="install.step3">Step 3: Connect MCP servers (optional naming)</h3>
+          <div class="mcp-note" data-i18n="install.mcp.note">
+            <strong>Note:</strong> The server names below (e.g., <code>daily-growth-signals</code>) are <em>reference names</em>. 
+            You can customize them when configuring your AI client. The actual service endpoints remain the same.
+          </div>
+          
+          <div class="mcp-services-grid">
+            <div class="mcp-service-card">
+              <h4 data-i18n="install.mcp.seo.title">SEO Data Service</h4>
+              <p class="mcp-service-desc" data-i18n="install.mcp.seo.desc">Google Trends, Keywords, SERP data</p>
+              <div class="code-row code-row-small">
+                <pre><code>{
+  "type": "http",
+  "url": "https://mcp.signaldig.com/data/seo/mcp",
+  "headers": {
+    "Authorization": "Bearer {your_api_key}"
+  }
 }</code></pre>
-            <button type="button" data-copy='{"url":"https://YOUR_DGS_HOST/mcp"}'>Copy</button>
+                <button type="button" data-copy='{"type":"http","url":"https://mcp.signaldig.com/data/seo/mcp"}'>Copy URL</button>
+              </div>
+            </div>
+
+            <div class="mcp-service-card">
+              <h4 data-i18n="install.mcp.social.title">Social Media Service</h4>
+              <p class="mcp-service-desc" data-i18n="install.mcp.social.desc">X, Reddit, Xiaohongshu</p>
+              <div class="code-row code-row-small">
+                <pre><code>{
+  "type": "http",
+  "url": "https://mcp.signaldig.com/data/social/mcp",
+  "headers": {
+    "Authorization": "Bearer {your_api_key}"
+  }
+}</code></pre>
+                <button type="button" data-copy='{"type":"http","url":"https://mcp.signaldig.com/data/social/mcp"}'>Copy URL</button>
+              </div>
+            </div>
+
+            <div class="mcp-service-card">
+              <h4 data-i18n="install.mcp.decision.title">Decision Engine</h4>
+              <p class="mcp-service-desc" data-i18n="install.mcp.decision.desc">Content opportunity recommendations</p>
+              <div class="code-row code-row-small">
+                <pre><code>{
+  "type": "http",
+  "url": "https://mcp.signaldig.com/signals/seo/mcp",
+  "headers": {
+    "Authorization": "Bearer {your_api_key}"
+  }
+}</code></pre>
+                <button type="button" data-copy='{"type":"http","url":"https://mcp.signaldig.com/signals/seo/mcp"}'>Copy URL</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="api-key-note" data-i18n="install.apikey.note">
+            Get your API key from your Daily Growth Signals workspace dashboard.
           </div>
         </div>
       </section>
+
+      <!-- Non-Developer Installation -->
+      <section id="install-nondev" class="section install install-nondev-section" style="display: none;">
+        <h2 data-i18n="install.nondev.title">Simple Download Installation</h2>
+        <p class="section-lede" data-i18n="install.nondev.subtitle">
+          Download the pre-packaged skills zip file and extract it to your agent's skills directory.
+          No Git or command line experience required.
+        </p>
+
+        <!-- Step 1: Download -->
+        <div class="install-step">
+          <h3 data-i18n="install.nondev.step1">Step 1: Download the latest release</h3>
+          <div class="download-box">
+            <a class="button button-dark download-btn" href="https://github.com/daily-growth-signals/seo-signal-skills/releases/latest" target="_blank" rel="noopener">
+              <span data-i18n="install.nondev.downloadBtn">Download seo-signal-skills.zip</span>
+              <span class="download-arrow">↓</span>
+            </a>
+            <p class="download-hint" data-i18n="install.nondev.downloadHint">Contains all three skill folders ready to use</p>
+          </div>
+        </div>
+
+        <!-- Step 2: Extract -->
+        <div class="install-step">
+          <h3 data-i18n="install.nondev.step2">Step 2: Extract the zip file</h3>
+          <div class="extract-steps">
+            <div class="extract-step-item">
+              <span class="extract-num">1</span>
+              <p data-i18n="install.nondev.extract1">Locate the downloaded <code>seo-signal-skills-*.zip</code> file</p>
+            </div>
+            <div class="extract-step-item">
+              <span class="extract-num">2</span>
+              <p data-i18n="install.nondev.extract2">Right-click and choose "Extract All" (Windows) or double-click (Mac)</p>
+            </div>
+            <div class="extract-step-item">
+              <span class="extract-num">3</span>
+              <p data-i18n="install.nondev.extract3">You'll see three folders: <code>research-seo-signals</code>, <code>research-social-signals</code>, <code>decide-content-opportunities</code></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Copy to agent -->
+        <div class="install-step">
+          <h3 data-i18n="install.nondev.step3">Step 3: Copy folders to your agent</h3>
+          <p class="step-hint" data-i18n="install.nondev.step3.hint">Find your agent's skills folder and copy all three skill folders there:</p>
+          
+          <div class="agent-paths">
+            <div class="agent-path-card">
+              <h4>Claude Code</h4>
+              <code>~/.claude/skills/</code>
+            </div>
+            <div class="agent-path-card">
+              <h4>Codex</h4>
+              <code>~/.codex/skills/</code>
+            </div>
+            <div class="agent-path-card">
+              <h4>Cursor</h4>
+              <code>~/.cursor/skills/</code>
+            </div>
+            <div class="agent-path-card">
+              <h4>Windsurf</h4>
+              <code>~/.windsurf/skills/</code>
+            </div>
+          </div>
+
+          <div class="visual-guide">
+            <div class="guide-step">
+              <span class="guide-icon">📁</span>
+              <p data-i18n="install.nondev.guide1">Open the extracted folder</p>
+            </div>
+            <span class="guide-arrow">→</span>
+            <div class="guide-step">
+              <span class="guide-icon">✂️</span>
+              <p data-i18n="install.nondev.guide2">Select all three skill folders</p>
+            </div>
+            <span class="guide-arrow">→</span>
+            <div class="guide-step">
+              <span class="guide-icon">📋</span>
+              <p data-i18n="install.nondev.guide3">Copy/Cut them</p>
+            </div>
+            <span class="guide-arrow">→</span>
+            <div class="guide-step">
+              <span class="guide-icon">📌</span>
+              <p data-i18n="install.nondev.guide4">Paste into your agent's skills folder</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: MCP config (simplified) -->
+        <div class="install-step">
+          <h3 data-i18n="install.nondev.step4">Step 4: Configure MCP (optional)</h3>
+          <p class="step-hint" data-i18n="install.nondev.step4.hint">
+            If you want to use the full features, you need to connect to our MCP services. 
+            Ask your AI agent to help you configure this, or follow your client's documentation.
+          </p>
+          <div class="mcp-simple-config">
+            <p data-i18n="install.nondev.mcpSimple">The MCP server URLs are provided in the included SKILL.md files in each skill folder.</p>
+            <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills#connect-the-mcp-servers" target="_blank" rel="noopener" data-i18n="install.nondev.viewDocs">View Full Documentation →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Back to selection -->
+      <div class="back-to-selection" style="display: none;">
+        <button class="text-btn" id="back-to-selection" data-i18n="install.backToSelection">← Choose a different installation method</button>
+      </div>
     </main>
 
     <footer>
       <strong>Daily Growth Signals</strong>
-      <span>Evidence before opinion.</span>
+      <span data-i18n="footer.tagline">Evidence before opinion.</span>
     </footer>
   </body>
 </html>

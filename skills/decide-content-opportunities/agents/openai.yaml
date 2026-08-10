@@ -1,4 +1,7 @@
 interface:
   display_name: "Content Opportunity Decisions"
   short_description: "Turn traceable signals into content decisions"
+  icon_small: "./assets/small-logo.svg"
+  icon_large: "./assets/large-logo.png"
+  brand_color: "#10B981"
   default_prompt: "Use $decide-content-opportunities and the Decision MCP to generate an evidence-constrained keyword decision with confidence, counter-evidence, conditions, risks, and a recommended next test."
