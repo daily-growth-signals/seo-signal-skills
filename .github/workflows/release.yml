@@ -28,33 +28,61 @@ jobs:
               decide-content-opportunities/ \
               -x "*.DS_Store"
 
+      - name: Generate Release Body
+        id: changelog
+        run: |
+          # 获取上一个 tag（如果有）
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          if [ -n "$PREV_TAG" ]; then
+            # 生成从上个 tag 到当前的变更日志
+            CHANGELOG=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          else
+            # 如果没有上个 tag，显示最近的所有提交
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges -20)
+          fi
+
+          # 生成 release body
+          cat << EOF > /tmp/release_body.md
+          ## Release ${{ steps.version.outputs.VERSION }}
+
+          ### 📋 变更日志 (Changelog)
+
+          ${CHANGELOG}
+
+          ### 包含技能 (Included Skills)
+
+          - **research-seo-signals** - SEO 信号研究与数据采集
+          - **research-social-signals** - 社交媒体信号监听 (支持 X/Reddit/知乎/地域热点)
+          - **decide-content-opportunities** - 内容机会决策建议
+
+          ### 安装 (Installation)
+
+          解压后将 skills 子文件夹链接到您的 AI 客户端：
+
+          \`\`\`bash
+          # Claude Code 示例
+          ln -s "\$(pwd)/research-seo-signals" ~/.claude/skills/
+          ln -s "\$(pwd)/research-social-signals" ~/.claude/skills/
+          ln -s "\$(pwd)/decide-content-opportunities" ~/.claude/skills/
+          \`\`\`
+
+          ### MCP 配置 (MCP Configuration)
+
+          请参考 [README.md](https://github.com/daily-growth-signals/seo-signal-skills/blob/main/README.md) 配置 MCP 服务。
+          EOF
+
+          # 将内容设置为输出（去除前导空格）
+          sed 's/^[[:space:]]*//' /tmp/release_body.md >> $GITHUB_OUTPUT
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          cat /tmp/release_body.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           name: SEO Signal Skills ${{ steps.version.outputs.VERSION }}
-          body: |
-            ## Release ${{ steps.version.outputs.VERSION }}
-
-            ### 包含技能 (Included Skills)
-            
-            - **research-seo-signals** - SEO 信号研究与数据采集
-            - **research-social-signals** - 社交媒体信号监听
-            - **decide-content-opportunities** - 内容机会决策建议
-            
-            ### 安装 (Installation)
-            
-            解压后将 `skills` 子文件夹链接到您的 AI 客户端：
-            
-            ```bash
-            # Claude Code 示例
-            ln -s "$(pwd)/research-seo-signals" ~/.claude/skills/
-            ln -s "$(pwd)/research-social-signals" ~/.claude/skills/
-            ln -s "$(pwd)/decide-content-opportunities" ~/.claude/skills/
-            ```
-            
-            ### MCP 配置 (MCP Configuration)
-            
-            请参考 [README.md](https://github.com/daily-growth-signals/seo-signal-skills/blob/main/README.md) 配置 MCP 服务。
+          body: ${{ steps.changelog.outputs.body }}
           files: seo-signal-skill*.zip
           draft: false
           prerelease: false
