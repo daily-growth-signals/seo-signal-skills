@@ -178,6 +178,10 @@ Use $research-social-signals to find Xiaohongshu notes about portable coffee mak
 ```
 
 ```text
+Use $research-social-signals to find Zhihu articles and answers about AI meeting assistants. Preserve the exact search filters, source links, and native vote or comment evidence.
+```
+
+```text
 Use $research-social-signals to identify recurring user questions and complaints about AI meeting assistants. Do not generate an SEO report.
 ```
 
