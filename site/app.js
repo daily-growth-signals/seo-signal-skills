@@ -36,7 +36,7 @@ const I18N = {
     "install.mcp.seo.title": "SEO Data Service",
     "install.mcp.seo.desc": "Google Trends, Keywords, SERP data",
     "install.mcp.social.title": "Social Media Service",
-    "install.mcp.social.desc": "X, Reddit, Xiaohongshu, Zhihu",
+    "install.mcp.social.desc": "X, Reddit, Xiaohongshu, Zhihu, LinkedIn, WeChat",
     "install.mcp.decision.title": "Decision Engine",
     "install.mcp.decision.desc": "Content opportunity recommendations",
     "install.apikey.note": "Get your API key from your Daily Growth Signals workspace dashboard.",
@@ -104,7 +104,7 @@ const I18N = {
     "install.mcp.seo.title": "SEO 数据服务",
     "install.mcp.seo.desc": "Google Trends、关键词、SERP 数据",
     "install.mcp.social.title": "社交媒体服务",
-    "install.mcp.social.desc": "X、Reddit、小红书、知乎",
+    "install.mcp.social.desc": "X、Reddit、小红书、知乎、LinkedIn、微信公众号",
     "install.mcp.decision.title": "决策引擎",
     "install.mcp.decision.desc": "内容机会建议",
     "install.apikey.note": "从您的 Daily Growth Signals 工作空间控制台获取 API 密钥。",
@@ -179,8 +179,8 @@ const SKILLS = [
     id: "research-social-signals",
     name: { en: "Social Signal Research", zh: "社交信号研究" },
     desc: { 
-      en: "Research traceable public social-media conversations for brand mentions, pain points, and audience language.",
-      zh: "研究可追溯的公开社交媒体对话（品牌提及、痛点、用户语言）。"
+      en: "Research traceable public conversations, creator histories, member activity, account articles, and native engagement evidence across major social platforms.",
+      zh: "研究主流社交平台上可追溯的公开对话、创作者历史、用户动态、账号文章和原生互动证据。"
     },
     files: [
       { name: "SKILL.md",           type: "file" },

@@ -75,11 +75,17 @@ Unlike raw data providers that return numbers without context, this service:
 - **Reddit**: Community discussions, user feedback, pain points
 - **Xiaohongshu (Little Red Book)**: Chinese lifestyle content, consumer discussions
 - **Zhihu**: Chinese long-form articles, answers, and author perspectives
+- **LinkedIn**: Member posts, commented or reacted content, and available impression metrics
+- **WeChat Official Accounts**: Raw account articles and parsed public engagement metrics
 
 **Tools Available**:
 - `search_x_posts` – Query-bounded X/Twitter post retrieval
 - `search_reddit_posts` – Reddit community post discovery
 - `search_xiaohongshu_notes` – Xiaohongshu note search with image support
+- `get_xiaohongshu_user_notes` – Xiaohongshu creator note history with cursor paging
+- `search_zhihu_articles` – Zhihu public content retrieval
+- `get_linkedin_user_posts` – LinkedIn member activity and available engagement evidence
+- `get_wechat_account_articles` – Raw WeChat Official Account articles with parsed metrics
 - `search_zhihu_articles` – Zhihu content search with exact parameter preservation
 - `get_x_trends` – Current X trending topics by country/region
 
@@ -263,11 +269,17 @@ SEO Signal Skills 是一套结构化的技能集，旨在通过 MCP（模型上�
 - **Reddit**：社区讨论、用户反馈、痛点挖掘
 - **知乎**：中文长文、回答与作者观点研究
 - **小红书**：中文生活方式内容、消费者讨论
+- **LinkedIn**：用户发帖、评论或点赞过的内容及可用展示指标
+- **微信公众号**：账号原始文章与结构化公开互动指标
 
 **可用工具**：
 - `search_x_posts` – 有界查询的 X/Twitter 帖子检索
 - `search_reddit_posts` – Reddit 社区帖子发现
 - `search_xiaohongshu_notes` – 小红书笔记搜索（支持图片）
+- `get_xiaohongshu_user_notes` – 小红书创作者笔记历史与游标分页
+- `search_zhihu_articles` – 知乎公开内容检索
+- `get_linkedin_user_posts` – LinkedIn 用户内容与可用互动证据
+- `get_wechat_account_articles` – 微信公众号原始文章与结构化指标
 - `search_zhihu_articles` – 知乎内容搜索（原样保留搜索参数）
 - `get_x_trends` – 按国家/地区获取当前 X 热门话题
 

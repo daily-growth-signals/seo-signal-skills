@@ -1,5 +1,52 @@
 # Social Search Functional Contract
 
+## Tool: `get_wechat_account_articles`
+
+Return one raw page of content for a WeChat Official Account.
+
+Inputs:
+
+- `username`: required public account identifier matching `gh_...`.
+- `page_size`: 10–20; default `20`.
+- `offset`: opaque cursor returned as `next_offset`; empty for the first page.
+- `item_show_type`: optional content tab: `0` articles, `5` videos, `7` audio, or `8` image-text posts.
+- `idempotency_key`: optional stable key for safely retrying the same logical page.
+
+The request always uses raw mode. Expected results include the account identifier, page context, `is_end`, `next_offset`, original article objects in `raw_data`, and zero or more normalized metric snapshots. A snapshot contains only useful numeric fields that were actually recognized: `read_count`, `like_count`, `comment_count`, `share_count`, and `watching_count`. Missing values remain null. Display prose is not repeated in the normalized metric object.
+
+Use `next_offset` unchanged for the next page and stop when `is_end` is true. Do not decode or construct offsets. Do not equate reads with unique people, impressions, approval, or conversion. Return raw objects only when the user asks for original data or when a necessary field has no normalized equivalent.
+
+## Tool: `get_linkedin_user_posts`
+
+Return one page of public activity associated with a LinkedIn member profile.
+
+Inputs:
+
+- `profile_url`: required HTTPS LinkedIn member URL under `/in/`.
+- `activity_type`: `posts`, `comments`, or `reactions`; default `posts`.
+- `start`: non-negative page offset; default `0`.
+- `pagination_token`: optional opaque token returned by the previous page.
+- `idempotency_key`: optional stable key for safely retrying the same logical page.
+
+Expected results include the profile URL, activity type, page context, source objects, and available normalized fields such as post ID, URL, text, publication time, in-network impressions, out-of-network impressions, likes, comments, and reposts. Missing metrics remain null and must not be converted to zero.
+
+Preserve both pagination inputs required by the live schema. Do not use a company page, search URL, or arbitrary LinkedIn URL in place of a member profile. Treat impressions and engagement as platform-native observations, not proof of sentiment, quality, or conversion.
+
+## Tool: `get_xiaohongshu_user_notes`
+
+Return one page of notes posted by a specific Xiaohongshu creator.
+
+Inputs:
+
+- `user_id`: preferred creator identifier when known.
+- `share_text`: Xiaohongshu share link or text when `user_id` is unavailable.
+- `cursor`: opaque cursor returned by the previous page; empty for the first page.
+- `idempotency_key`: optional stable key for safely retrying the same logical page.
+
+At least one creator identity input is required; `user_id` takes precedence when both are supplied. Expected results include identity context, `cursor`, `next_cursor`, `has_more`, capture time, result count, and normalized notes with source URLs and native public metrics.
+
+Pass `next_cursor` unchanged for another page and stop when `has_more` is false. Do not substitute `search_xiaohongshu_notes` when the task is creator-history research, and do not invent a user ID or cursor from a profile nickname.
+
 ## Tool: `search_zhihu_articles`
 
 Search public Zhihu content while preserving every supplied search value exactly.

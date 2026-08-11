@@ -27,6 +27,8 @@ This repository provides three product-specific skills:
 - translate a social-listening goal into focused literal X query expressions;
 - reuse conversation results before repeating the same live query;
 - select recency or relevancy intentionally and paginate only when broader coverage is needed;
+- choose creator/account tools for Xiaohongshu, LinkedIn, and WeChat instead of forcing keyword search;
+- preserve native engagement meanings, raw WeChat article fields when requested, and opaque pagination values;
 - deduplicate overlapping searches by `post_id` while preserving source URLs and query context;
 - separate observations, synthesis, possible actions, and coverage limitations.
 
@@ -178,6 +180,8 @@ GitHub Pages publishes the project overview at:
 - 将社交监听目标转化为聚焦的字面 X 查询表达式；
 - 在重复相同实时查询前复用对话结果；
 - 有意选择时效性或相关性排序，仅在需要更广覆盖时进行分页；
+- 针对小红书创作者、LinkedIn 用户和微信公众号选择对应账号工具，而不是强行使用关键词搜索；
+- 保留平台原生互动指标语义、按需提供微信公众号原始字段，并原样传递分页值；
 - 按 `post_id` 去重叠搜索，同时保留源 URL 和查询上下文；
 - 区分观察、综合、可能行动和覆盖限制。
 
