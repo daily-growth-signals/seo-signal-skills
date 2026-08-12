@@ -1,6 +1,6 @@
 interface:
   display_name: "Social Signal Retrieval"
-  short_description: "获取社交平台公开账号、帖子内容和阅读、展示、点赞等互动数据"
+  short_description: "Retrieve public social media account and content data"
   icon_small: "./assets/small-logo.svg"
   icon_large: "./assets/large-logo.png"
   brand_color: "#EF4444"
