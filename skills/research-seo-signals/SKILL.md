@@ -159,7 +159,7 @@ Before writing the answer:
 3. Read `status`, `limitations`, `usage`, and `result.field_semantics` before
    interpreting any raw or normalized result field. Apply each matching entry's
    `unit`, `meaning`, and `caveats`; do not replace the live glossary with
-   remembered provider definitions.
+   remembered source definitions.
 4. Inventory all families expected for the selected request before summarizing. For a scoped request, require only its selected family plus `evidence`, `signals`, `limitations`, and `usage`; do not misreport intentionally unrequested families as missing.
 5. For **full** depth only: count every array and include every relevant item. For **concise** depth: report counts and the strongest items, and state that more rows are available from the same `request_id`.
 6. Build a set of available `evidence_id` values for any claim you make.

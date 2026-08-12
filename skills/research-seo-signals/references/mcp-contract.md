@@ -9,7 +9,7 @@ Inputs:
 - `keyword` — required seed query, 1–200 characters.
 - `domain` — required hostname without scheme or path.
 - `market` — required ISO 3166-1 alpha-2 country code.
-- `language` — required research-language code; it scopes provider data and does not select the user-facing response language.
+- `language` — required research-language code; it scopes the returned research data and does not select the user-facing response language.
 - `data_scopes` — optional non-empty combination of `keyword_overview`, `related_keywords`, `serp`, and `google_trends`; omission selects all SEO families. Use the separate Social MCP for X evidence.
 - `idempotency_key` — strongly recommended stable retry key for the logical research identity.
 

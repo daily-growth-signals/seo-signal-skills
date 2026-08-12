@@ -81,7 +81,7 @@ inference, recommendation, and expected outcome.
 9. Return the stance, decision basis, confidence, counter-evidence, conditions,
    risks, recommended actions, stop conditions, missing inputs, and source
    `request_id`. Use
-   [assets/content-decision-template.md](assets/content-decision-template.md)
+   [references/content-decision-template.md](references/content-decision-template.md)
    when saving a durable artifact.
 
 ## Evidence Sufficiency

@@ -179,7 +179,7 @@ The page size, from 10 to 100; default 50. This is not a total-result guarantee.
 ### `sort_order`
 
 - `recency`: newer matching posts first;
-- `relevancy`: provider-ranked topical relevance.
+- `relevancy`: relevance-ranked matching posts.
 
 Do not label either option “best”. Use the one matching the caller's retrieval goal, or keep separate result sets if both were explicitly requested.
 
@@ -239,7 +239,7 @@ Preserve all user-supplied values exactly, including string pagination and leadi
 
 ## Safe failure handling
 
-Supplier responses are internal diagnostics, not user data. Never repeat or expose their response JSON, supplier name, documentation/support links, request IDs, API routes, cache URLs, debug IDs or payloads, headers, timestamps/timezones, or billing messages.
+Technical diagnostics are not user data. Never repeat response JSON, documentation or support links, request traces, routes, cache links, debug payloads, headers, system timestamps, or charge messages.
 
 - For an invalid public input, name only the invalid field, explain the expected public format, and show how the user can obtain or correct it.
 - For a temporary upstream failure, return only the stable SignalDig error meaning: social data is temporarily unavailable; retry the same logical request later.

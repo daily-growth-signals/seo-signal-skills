@@ -78,4 +78,4 @@ Would change the decision:
 - ...
 ```
 
-Never calculate a percentage by mapping high, medium, and low to arbitrary numbers. Never average provider metrics into a confidence score.
+Never calculate a percentage by mapping high, medium, and low to arbitrary numbers. Never average source metrics into a confidence score.

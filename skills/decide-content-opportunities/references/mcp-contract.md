@@ -1,8 +1,7 @@
 # Decision MCP Functional Contract
 
-The Decision MCP is separate from the SEO research MCP. It reuses the
-backend's published keyword Workflow, evidence mapper, billing, audit, and
-snapshots, but always enables the decision Skill/LLM path.
+The Decision MCP is separate from the SEO research MCP. Use it when the caller
+needs a conditional recommendation rather than SEO data retrieval alone.
 
 ## Tool: `submit_keyword_decision_report`
 

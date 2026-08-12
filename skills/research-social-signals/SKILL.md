@@ -15,7 +15,7 @@ Retrieve useful underlying social data. Help the caller form a valid, focused re
 4. Do not force results into a fixed analysis template. Match the caller's requested shape; when none is given, provide a compact retrieval summary plus the data.
 5. Do not manufacture a difficult identifier or silently repair an ambiguous parameter. Explain it, validate what can be validated, and request the missing value when necessary.
 6. Treat missing metrics as unknown, not zero. Keep platform-native metrics distinct.
-7. Never expose a data supplier's response body, name, documentation or support URL, request ID, route, cache URL, debug fields, headers, timestamps, timezone, or billing text. Convert failures into a short user-facing parameter correction or stable SignalDig availability error.
+7. Never expose technical error details, support links, request traces, cache links, headers, or charge messages. Convert failures into a short parameter correction or a clear temporary-unavailability message.
 
 ## Before Every Call
 
@@ -68,7 +68,7 @@ For a Xiaohongshu account request, keep these direct observations available when
 
 Do not derive a posting mix, engagement rate, account tier, content quality, growth diagnosis, benchmark, or recommendation inside this Skill. A downstream AI may calculate or interpret those observations after retrieval. If `view_count` is absent, report exposure/views as unavailable; do not estimate them from likes or other interactions.
 
-For a LinkedIn member request, preserve the returned public profile fields separately from the activity page. Treat `posts` as the only content list: the profile source's internal `posts` and `activity` previews are intentionally excluded because they overlap with the richer paginated post source. Do not reconstruct those discarded previews from supplier data.
+For a LinkedIn member request, preserve the returned public profile fields separately from the activity page. Treat `posts` as the content list. Ignore profile-level `posts` or `activity` previews if they appear because they duplicate less complete content.
 
 Do not add generic advice, opportunity rankings, content ideas, sentiment labels, performance judgments, or next-action recommendations. A concise note about invalid inputs, missing fields, or retrieval limitations is part of data quality and is allowed.
 
@@ -82,7 +82,7 @@ Do not add generic advice, opportunity rankings, content ideas, sentiment labels
 6. Deduplicate overlapping results only by a stable platform identifier, while retaining query provenance when useful.
 7. Preserve partial results when a later page fails; do not restart or conceal the missing coverage.
 8. Retry a temporary failure only for the same logical page with unchanged inputs.
-9. If a tool reports `signaldig_social_data_temporarily_unavailable`, tell the caller that the social data is temporarily unavailable and that the same request may be retried. Do not reveal or reconstruct the underlying supplier error.
+9. If a tool reports `signaldig_social_data_temporarily_unavailable`, tell the caller that the social data is temporarily unavailable and that the same request may be retried. Do not reveal or reconstruct technical error details.
 
 ## Examples
 

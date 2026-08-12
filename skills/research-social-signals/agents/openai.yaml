@@ -1,7 +1,7 @@
 interface:
   display_name: "Social Signal Retrieval"
-  short_description: "Retrieve validated public social data without decisions"
+  short_description: "获取社交平台公开账号、帖子内容和阅读、展示、点赞等互动数据"
   icon_small: "./assets/small-logo.svg"
   icon_large: "./assets/large-logo.png"
   brand_color: "#EF4444"
-  default_prompt: "Use $research-social-signals to validate my inputs and retrieve only the traceable social data needed. For Xiaohongshu or LinkedIn member retrieval, keep public profile fields separate from the single paginated content source, preserve native metrics, and make no score or decision."
+  default_prompt: "Use $research-social-signals to check my account link or search parameters, then retrieve only the public social account, content, and platform metrics I need. Return the source data without scoring the account or recommending a strategy."

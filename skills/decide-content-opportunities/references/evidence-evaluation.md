@@ -10,9 +10,9 @@ Record each source before interpreting it:
 | Trace | `evidence_id` and returned URL when present | `post_id` and post URL |
 | Time | result and source timestamps | post and collection timestamps |
 | Coverage | completed and missing families | query, language, ranking, pagination |
-| Limitations | terminal limitations and field semantics | provider errors and sampling limits |
+| Limitations | terminal limitations and field semantics | retrieval errors and sampling limits |
 
-Keep duplicated observations linked to their original sources. Corroboration requires independent evidence, not the same provider field repeated in several summaries.
+Keep duplicated observations linked to their original sources. Corroboration requires independent evidence, not the same source field repeated in several summaries.
 
 ## Admissibility
 
@@ -20,7 +20,7 @@ Use evidence in a decision only when:
 
 - its source can be traced;
 - its market, language, audience, and time scope are known or explicitly bounded;
-- its meaning follows the returned field semantics rather than a remembered provider definition;
+- its meaning follows the returned field semantics rather than a remembered source definition;
 - its limitation does not invalidate the claim being made.
 
 Exclude invented transformations, unsupported sentiment labels, inferred commercial value, and claims copied from a prior synthesis without its underlying source trace.

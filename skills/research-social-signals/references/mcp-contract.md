@@ -82,7 +82,7 @@ Expected results retain the complete parameter object plus capture time, result 
 
 ## Tool: `search_reddit_posts`
 
-Search public Reddit posts through the standalone `reddit-posts-search` social Workflow. Use it for community research, user wording, pain points, questions, and feedback; it is not part of SEO keyword research.
+Search public Reddit posts for community research, user wording, pain points, questions, and feedback. Use the social-data tool for this request rather than SEO keyword research.
 
 Inputs:
 
@@ -95,7 +95,7 @@ The current public tool exposes no sort, time-range, safe-search, or pagination 
 
 ## Tool: `search_xiaohongshu_notes`
 
-Search public Xiaohongshu notes through the standalone `xiaohongshu-notes-search` social Workflow. Use it for public note research, creator wording, Chinese lifestyle or consumer discussion, and returned image evidence; it is not part of SEO keyword research.
+Search public Xiaohongshu notes for creator wording, Chinese lifestyle or consumer discussion, and returned image evidence. Use the social-data tool for this request rather than SEO keyword research.
 
 Inputs:
 
@@ -120,7 +120,7 @@ Inputs:
 - `country_name`: optional canonical English country name supported by X. Omit it to use worldwide WOEID `1`.
 - `max_trends`: number of trends from 1 to 50; default `20`.
 
-Expected result content includes the resolved `woeid`, `captured_at`, trend `items`, native `post_count` where X provides it, and safe provider `errors`.
+Expected result content includes the resolved `woeid`, `captured_at`, trend `items`, native `post_count` where X provides it, and safe retrieval `errors`.
 
 Convert a localized user country name to the canonical English name before calling the tool. Do not pass an ISO code, WOEID, or city name. If the tool rejects the country, preserve the user's original wording and return `unsupported country name: <original user input>` without guessing or falling back to worldwide. Do not interpret the result as personalized trends, a representative opinion sample, or evidence that an unlisted topic is absent.
 
@@ -142,19 +142,19 @@ Inputs:
 
 The tool returns one result page synchronously.
 
-Expected result content includes normalized posts, authors, timestamps, languages, native public metrics, post URLs, provider errors, result metadata, and an optional `next_token`. Follow the live structured schema when exact field names differ.
+Expected result content includes normalized posts, authors, timestamps, languages, native public metrics, post URLs, retrieval errors, result metadata, and an optional `next_token`. Follow the live structured schema when exact field names differ.
 
 ## Query Semantics
 
 - Pass `query` exactly as X should evaluate it.
 - X search is literal and ranking-dependent, not exhaustive semantic retrieval.
 - Use focused phrase, spelling, language, problem, and use-case variants when they materially improve recall.
-- Native operators such as `OR`, `-is:retweet`, and `lang:` may be used when supported by the provider.
+- Native operators such as `OR`, `-is:retweet`, and `lang:` may be used when supported by the tool.
 - Split an over-broad expression into focused calls and deduplicate by `post_id`.
 
 ## Common X Query Operators
 
-`search_x_posts` passes one raw X API v2 query expression to Recent Search. The following table covers the common operators used by this Skill; it is not an exhaustive catalog. Consult the [official X Search operator reference](https://docs.x.com/x-api/posts/search/integrate/operators) when the task needs another operator, and verify access-level availability through the live provider.
+`search_x_posts` accepts one raw X API v2 query expression. The following table covers the common operators used by this Skill; it is not an exhaustive catalog. Consult the [official X Search operator reference](https://docs.x.com/x-api/posts/search/integrate/operators) when the task needs another operator, and verify availability through the live tool.
 
 | Goal | API expression | Example | Notes |
 | --- | --- | --- | --- |
@@ -182,9 +182,9 @@ Do not copy X web-search date text into `query`. For this API:
 - For minute- or second-level boundaries, pass an ISO 8601 UTC value such as `2025-10-01T00:00:00Z`; do not use web forms such as `since:2025-10-01_00:00:00_UTC`.
 - Keep `end_time` later than `start_time`. For a current-window search, normally omit `end_time`.
 
-Conjunction-required filters such as `lang:`, `is:`, and `has:` cannot form a valid query by themselves. Pair them with a standalone keyword, phrase, hashtag, mention, `from:`, or `to:` expression. The X API may gate some operators by access level; treat a provider rejection as an availability boundary instead of rewriting the user's intent silently.
+Conjunction-required filters such as `lang:`, `is:`, and `has:` cannot form a valid query by themselves. Pair them with a standalone keyword, phrase, hashtag, mention, `from:`, or `to:` expression. The X API may gate some operators by access level; treat a tool rejection as an availability boundary instead of rewriting the user's intent silently.
 
-## Provider Compatibility Checks
+## Observed X Filter Availability
 
 The following engagement filters were checked against X Recent Search on 2026-07-28. Each probe used the standalone keyword `AI`, `-is:retweet`, `sort_order=recency`, and `max_results=10`.
 
@@ -213,17 +213,17 @@ Reuse one `idempotency_key` only to retry the same logical page. Use a new key f
 
 ## Evidence Boundary
 
-- Returned posts are observations within the provider's recent-search window and ranking behavior.
+- Returned posts are observations within X's recent-search window and ranking behavior.
 - A result set is not a representative sample of X.
 - Missing results do not prove absence.
 - Preserve URLs and distinguish direct evidence from inference.
-- Report the query expressions, sort order, effective time or Post ID boundaries, pagination depth, and provider errors that materially affect coverage.
+- Report the query expressions, sort order, effective time or Post ID boundaries, pagination depth, and retrieval errors that materially affect coverage.
 
 ## Common Failures
 
 - Tool unavailable: report the missing live coverage without guessing at internal causes.
-- Temporary social-data failure: surface only the stable SignalDig availability meaning. Never expose supplier response JSON, identity, documentation/support URLs, request IDs, routes, cache links, debug fields, headers, timestamps/timezones, or billing text.
+- Temporary social-data failure: state only that the social data is temporarily unavailable and the same request may be retried. Do not include underlying service diagnostics, support links, request traces, cache links, or billing text.
 - Query validation failure: check length, expression syntax, and `max_results`.
-- Time-boundary validation failure: check UTC values, ensure `end_time` is later than `start_time`, and omit `end_time` for a current-window search when the provider rejects a too-recent boundary.
+- Time-boundary validation failure: check UTC values, ensure `end_time` is later than `start_time`, and omit `end_time` for a current-window search when the tool rejects a too-recent boundary.
 - Retry conflict: preserve the original inputs for a same-page retry, or use a new key for a genuinely different page or search.
-- Provider failure: preserve any partial returned evidence and disclose the unavailable coverage.
+- Retrieval failure: preserve any partial returned evidence and disclose the unavailable coverage.
