@@ -22,15 +22,16 @@ This repository provides three product-specific skills:
 - separate sourced facts from inference without making the final SEO decision;
 - default to a concise report unless the user asks for a full export.
 
-**[`research-social-signals`](skills/research-social-signals/SKILL.md)** guides an AI agent to:
+**[`research-social-signals`](skills/research-social-signals/SKILL.md)** guides an AI agent to retrieve underlying social data:
 
-- translate a social-listening goal into focused literal X query expressions;
+- explain unfamiliar platform identifiers and validate user-supplied parameters before retrieval;
+- translate a broad retrieval goal into a small set of focused platform-native searches;
 - reuse conversation results before repeating the same live query;
 - select recency or relevancy intentionally and paginate only when broader coverage is needed;
 - choose creator/account tools for Xiaohongshu, LinkedIn, and WeChat instead of forcing keyword search;
 - preserve native engagement meanings, raw WeChat article fields when requested, and opaque pagination values;
 - deduplicate overlapping searches by `post_id` while preserving source URLs and query context;
-- separate observations, synthesis, possible actions, and coverage limitations.
+- return source data and coverage limitations without making analysis decisions or recommendations.
 
 **[`decide-content-opportunities`](skills/decide-content-opportunities/SKILL.md)** guides an AI agent to:
 
@@ -175,15 +176,16 @@ GitHub Pages publishes the project overview at:
 - 区分有来源的事实与推断，不做出最终的 SEO 决策；
 - 默认输出简洁报告，除非用户要求完整导出。
 
-**[`research-social-signals`](skills/research-social-signals/SKILL.md)** 指导 AI Agent：
+**[`research-social-signals`](skills/research-social-signals/SKILL.md)** 指导 AI Agent 检索底层社交数据：
 
-- 将社交监听目标转化为聚焦的字面 X 查询表达式；
+- 在检索前解释难懂的平台标识并校验用户提供的参数；
+- 将宽泛检索目标转化为少量聚焦的平台原生查询；
 - 在重复相同实时查询前复用对话结果；
 - 有意选择时效性或相关性排序，仅在需要更广覆盖时进行分页；
 - 针对小红书创作者、LinkedIn 用户和微信公众号选择对应账号工具，而不是强行使用关键词搜索；
 - 保留平台原生互动指标语义、按需提供微信公众号原始字段，并原样传递分页值；
 - 按 `post_id` 去重叠搜索，同时保留源 URL 和查询上下文；
-- 区分观察、综合、可能行动和覆盖限制。
+- 返回源数据与覆盖限制，不做分析决策或行动建议。
 
 **[`decide-content-opportunities`](skills/decide-content-opportunities/SKILL.md)** 指导 AI Agent：
 

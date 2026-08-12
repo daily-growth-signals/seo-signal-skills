@@ -177,10 +177,10 @@ const SKILLS = [
   },
   {
     id: "research-social-signals",
-    name: { en: "Social Signal Research", zh: "社交信号研究" },
+    name: { en: "Social Signal Retrieval", zh: "社交信号检索" },
     desc: { 
-      en: "Research traceable public conversations, creator histories, member activity, account articles, and native engagement evidence across major social platforms.",
-      zh: "研究主流社交平台上可追溯的公开对话、创作者历史、用户动态、账号文章和原生互动证据。"
+      en: "Validate platform inputs and retrieve traceable public conversations, creator histories, account content, and native metrics without making decisions.",
+      zh: "校验平台参数并检索可追溯的公开对话、创作者历史、账号内容和原生指标，不提供分析决策。"
     },
     files: [
       { name: "SKILL.md",           type: "file" },
@@ -188,6 +188,7 @@ const SKILLS = [
       { name: "  openai.yaml",       type: "file" },
       { name: "references/",         type: "dir" },
       { name: "  mcp-contract.md",   type: "file" },
+      { name: "  parameter-guide.md", type: "file" },
     ],
   },
   {

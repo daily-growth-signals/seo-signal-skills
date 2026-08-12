@@ -1,4 +1,6 @@
-# Social Search Functional Contract
+# Social Retrieval Functional Contract
+
+Use this reference for exact tool boundaries, result fields, and continuation behavior. Use [parameter-guide.md](parameter-guide.md) when an input needs a plain-language explanation, format check, or acquisition method. These tools retrieve data for downstream use; they do not make analysis or business decisions.
 
 ## Tool: `get_wechat_account_articles`
 
@@ -6,7 +8,7 @@ Return one raw page of content for a WeChat Official Account.
 
 Inputs:
 
-- `username`: required public account identifier matching `gh_...`.
+- `username`: required WeChat Official Account original ID matching `gh_...`; this value is also commonly called `gh_name`, `gh_id`, `gh_username`, or 原始ID, and is not the visible account name.
 - `page_size`: 10–20; default `20`.
 - `offset`: opaque cursor returned as `next_offset`; empty for the first page.
 - `item_show_type`: optional content tab: `0` articles, `5` videos, `7` audio, or `8` image-text posts.
@@ -14,7 +16,7 @@ Inputs:
 
 The request always uses raw mode. Expected results include the account identifier, page context, `is_end`, `next_offset`, original article objects in `raw_data`, and zero or more normalized metric snapshots. A snapshot contains only useful numeric fields that were actually recognized: `read_count`, `like_count`, `comment_count`, `share_count`, and `watching_count`. Missing values remain null. Display prose is not repeated in the normalized metric object.
 
-Use `next_offset` unchanged for the next page and stop when `is_end` is true. Do not decode or construct offsets. Do not equate reads with unique people, impressions, approval, or conversion. Return raw objects only when the user asks for original data or when a necessary field has no normalized equivalent.
+Use `next_offset` unchanged for the next page and stop when `is_end` is true. Do not decode or construct offsets. Do not equate reads with unique people, impressions, approval, or conversion. Preserve the returned raw objects when raw data is requested; otherwise expose only the fields needed by the caller instead of dumping the payload.
 
 ## Tool: `get_linkedin_user_posts`
 

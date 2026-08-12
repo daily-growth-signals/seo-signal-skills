@@ -64,11 +64,11 @@ Unlike raw data providers that return numbers without context, this service:
 
 ---
 
-#### 2. Research Social Signals (`research-social-signals`)
+#### 2. Retrieve Social Signals (`research-social-signals`)
 
 **MCP Service**: `social-growth-signals`
 
-**Purpose**: Collect traceable social media conversations and trend data from major platforms.
+**Purpose**: Validate retrieval inputs and collect traceable underlying social data without making analysis decisions.
 
 **Platforms Covered**:
 - **X (Twitter)**: Real-time conversations, trending topics
@@ -83,17 +83,16 @@ Unlike raw data providers that return numbers without context, this service:
 - `search_reddit_posts` – Reddit community post discovery
 - `search_xiaohongshu_notes` – Xiaohongshu note search with image support
 - `get_xiaohongshu_user_notes` – Xiaohongshu creator note history with cursor paging
-- `search_zhihu_articles` – Zhihu public content retrieval
 - `get_linkedin_user_posts` – LinkedIn member activity and available engagement evidence
 - `get_wechat_account_articles` – Raw WeChat Official Account articles with parsed metrics
 - `search_zhihu_articles` – Zhihu content search with exact parameter preservation
 - `get_x_trends` – Current X trending topics by country/region
 
 **Use Cases**:
-- Social listening and brand monitoring
-- User language discovery and pain point identification
-- Product/competitor mention tracking
-- Campaign research and audience feedback analysis
+- Validate account identifiers, profile URLs, filters, and continuation values
+- Retrieve public posts, creator histories, account content, trends, and native metrics
+- Supply traceable source data for downstream AI analysis
+- Preserve raw fields and collection boundaries without recommendations
 
 ---
 
@@ -258,11 +257,11 @@ SEO Signal Skills 是一套结构化的技能集，旨在通过 MCP（模型上�
 
 ---
 
-#### 2. 研究社交信号 (`research-social-signals`)
+#### 2. 检索社交信号 (`research-social-signals`)
 
 **MCP 服务**：`social-growth-signals`
 
-**用途**：从主流平台收集可追溯的社交媒体对话和趋势数据。
+**用途**：解释并校验检索参数，从主流平台收集可追溯的底层社交数据，不提供分析决策。
 
 **覆盖平台**：
 - **X (Twitter)**：实时对话、热门话题
@@ -277,17 +276,16 @@ SEO Signal Skills 是一套结构化的技能集，旨在通过 MCP（模型上�
 - `search_reddit_posts` – Reddit 社区帖子发现
 - `search_xiaohongshu_notes` – 小红书笔记搜索（支持图片）
 - `get_xiaohongshu_user_notes` – 小红书创作者笔记历史与游标分页
-- `search_zhihu_articles` – 知乎公开内容检索
 - `get_linkedin_user_posts` – LinkedIn 用户内容与可用互动证据
 - `get_wechat_account_articles` – 微信公众号原始文章与结构化指标
 - `search_zhihu_articles` – 知乎内容搜索（原样保留搜索参数）
 - `get_x_trends` – 按国家/地区获取当前 X 热门话题
 
 **适用场景**：
-- 社交聆听和品牌监控
-- 用户语言发现和痛点识别
-- 产品/竞争对手提及追踪
-- 活动研究和受众反馈分析
+- 校验账号标识、主页 URL、筛选条件和翻页参数
+- 检索公开帖子、创作者历史、账号内容、趋势与原生指标
+- 为下游 AI 分析提供可追溯的源数据
+- 保留原始字段和采集边界，不输出行动建议
 
 ---
 
