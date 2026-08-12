@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/small-logo.svg"
   icon_large: "./assets/large-logo.png"
   brand_color: "#EF4444"
-  default_prompt: "Use $research-social-signals to validate my inputs and retrieve traceable public X, Reddit, Xiaohongshu, Zhihu, LinkedIn, or WeChat Official Account data. Explain unfamiliar identifiers, preserve native metrics and pagination, and make no analysis decision or recommendation."
+  default_prompt: "Use $research-social-signals to validate my inputs and retrieve only the traceable social data needed. For a Xiaohongshu account URL or profile ID, return its public profile and posted-note source data with native metrics, without scoring the account or making a decision."

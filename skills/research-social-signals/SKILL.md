@@ -1,6 +1,6 @@
 ---
 name: research-social-signals
-description: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts through the Daily Growth Signals Social MCP. Use when an AI needs underlying posts, notes, account content, trends, source URLs, timestamps, pagination state, or native metrics for its own downstream analysis. Select the correct retrieval tool, explain unfamiliar parameters, validate user-supplied values, suggest focused searches, and return data without making marketing, content, SEO, sentiment, or business decisions.
+description: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts through the Daily Growth Signals Social MCP. Use when an AI needs underlying posts, notes, account profiles, account content, trends, source URLs, timestamps, pagination state, or native metrics for downstream analysis or decision support. Select the correct retrieval tool, explain unfamiliar parameters, validate user-supplied values, suggest focused searches, and return data without making marketing, content, SEO, sentiment, account-performance, or business decisions.
 ---
 
 # Retrieve Social Signals
@@ -34,7 +34,7 @@ Retrieve useful underlying social data. Help the caller form a valid, focused re
 - Use `get_x_trends` for current X trends by country or worldwide.
 - Use `search_reddit_posts` for public Reddit posts matching a focused natural-language query.
 - Use `search_xiaohongshu_notes` for public Xiaohongshu notes matching keywords and optional native filters.
-- Use `get_xiaohongshu_user_notes` for notes posted by one Xiaohongshu creator, identified by `user_id` or share text/link.
+- Use `get_xiaohongshu_user_account` for one Xiaohongshu creator's public profile and posted notes, identified by a 24-character profile `user_id` or profile share text/link. The old notes-only tool is not part of the current public contract.
 - Use `search_zhihu_articles` for public Zhihu content with explicit native filters.
 - Use `get_linkedin_user_posts` for activity associated with one LinkedIn member profile under `/in/`.
 - Use `get_wechat_account_articles` for content published by one WeChat Official Account identified by its original ID beginning with `gh_`.
@@ -60,6 +60,14 @@ Preserve, when returned and relevant:
 - capture time, result count, page/cursor/token state, end-of-list state, and safe SignalDig errors;
 - raw source objects only when the caller asks for raw data or no normalized field represents the needed value.
 
+For a Xiaohongshu account request, keep these direct observations available when returned:
+
+- profile identity, public profile URL, nickname, avatar, description, location, verification state, follower/following counts, public note count, and received interaction counts;
+- each note's `note_type`, source URL, publication time, title/description, and native like, collect, comment, share, and view counts;
+- `cursor`, `next_cursor`, `has_more`, capture time, and returned note count.
+
+Do not derive a posting mix, engagement rate, account tier, content quality, growth diagnosis, benchmark, or recommendation inside this Skill. A downstream AI may calculate or interpret those observations after retrieval. If `view_count` is absent, report exposure/views as unavailable; do not estimate them from likes or other interactions.
+
 Do not add generic advice, opportunity rankings, content ideas, sentiment labels, performance judgments, or next-action recommendations. A concise note about invalid inputs, missing fields, or retrieval limitations is part of data quality and is allowed.
 
 ## Non-Negotiable Data Rules
@@ -81,7 +89,7 @@ Use $research-social-signals to retrieve recent X posts about PDF translation th
 ```
 
 ```text
-Use $research-social-signals to retrieve the public notes of this Xiaohongshu creator: https://xhslink.com/example. Explain any identity or cursor parameter you need before calling the tool.
+Use $research-social-signals to retrieve the public profile and posted notes of this Xiaohongshu creator: https://xhslink.com/example. Return note types, source URLs, publication times, and available native engagement/view counts; do not score or diagnose the account.
 ```
 
 ```text

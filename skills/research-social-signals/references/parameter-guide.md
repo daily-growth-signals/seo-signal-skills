@@ -70,9 +70,11 @@ Omit it when the caller did not request a specific tab. Do not infer the value f
 
 `read_count`, `like_count`, `comment_count`, `share_count`, and `watching_count` are separate native counts. Missing values remain unknown. Reads are not guaranteed unique people or impressions. Return normalized numeric fields directly; do not return display prose such as `showDesc` as a substitute. Preserve `raw_data` when raw source objects were requested.
 
-## Xiaohongshu creator notes
+## Xiaohongshu creator account
 
-Tool: `get_xiaohongshu_user_notes`
+Tool: `get_xiaohongshu_user_account`
+
+Use this combined tool when the caller provides a Xiaohongshu account URL, profile share link, or valid profile user token and wants account-level source data. It returns public profile fields together with one page of published notes. Do not look up a creator by keyword and pretend the first search result is the requested account.
 
 ### `user_id`
 
@@ -98,6 +100,8 @@ Before calling:
 ### `cursor`
 
 Use an empty string for the first page. For another page, pass `next_cursor` unchanged. Stop when `has_more` is false. Never use a note ID, page number, or keyword-search token as this cursor.
+
+Another page is still the same creator-history retrieval. Reuse only the returned cursor and preserve the same identity. Do not automatically fetch all pages merely because the caller says “分析账号”; first establish the time range, note count, or pagination depth needed by the downstream analysis.
 
 ## Xiaohongshu keyword search
 

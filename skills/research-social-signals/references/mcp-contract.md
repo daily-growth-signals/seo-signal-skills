@@ -34,9 +34,9 @@ Expected results include the profile URL, activity type, page context, source ob
 
 Preserve both pagination inputs required by the live schema. Do not use a company page, search URL, or arbitrary LinkedIn URL in place of a member profile. Treat impressions and engagement as platform-native observations, not proof of sentiment, quality, or conversion.
 
-## Tool: `get_xiaohongshu_user_notes`
+## Tool: `get_xiaohongshu_user_account`
 
-Return one page of notes posted by a specific Xiaohongshu creator.
+Return a specific Xiaohongshu creator's public profile and one page of posted notes. This combined account tool replaces the previous public notes-only tool.
 
 Inputs:
 
@@ -45,9 +45,15 @@ Inputs:
 - `cursor`: opaque cursor returned by the previous page; empty for the first page.
 - `idempotency_key`: optional stable key for safely retrying the same logical page.
 
-At least one creator identity input is required; `user_id` takes precedence when both are supplied. Expected results include identity context, `cursor`, `next_cursor`, `has_more`, capture time, result count, and normalized notes with source URLs and native public metrics.
+At least one creator identity input is required; `user_id` takes precedence when both are supplied. Expected results include:
+
+- `profile`: stable user ID, public profile URL, visible Xiaohongshu number when returned, nickname, avatar, description, public location, verification state, follower/following counts, public note count, received like/collect counts, and the platform's public interaction aggregate when available;
+- page context: `cursor`, `next_cursor`, `has_more`, capture time, and result count;
+- `notes`: note ID, note type, public source URL, title, description, publication time, author, image references, and native like, collect, comment, share, and `view_count` values when returned.
 
 Pass `next_cursor` unchanged for another page and stop when `has_more` is false. Do not substitute `search_xiaohongshu_notes` when the task is creator-history research, and do not invent a user ID or cursor from a profile nickname.
+
+These are account-analysis inputs, not an account analysis result. Do not add an engagement rate, performance score, content classification, growth judgment, benchmark, or recommendation to the retrieved object. Keep `note_type` platform-native. Treat a missing `view_count` as unknown; zero is valid only when the live result explicitly returns zero. Do not call likes or interactions “exposure.”
 
 ## Tool: `search_zhihu_articles`
 
