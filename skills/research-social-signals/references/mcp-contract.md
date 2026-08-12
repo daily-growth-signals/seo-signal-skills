@@ -40,7 +40,7 @@ Return one page of notes posted by a specific Xiaohongshu creator.
 
 Inputs:
 
-- `user_id`: preferred creator identifier when known.
+- `user_id`: 24-character hexadecimal token extracted from a public `/user/profile/<token>` URL; never use the visible Xiaohongshu number or nickname.
 - `share_text`: Xiaohongshu share link or text when `user_id` is unavailable.
 - `cursor`: opaque cursor returned by the previous page; empty for the first page.
 - `idempotency_key`: optional stable key for safely retrying the same logical page.
@@ -210,6 +210,7 @@ Reuse one `idempotency_key` only to retry the same logical page. Use a new key f
 ## Common Failures
 
 - Tool unavailable: report the missing live coverage without guessing at internal causes.
+- Temporary social-data failure: surface only the stable SignalDig availability meaning. Never expose supplier response JSON, identity, documentation/support URLs, request IDs, routes, cache links, debug fields, headers, timestamps/timezones, or billing text.
 - Query validation failure: check length, expression syntax, and `max_results`.
 - Time-boundary validation failure: check UTC values, ensure `end_time` is later than `start_time`, and omit `end_time` for a current-window search when the provider rejects a too-recent boundary.
 - Retry conflict: preserve the original inputs for a same-page retry, or use a new key for a genuinely different page or search.

@@ -76,7 +76,9 @@ Tool: `get_xiaohongshu_user_notes`
 
 ### `user_id`
 
-A Xiaohongshu creator's stable platform identifier, not the creator nickname, visible Xiaohongshu number, note ID, keyword, or profile display name. The exact shape is platform-provided and can vary; do not invent or reconstruct it from a nickname.
+A Xiaohongshu creator's 24-character hexadecimal profile token. It is the path segment after `/user/profile/` in a public profile URL. For example, in `https://www.xiaohongshu.com/user/profile/5fdc60100000000001002787`, pass `5fdc60100000000001002787` as `user_id`.
+
+It is not the visible Xiaohongshu number such as `1017613851`, creator nickname, note ID, keyword, profile display name, or the complete profile URL. Never invent or reconstruct it from a nickname or visible account number.
 
 Use `user_id` when it is already known from a Xiaohongshu profile/share payload or a previous trusted result. If the caller supplies both `user_id` and `share_text`, the tool prioritizes `user_id`.
 
@@ -87,7 +89,10 @@ The copied Xiaohongshu share link or the full share text containing that link. U
 Before calling:
 
 - If the caller pastes an `http://` or `https://` Xiaohongshu share link into `user_id`, move it to `share_text` only after explaining the correction.
+- If the caller pastes a complete `/user/profile/<token>` URL, extract the 24-character `<token>` only after confirming the path shape.
+- Reject a visible numeric Xiaohongshu number as `user_id`; ask for the public profile URL or a valid share link instead.
 - If the caller gives only a nickname, ask for a profile share link or a trusted `user_id`; nicknames are not unique.
+- Require a valid `https://` link in `share_text`. A malformed value such as `ttps://...` must be corrected before calling the tool.
 - At least one of `user_id` or `share_text` is required.
 
 ### `cursor`
@@ -225,3 +230,12 @@ The exact raw keyword. Preserve user-supplied whitespace, language, and wording 
 - `vertical_info`: opaque source value returned or explicitly provided for the same search context.
 
 Preserve all user-supplied values exactly, including string pagination and leading zeros. Never invent continuation fields or silently replace an unsupported value with a nearby filter.
+
+## Safe failure handling
+
+Supplier responses are internal diagnostics, not user data. Never repeat or expose their response JSON, supplier name, documentation/support links, request IDs, API routes, cache URLs, debug IDs or payloads, headers, timestamps/timezones, or billing messages.
+
+- For an invalid public input, name only the invalid field, explain the expected public format, and show how the user can obtain or correct it.
+- For a temporary upstream failure, return only the stable SignalDig error meaning: social data is temporarily unavailable; retry the same logical request later.
+- A response can have an outer success code while its nested `data` contains an error. Treat that as failure, not as empty or successful data.
+- For WeChat article/account retrieval failures, never expose nested `error`, `message`, `debug_id`, or `debug_info`. Ask the user to verify the public account original ID or article URL only when that is the actionable public input.

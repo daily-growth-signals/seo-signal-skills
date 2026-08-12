@@ -10,11 +10,12 @@ Retrieve useful underlying social data. Help the caller form a valid, focused re
 ## Core Boundary
 
 1. Treat this Skill as a data-retrieval layer for another AI or user.
-2. Return source content, identifiers, URLs, timestamps, native metrics, request parameters, pagination state, and errors that help downstream analysis.
+2. Return source content, identifiers, URLs, timestamps, native metrics, request parameters, pagination state, and safe SignalDig error codes that help downstream analysis.
 3. Do not decide what content to create, which opportunity to prioritize, whether sentiment is positive, or what action the user should take.
 4. Do not force results into a fixed analysis template. Match the caller's requested shape; when none is given, provide a compact retrieval summary plus the data.
 5. Do not manufacture a difficult identifier or silently repair an ambiguous parameter. Explain it, validate what can be validated, and request the missing value when necessary.
 6. Treat missing metrics as unknown, not zero. Keep platform-native metrics distinct.
+7. Never expose a data supplier's response body, name, documentation or support URL, request ID, route, cache URL, debug fields, headers, timestamps, timezone, or billing text. Convert failures into a short user-facing parameter correction or stable SignalDig availability error.
 
 ## Before Every Call
 
@@ -56,7 +57,7 @@ Preserve, when returned and relevant:
 - stable post, note, content, user, or account identifiers;
 - source URLs, author/account identity, publication time, text, title, and media URLs;
 - native public counts without combining unlike metrics;
-- capture time, result count, page/cursor/token state, end-of-list state, and provider errors;
+- capture time, result count, page/cursor/token state, end-of-list state, and safe SignalDig errors;
 - raw source objects only when the caller asks for raw data or no normalized field represents the needed value.
 
 Do not add generic advice, opportunity rankings, content ideas, sentiment labels, performance judgments, or next-action recommendations. A concise note about invalid inputs, missing fields, or retrieval limitations is part of data quality and is allowed.
@@ -71,6 +72,7 @@ Do not add generic advice, opportunity rankings, content ideas, sentiment labels
 6. Deduplicate overlapping results only by a stable platform identifier, while retaining query provenance when useful.
 7. Preserve partial results when a later page fails; do not restart or conceal the missing coverage.
 8. Retry a temporary failure only for the same logical page with unchanged inputs.
+9. If a tool reports `signaldig_social_data_temporarily_unavailable`, tell the caller that the social data is temporarily unavailable and that the same request may be retried. Do not reveal or reconstruct the underlying supplier error.
 
 ## Examples
 
