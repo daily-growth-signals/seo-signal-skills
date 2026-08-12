@@ -38,7 +38,9 @@ Expected results include:
 
 The profile collection may internally return content previews, but the public result intentionally excludes its `posts` and `activity` fields. Do not merge, compare, or expose those previews: use only the paginated `posts` result as content evidence. Missing profile fields and metrics remain null and must not be converted to zero.
 
-Preserve both pagination inputs required by the live schema. Do not use a company page, search URL, or arbitrary LinkedIn URL in place of a member profile. Treat impressions and engagement as platform-native observations, not proof of sentiment, quality, or conversion.
+Treat `start` and `pagination_token` as one atomic pagination state. Page 1 uses `start=0` without a token. Page 2 uses `start=50` together with the exact token returned by page 1; page 3 uses `start=100` together with the exact token returned by page 2. For each later page, advance `start` by 50 and replace the token in the same request while preserving `profile_url` and `activity_type`. Never probe by changing only one pagination field. If the immediately preceding successful response has no token, do not issue an offset-only request.
+
+Do not use a company page, search URL, or arbitrary LinkedIn URL in place of a member profile. Treat impressions and engagement as platform-native observations, not proof of sentiment, quality, or conversion.
 
 ## Tool: `get_xiaohongshu_user_posts`
 
@@ -108,6 +110,8 @@ Inputs:
 - `idempotency_key`: optional stable key for safely retrying the same logical page.
 
 Expected result content includes `query`, `page`, `captured_at`, `result_count`, optional continuation identifiers, and normalized notes. Each note retains `note_id`, URL, note type, title, description, author, publication time, native like/collect/comment/share counts, and its complete ordered image list with cover markers and source URLs where returned. Follow the live structured schema when exact field names differ.
+
+For a later page, increment `page` and carry forward the immediately preceding response's `search_id` and `search_session_id` when present, in the same request. Keep `query`, `sort_type`, `note_type`, and `time_filter` unchanged. Never probe by advancing `page` without returned identifiers and then retrying identifiers against the old page.
 
 Use a new `idempotency_key` for a different page or any changed filter. Do not auto-paginate. Do not infer image content from an image URL alone, claim that returned source images are archived, or conflate collect, like, comment, and share counts.
 

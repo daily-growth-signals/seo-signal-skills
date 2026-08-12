@@ -46,6 +46,9 @@ Retrieve useful underlying social data. Help the caller form a valid, focused re
 - Tell the caller what materially changes coverage: platform, query, language, sort, time filter, content type, account identity, and pagination depth.
 - Do not add filters merely because they exist. Use them only when they express the caller's stated need.
 - Do not automatically paginate. Fetch another page only when requested or when the caller explicitly needs broader coverage; reuse only tokens returned by the same search context.
+- Treat pagination as one atomic state transition, not as independent optional parameters. For every later page, copy the unchanged query/account/filter inputs from the preceding request and update every pagination field together exactly as that tool's contract specifies.
+- Never probe pagination by changing only one member of a multi-field pagination state. In particular, a LinkedIn next-page request must advance `start` and carry forward the preceding response's `pagination_token` in the same call; Xiaohongshu keyword search must advance `page` while carrying forward its returned search identifiers when present.
+- Build a next-page request only from the immediately preceding successful response. If a required continuation value is absent, inconsistent, or belongs to a different context, stop and report that the next page cannot be requested safely; do not try alternate parameter combinations.
 - Reuse results already present in the conversation instead of repeating the same paid or live request.
 - Use the same `idempotency_key` only to retry the same logical page with identical inputs. Use a new key after any input or page changes.
 
@@ -103,5 +106,5 @@ Use $research-social-signals to search Xiaohongshu for portable coffee makers. C
 ```
 
 ```text
-Use $research-social-signals to retrieve one LinkedIn member's public profile and one page of posts from their `/in/` profile URL. Keep missing impression metrics unknown and return no recommendations.
+Use $research-social-signals to retrieve one LinkedIn member's public profile and two pages of posts from their `/in/` profile URL. Request page 1 with `start=0` and no token. Request page 2 with `start=50` and the exact `pagination_token` returned by page 1 in the same call; never test those two changes separately. Keep missing impression metrics unknown and return no recommendations.
 ```

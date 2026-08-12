@@ -26,6 +26,26 @@ Values such as `next_token`, `cursor`, `next_cursor`, `offset`, `next_offset`, `
 
 For a first page, omit the optional token or use the documented empty/default value. For another page, use only the continuation value returned for the same account, query, and filters.
 
+### Atomic pagination transitions
+
+A page is identified by the complete set of stable retrieval inputs and pagination inputs, not by one token or offset in isolation. After a successful page:
+
+1. Keep the account identity, query, activity/content type, sorting, filters, time bounds, and page size unchanged.
+2. Copy every continuation value required by the selected tool from that response.
+3. Advance every numeric page or offset field required by the selected tool at the same time.
+4. Send one next-page request containing the complete new pagination state and a new `idempotency_key`.
+
+Never discover the right combination by issuing separate paid calls such as “new token with old offset” followed by “new offset without token.” If the previous response does not provide enough state to construct the next page, stop instead of guessing.
+
+| Tool | First page | Later page |
+| --- | --- | --- |
+| `get_wechat_account_articles` | `offset=""` | Set `offset` to the previous `next_offset` unchanged. |
+| `get_xiaohongshu_user_posts` | `cursor=""` | Set `cursor` to the previous `next_cursor` unchanged; stop when `has_more=false`. |
+| `search_xiaohongshu_notes` | `page=1`, no search identifiers | Increment `page` and preserve the previous `search_id` and `search_session_id` when returned. |
+| `get_linkedin_user_posts` | `start=0`, `pagination_token` omitted/null | Increase `start` by 50 and set `pagination_token` to the previous response's token in the same request. |
+| `search_x_posts` | no `next_token` | Set `next_token` to the previous response's value and keep every other search input unchanged. |
+| `search_zhihu_articles` | documented initial pagination defaults | Carry forward returned continuation fields and update the documented offset together; never invent either value. |
+
 ## WeChat Official Account
 
 Tool: `get_wechat_account_articles`
@@ -160,7 +180,13 @@ Do not use `comments` or `reactions` merely to seek more data. Select them only 
 
 ### `start` and `pagination_token`
 
-`start` is a non-negative page offset; use `0` initially. `pagination_token` is returned continuation state. On later pages, preserve both values required by the live response. Do not increment `start` by assumption or reuse a token for another member/activity type.
+`start` is a non-negative page offset and advances in steps of 50. `pagination_token` is opaque continuation state returned by the preceding response. They form one atomic pagination state:
+
+- page 1: `start=0`, `pagination_token=null` (or omit it);
+- page 2: `start=50`, `pagination_token=<exact token returned by page 1>`;
+- page 3: `start=100`, `pagination_token=<exact token returned by page 2>`.
+
+For every later page, advance `start` by 50 and replace `pagination_token` with the immediately preceding response's token in the same request. Keep `profile_url` and `activity_type` unchanged. Never call with a new token and the old `start`, a new `start` and a null/old token, or a token from another member/activity type. If the preceding response has no token, do not guess one or issue an offset-only probe.
 
 ## X post search
 
