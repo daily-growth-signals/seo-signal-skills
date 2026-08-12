@@ -27,6 +27,8 @@ Store the full ticket in the conversation/session ledger. Reusing the same idemp
 
 Use this tool with the smallest sufficient `data_scopes` combination whenever the task needs two or more families. Omit `data_scopes` only when every supported family is required.
 
+The shared `/data/seo/mcp` endpoint is a transport entry point, not an instruction to retrieve every SEO family. A generic keyword request does not establish a scope. Confirm the user's required data family before submitting when their goal does not clearly map to one or more scopes. Do not call this tool while scope is ambiguous, and never omit `data_scopes` merely because the endpoint combines the tools.
+
 ## Tool: `submit_specific_seo_data`
 
 Submit one asynchronous request that executes only the selected data Capability.
@@ -40,6 +42,15 @@ Inputs:
 The ticket fields and polling behavior are identical to `submit_keyword_research_signals`. Its functional behavior is equivalent to `submit_keyword_research_signals(data_scopes=[data_scope])`. The terminal result contains only the selected data family and its derived evidence/signals. Other intentionally unrequested families can be null or empty and are not limitations.
 
 Prefer this tool whenever one data family fully answers the request.
+
+Plain-language scope mapping:
+
+- keyword metrics, CPC, competition, properties, or intent: `keyword_overview`
+- related, expanded, or long-tail queries: `related_keywords`
+- rankings, organic results, SERP features, or target-domain presence: `serp`
+- interest over time, geography, top queries, or rising queries: `google_trends`
+
+When the user only says to “look up” or “research” a keyword, ask which of these data families they need before making a paid/live request. When their wording already identifies the family, submit directly without an unnecessary confirmation.
 
 ## Tool: `get_keyword_research_signals`
 

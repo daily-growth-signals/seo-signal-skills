@@ -1,6 +1,6 @@
 ---
 name: research-seo-signals
-description: Research evidence-backed SEO demand signals for a keyword, domain, market, and language through the Daily Growth Signals MCP server. Use for keyword validation, search-demand analysis, intent discovery, SERP pattern review, audience evidence, market comparison, opportunity briefs, and any request that needs traceable SEO evidence instead of unsupported recommendations. Prefer reusing a prior request_id or the same idempotency_key before creating a duplicate submit.
+description: Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the Daily Growth Signals MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
 ---
 
 # Research SEO Signals
@@ -35,6 +35,9 @@ Turn a natural-language SEO research goal into the smallest sufficient asynchron
 10. Never use the aggregate submit tool merely to obtain one data family. Use the narrowest `data_scope` that satisfies the user's goal.
 11. Default report depth is **concise**. Do not paste every array item unless the user explicitly asks for a full export or complete dump. When concise, still preserve exact metric values you do cite and disclose the full counts returned.
 12. Do not refresh live data just to rephrase an earlier answer. Reuse the prior terminal result unless the user asks for a refresh or the prior result is missing required scopes.
+13. **Confirm ambiguous scope before calling.** A generic request such as “查一下这个关键词”“研究这个词” or “看看关键词数据” does not authorize all data families. Briefly ask which data the user needs, using plain-language choices. Do not submit while the required scope remains ambiguous.
+14. Do not ask a scope question when the user's goal already identifies the needed family or families. Map the goal directly and retrieve only those scopes.
+15. Omit `data_scopes` only when the user explicitly asks for comprehensive/all-family research or when every family is demonstrably necessary to answer an already specific request. Never equate a unified MCP endpoint with permission for full retrieval.
 
 ## Logical Research Identity
 
@@ -70,8 +73,8 @@ Update the ledger after every successful submit or get.
 3. Normalize research `language` to an ISO language or supported BCP 47 code such as `en` or `zh-TW`.
 4. If research language is absent, infer it from the target market and keyword only when unambiguous; otherwise default to `en`.
 5. Determine response language separately from research language: honor an explicit answer-language request, otherwise use the user's conversation language, and default to English only when neither is clear.
-6. Ask only for a missing keyword or domain that cannot be safely inferred. Do not ask for optional report preferences before starting.
-7. Inventory the data families needed to answer the request.
+6. Ask for a missing keyword or domain that cannot be safely inferred.
+7. Inventory the data families needed to answer the request. If the user only names a keyword or asks for generic “keyword data/research,” pause before any live call and ask which of these they need: keyword metrics and intent, related keywords, current search results/SERP, or search trends. Allow one or more choices and explain them in user language, not only enum names.
 8. If exactly one family is needed, plan `submit_specific_seo_data`. If two or more families are needed, plan `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported families are required.
 9. Build the stable `idempotency_key` from the logical research identity.
 10. **Reuse gate (mandatory before submit):**
@@ -97,6 +100,15 @@ Use the following exact mapping:
 - `related_keywords`: related keyword discovery and their returned metrics.
 - `serp`: organic results, SERP features, target-domain presence, and traceability URL.
 - `google_trends`: interest timeline, geographic interest, and related top/rising queries.
+
+Map common user wording without another question when the intent is clear:
+
+- “搜索量、CPC、竞争度、关键词属性或搜索意图” → `keyword_overview`
+- “相关词、长尾词、扩展词或更多关键词” → `related_keywords`
+- “当前排名、搜索结果、SERP 特性或目标域名是否出现” → `serp`
+- “热度变化、时间趋势、地区热度或上升查询” → `google_trends`
+
+If wording spans multiple rows, select only those rows. If it matches none clearly, ask a short scope question before calling. Do not propose all families as the default or describe them as a mandatory bundle.
 
 Use one combined submit when the answer needs two or more families; do not split one logical combination into several requests. Omit `data_scopes` only for a complete all-family research request.
 
@@ -251,6 +263,13 @@ Single-family request:
 
 ```text
 Use $research-seo-signals to fetch only the organic SERP data for "AI SEO tools" for example.com in the US English market.
+```
+
+Ambiguous request (confirm before calling):
+
+```text
+User: 帮我查一下关键词“AI SEO 工具”。
+Agent: 你具体需要哪类底层数据：搜索量/CPC/竞争度与意图、相关关键词、当前 SERP，还是 Google Trends 趋势？可以选一项或多项。我会只请求你需要的数据。
 ```
 
 Combined request:

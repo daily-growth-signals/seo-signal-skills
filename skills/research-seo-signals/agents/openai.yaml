@@ -4,4 +4,4 @@ interface:
   icon_small: "./assets/small-logo.svg"
   icon_large: "./assets/large-logo.png"
   brand_color: "#3B82F6"
-  default_prompt: "Use $research-seo-signals to research evidence-backed SEO demand signals for this keyword and domain. Reuse any prior request_id for the same keyword/domain/market/language/scopes; only submit when needed, with a stable idempotency_key."
+  default_prompt: "Use $research-seo-signals to retrieve only the SEO data I need for this keyword and domain. If my requested data family is ambiguous, confirm it before calling; reuse prior results and avoid full retrieval by default."
