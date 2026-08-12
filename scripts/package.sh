@@ -67,8 +67,20 @@ echo "Output: ${OUTPUT_FILE}"
 
 # Validate version format for tagging
 if [ "$AUTO_TAG" = true ]; then
-    if ! [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+    if ! [[ "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
         echo "Error: Version must match format vMAJOR.MINOR.PATCH (e.g., v1.0.0)"
+        exit 1
+    fi
+
+    RELEASE_VERSION="${VERSION#v}"
+    if ! grep -Fq "## [${RELEASE_VERSION}]" "${PROJECT_ROOT}/CHANGELOG.md"; then
+        echo "Error: prepare and commit the reviewed CHANGELOG entry before tagging ${VERSION}" >&2
+        echo "Run: bash scripts/prepare-release-notes.sh ${VERSION}" >&2
+        exit 1
+    fi
+
+    if ! git diff --quiet -- CHANGELOG.md || ! git diff --cached --quiet -- CHANGELOG.md; then
+        echo "Error: commit the reviewed CHANGELOG.md entry before tagging ${VERSION}" >&2
         exit 1
     fi
     
