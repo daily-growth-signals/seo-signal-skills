@@ -6,6 +6,12 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 ### Changes
 
+- To be added.
+
+## [1.2.0] - 2026-08-12
+
+### Changes
+
 - Social signal retrieval now supports Xiaohongshu, LinkedIn, and WeChat Official Account data, including public profiles, content, and platform-native engagement metrics.
 - Xiaohongshu and LinkedIn account content use clearly named user-post tools so AI can select the correct data source.
 - Added input guidance and correction prompts for Xiaohongshu user IDs, WeChat original IDs, LinkedIn profile URLs, and pagination values.
