@@ -40,7 +40,7 @@ The profile collection may internally return content previews, but the public re
 
 Preserve both pagination inputs required by the live schema. Do not use a company page, search URL, or arbitrary LinkedIn URL in place of a member profile. Treat impressions and engagement as platform-native observations, not proof of sentiment, quality, or conversion.
 
-## Tool: `get_xiaohongshu_user_account`
+## Tool: `get_xiaohongshu_user_posts`
 
 Return a specific Xiaohongshu creator's public profile and one page of posted notes. This combined account tool replaces the previous public notes-only tool.
 

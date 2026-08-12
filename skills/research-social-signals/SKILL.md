@@ -34,7 +34,7 @@ Retrieve useful underlying social data. Help the caller form a valid, focused re
 - Use `get_x_trends` for current X trends by country or worldwide.
 - Use `search_reddit_posts` for public Reddit posts matching a focused natural-language query.
 - Use `search_xiaohongshu_notes` for public Xiaohongshu notes matching keywords and optional native filters.
-- Use `get_xiaohongshu_user_account` for one Xiaohongshu creator's public profile and posted notes, identified by a 24-character profile `user_id` or profile share text/link. The old notes-only tool is not part of the current public contract.
+- Use `get_xiaohongshu_user_posts` for one Xiaohongshu creator's public profile and posted notes, identified by a 24-character profile `user_id` or profile share text/link. The old account-named and notes-only tools are not part of the current public contract.
 - Use `search_zhihu_articles` for public Zhihu content with explicit native filters.
 - Use `get_linkedin_user_posts` for one LinkedIn member's public profile plus one page of activity under `/in/`.
 - Use `get_wechat_account_articles` for content published by one WeChat Official Account identified by its original ID beginning with `gh_`.

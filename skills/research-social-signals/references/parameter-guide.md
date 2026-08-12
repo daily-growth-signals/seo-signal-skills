@@ -72,7 +72,7 @@ Omit it when the caller did not request a specific tab. Do not infer the value f
 
 ## Xiaohongshu creator account
 
-Tool: `get_xiaohongshu_user_account`
+Tool: `get_xiaohongshu_user_posts`
 
 Use this combined tool when the caller provides a Xiaohongshu account URL, profile share link, or valid profile user token and wants account-level source data. It returns public profile fields together with one page of published notes. Do not look up a creator by keyword and pretend the first search result is the requested account.
 
