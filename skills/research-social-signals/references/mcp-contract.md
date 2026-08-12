@@ -42,7 +42,7 @@ Preserve both pagination inputs required by the live schema. Do not use a compan
 
 ## Tool: `get_xiaohongshu_user_posts`
 
-Return a specific Xiaohongshu creator's public profile and one page of posted notes. This combined account tool replaces the previous public notes-only tool.
+Return a specific Xiaohongshu creator's public profile and one page of posted notes.
 
 Inputs:
 

@@ -28,51 +28,11 @@ jobs:
               decide-content-opportunities/ \
               -x "*.DS_Store"
 
-      - name: Generate Release Body
-        run: |
-          # 获取上一个 tag（如果有）
-          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
-
-          if [ -n "$PREV_TAG" ]; then
-            git log ${PREV_TAG}..HEAD --pretty=format:"* %s (%h)" --no-merges > /tmp/changelog.txt
-          else
-            git log --pretty=format:"* %s (%h)" --no-merges -20 > /tmp/changelog.txt
-          fi
-
-          {
-            echo "## Release ${{ steps.version.outputs.VERSION }}"
-            echo ""
-            echo "### 📋 变更日志 (Changelog)"
-            echo ""
-            cat /tmp/changelog.txt
-            echo ""
-            echo "### 包含技能 (Included Skills)"
-            echo ""
-            echo "- **research-seo-signals** - SEO 信号研究与数据采集"
-            echo "- **research-social-signals** - 社交媒体信号监听 (支持 X/Reddit/知乎/地域热点)"
-            echo "- **decide-content-opportunities** - 内容机会决策建议"
-            echo ""
-            echo "### 安装 (Installation)"
-            echo ""
-            echo "解压后将 skills 子文件夹链接到您的 AI 客户端："
-            echo ""
-            echo '```bash'
-            echo "# Claude Code 示例"
-            echo 'ln -s "$(pwd)/research-seo-signals" ~/.claude/skills/'
-            echo 'ln -s "$(pwd)/research-social-signals" ~/.claude/skills/'
-            echo 'ln -s "$(pwd)/decide-content-opportunities" ~/.claude/skills/'
-            echo '```'
-            echo ""
-            echo "### MCP 配置 (MCP Configuration)"
-            echo ""
-            echo "请参考 [README.md](https://github.com/daily-growth-signals/seo-signal-skills/blob/main/README.md) 配置 MCP 服务。"
-          } > /tmp/release_body.md
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           name: SEO Signal Skills ${{ steps.version.outputs.VERSION }}
-          body_path: /tmp/release_body.md
+          generate_release_notes: true
           files: seo-signal-skill*.zip
           draft: false
           prerelease: false
