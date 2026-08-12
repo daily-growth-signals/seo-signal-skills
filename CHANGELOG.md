@@ -1,15 +1,14 @@
-# 更新日志
+# Changelog
 
-本文件只记录面向技能使用者的实际变化，不记录提交、重构过程或内部迁移说明。发布前由人工或
-AI 起草 `[Unreleased]`，人工审核后运行 `bash scripts/prepare-release-notes.sh vX.Y.Z` 固化版本。
+This file records user-facing changes only. Do not include commits, refactoring details, migration history, or internal implementation notes. Before a release, a human or AI drafts `[Unreleased]`; after human review, run `bash scripts/prepare-release-notes.sh vX.Y.Z` to finalize both language versions.
 
 ## [Unreleased]
 
-### 更新内容
+### Changes
 
-- 社媒信号检索新增小红书、LinkedIn 和微信公众号账号数据，返回公开资料、内容及平台原生互动指标。
-- 小红书与 LinkedIn 账号内容统一使用用户帖子工具，便于 AI 准确选择数据入口。
-- 补充小红书用户 ID、微信公众号原始 ID、LinkedIn 主页地址及分页参数的填写说明和纠错提示。
-- 优化社媒数据的安全错误提示，临时异常可重试且不会暴露底层服务信息。
-- 收紧 SEO 与社媒信号检索范围，先确认用户需要的数据，再调用对应工具，避免无关检索。
-- 精简技能说明为用户视角，只提供底层数据信号和使用边界，不输出账号评分或业务决策。
+- Social signal retrieval now supports Xiaohongshu, LinkedIn, and WeChat Official Account data, including public profiles, content, and platform-native engagement metrics.
+- Xiaohongshu and LinkedIn account content use clearly named user-post tools so AI can select the correct data source.
+- Added input guidance and correction prompts for Xiaohongshu user IDs, WeChat original IDs, LinkedIn profile URLs, and pagination values.
+- Improved safe error messages for social data retrieval so temporary failures can be retried without exposing underlying service details.
+- Narrowed SEO and social retrieval scope so the requested data is confirmed before calling tools, reducing irrelevant searches.
+- Reframed Skill documentation for end users: retrieval Skills provide underlying signals and usage boundaries without account scoring or business decisions.

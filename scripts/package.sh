@@ -73,14 +73,16 @@ if [ "$AUTO_TAG" = true ]; then
     fi
 
     RELEASE_VERSION="${VERSION#v}"
-    if ! grep -Fq "## [${RELEASE_VERSION}]" "${PROJECT_ROOT}/CHANGELOG.md"; then
-        echo "Error: prepare and commit the reviewed CHANGELOG entry before tagging ${VERSION}" >&2
+    if ! grep -Fq "## [${RELEASE_VERSION}]" "${PROJECT_ROOT}/CHANGELOG.md" || \
+       ! grep -Fq "## [${RELEASE_VERSION}]" "${PROJECT_ROOT}/CHANGELOG-zh.md"; then
+        echo "Error: prepare both reviewed CHANGELOG entries before tagging ${VERSION}" >&2
         echo "Run: bash scripts/prepare-release-notes.sh ${VERSION}" >&2
         exit 1
     fi
 
-    if ! git diff --quiet -- CHANGELOG.md || ! git diff --cached --quiet -- CHANGELOG.md; then
-        echo "Error: commit the reviewed CHANGELOG.md entry before tagging ${VERSION}" >&2
+    if ! git diff --quiet -- CHANGELOG.md CHANGELOG-zh.md || \
+       ! git diff --cached --quiet -- CHANGELOG.md CHANGELOG-zh.md; then
+        echo "Error: commit both reviewed CHANGELOG files before tagging ${VERSION}" >&2
         exit 1
     fi
     
