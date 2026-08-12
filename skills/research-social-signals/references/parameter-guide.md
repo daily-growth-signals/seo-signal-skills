@@ -142,6 +142,8 @@ Continuation identifiers returned by an earlier page. Never create them. Keep th
 
 Tool: `get_linkedin_user_posts`
 
+This combined request returns public member profile fields together with one page of the selected activity. The profile is account context, not a second post source; all content items come from the returned `posts` page.
+
 ### `profile_url`
 
 A full HTTPS LinkedIn **member** profile URL whose path begins with `/in/`, for example `https://www.linkedin.com/in/example-name/`. It is not a company page under `/company/`, a post URL, search-results URL, Sales Navigator URL, email address, or profile name.

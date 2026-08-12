@@ -20,7 +20,7 @@ Use `next_offset` unchanged for the next page and stop when `is_end` is true. Do
 
 ## Tool: `get_linkedin_user_posts`
 
-Return one page of public activity associated with a LinkedIn member profile.
+Return public account fields plus one page of activity associated with a LinkedIn member profile.
 
 Inputs:
 
@@ -30,7 +30,13 @@ Inputs:
 - `pagination_token`: optional opaque token returned by the previous page.
 - `idempotency_key`: optional stable key for safely retrying the same logical page.
 
-Expected results include the profile URL, activity type, page context, source objects, and available normalized fields such as post ID, URL, text, publication time, in-network impressions, out-of-network impressions, likes, comments, and reposts. Missing metrics remain null and must not be converted to zero.
+Expected results include:
+
+- `profile`: member ID, name, canonical profile URL, avatar, headline, about text, city, country code, current company, follower/connection counts, experience, and education when public;
+- page context: profile URL, activity type, offset, continuation token, capture time, and result count;
+- `posts`: the sole content list, containing the original source object plus available normalized post ID, URL, text, publication time, in-network impressions, out-of-network impressions, likes, comments, and reposts.
+
+The profile collection may internally return content previews, but the public result intentionally excludes its `posts` and `activity` fields. Do not merge, compare, or expose those previews: use only the paginated `posts` result as content evidence. Missing profile fields and metrics remain null and must not be converted to zero.
 
 Preserve both pagination inputs required by the live schema. Do not use a company page, search URL, or arbitrary LinkedIn URL in place of a member profile. Treat impressions and engagement as platform-native observations, not proof of sentiment, quality, or conversion.
 

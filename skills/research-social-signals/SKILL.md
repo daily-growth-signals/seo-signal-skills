@@ -36,7 +36,7 @@ Retrieve useful underlying social data. Help the caller form a valid, focused re
 - Use `search_xiaohongshu_notes` for public Xiaohongshu notes matching keywords and optional native filters.
 - Use `get_xiaohongshu_user_account` for one Xiaohongshu creator's public profile and posted notes, identified by a 24-character profile `user_id` or profile share text/link. The old notes-only tool is not part of the current public contract.
 - Use `search_zhihu_articles` for public Zhihu content with explicit native filters.
-- Use `get_linkedin_user_posts` for activity associated with one LinkedIn member profile under `/in/`.
+- Use `get_linkedin_user_posts` for one LinkedIn member's public profile plus one page of activity under `/in/`.
 - Use `get_wechat_account_articles` for content published by one WeChat Official Account identified by its original ID beginning with `gh_`.
 
 ## Search Guidance
@@ -67,6 +67,8 @@ For a Xiaohongshu account request, keep these direct observations available when
 - `cursor`, `next_cursor`, `has_more`, capture time, and returned note count.
 
 Do not derive a posting mix, engagement rate, account tier, content quality, growth diagnosis, benchmark, or recommendation inside this Skill. A downstream AI may calculate or interpret those observations after retrieval. If `view_count` is absent, report exposure/views as unavailable; do not estimate them from likes or other interactions.
+
+For a LinkedIn member request, preserve the returned public profile fields separately from the activity page. Treat `posts` as the only content list: the profile source's internal `posts` and `activity` previews are intentionally excluded because they overlap with the richer paginated post source. Do not reconstruct those discarded previews from supplier data.
 
 Do not add generic advice, opportunity rankings, content ideas, sentiment labels, performance judgments, or next-action recommendations. A concise note about invalid inputs, missing fields, or retrieval limitations is part of data quality and is allowed.
 
@@ -101,5 +103,5 @@ Use $research-social-signals to search Xiaohongshu for portable coffee makers. C
 ```
 
 ```text
-Use $research-social-signals to retrieve one LinkedIn member's posts from their `/in/` profile URL. Keep missing impression metrics unknown and return no recommendations.
+Use $research-social-signals to retrieve one LinkedIn member's public profile and one page of posts from their `/in/` profile URL. Keep missing impression metrics unknown and return no recommendations.
 ```
