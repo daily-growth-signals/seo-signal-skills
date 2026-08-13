@@ -131,6 +131,7 @@ Convert a localized user country name to the canonical English name before calli
 ## Tool: `search_x_posts`
 
 Search X using one raw X API v2 expression. Select the recent seven-day endpoint or the Full-archive endpoint explicitly; always treat the live tool boundary as authoritative if X changes access or retention.
+The Social MCP executes this tool through the independently published default Workflow `x-posts-search@1`; it does not depend on or upgrade the legacy `social-posts-search@1` definition.
 
 Inputs:
 
