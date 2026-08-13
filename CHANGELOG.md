@@ -8,6 +8,14 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.2.1] - 2026-08-13
+
+### Changes
+
+- X post search adds a historical mode: it searches recent posts by default and can also search posts from older time ranges when historical access is available, supporting long-range research.
+- Historical searches support fetching more results at once, and paging stops naturally once results are exhausted, so there is no need to manually check for more content.
+- Clarified the boundary of historical search: without the required access, it will not silently fall back and claim that older time ranges were covered.
+
 ## [1.2.0] - 2026-08-12
 
 ### Changes
