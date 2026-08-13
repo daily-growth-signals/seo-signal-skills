@@ -130,12 +130,13 @@ Convert a localized user country name to the canonical English name before calli
 
 ## Tool: `search_x_posts`
 
-Search the X Recent Search window using one raw X API v2 expression. Recent Search currently retrieves matching Posts from the previous seven days; always treat the live tool boundary as authoritative if X changes that window.
+Search X using one raw X API v2 expression. Select the recent seven-day endpoint or the Full-archive endpoint explicitly; always treat the live tool boundary as authoritative if X changes access or retention.
 
 Inputs:
 
 - `query`: required raw query expression, 1–512 characters.
-- `max_results`: page size from 10 to 100; default `50`.
+- `search_mode`: `recent` for the recent-search window or `all` for Full-archive Search; default `recent`.
+- `max_results`: page size from 10 to 100 in `recent` mode, or 10 to 500 in `all` mode; default `50`.
 - `next_token`: optional opaque token returned by the previous page.
 - `sort_order`: `recency` or `relevancy`; default `recency`.
 - `start_time`: optional inclusive UTC start time.
@@ -146,7 +147,7 @@ Inputs:
 
 The tool returns one result page synchronously.
 
-Expected result content includes normalized posts, authors, timestamps, languages, native public metrics, post URLs, retrieval errors, result metadata, and an optional `next_token`. Follow the live structured schema when exact field names differ.
+Expected result content includes normalized posts, authors, timestamps, languages, native public metrics, post URLs, retrieval errors, and pagination metadata: `newest_id`, `oldest_id`, `next_token`, `previous_token`, and `result_count`. A null `next_token` means X returned no forward continuation for that page. Follow the live structured schema when exact field names differ.
 
 ## Query Semantics
 
@@ -202,13 +203,14 @@ The following engagement filters were checked against X Recent Search on 2026-07
 
 ## Pagination
 
-Use the returned `next_token` unchanged with the same `query`, `max_results`, `sort_order`, `start_time`, `end_time`, `since_id`, and `until_id`. Do not decode, edit, combine, or reuse it for another search context. Stop after the first page unless the user requests broader coverage or the evidence is insufficient for the stated goal.
+Use the returned `next_token` unchanged with the same `search_mode`, `query`, `max_results`, `sort_order`, `start_time`, `end_time`, `since_id`, and `until_id`. Do not decode, edit, combine, or reuse it for another search context. Stop when `next_token` is null. `previous_token` is response context, not a substitute for forward pagination.
 
 Reuse one `idempotency_key` only to retry the same logical page. Use a new key for the next page or whenever another search input changes.
 
 ## Search Boundaries
 
-- X Recent Search currently covers only the previous seven days; a wider requested period cannot be satisfied by this endpoint.
+- `recent` currently covers only the previous seven days. Select `all` when the requested period is older and Full-archive access is available.
+- Full-archive availability depends on the configured X access tier. Never silently fall back to `recent` while claiming historical coverage.
 - Use `start_time` and `end_time` only when the research goal needs a defined UTC window.
 - For a current-window search, normally omit `end_time` so X can use its latest searchable boundary and avoid index-delay or clock-skew errors.
 - Keep explicit time boundaries stable across every page of one search.
@@ -217,7 +219,7 @@ Reuse one `idempotency_key` only to retry the same logical page. Use a new key f
 
 ## Evidence Boundary
 
-- Returned posts are observations within X's recent-search window and ranking behavior.
+- Returned posts are observations within the selected endpoint's time boundary and ranking behavior.
 - A result set is not a representative sample of X.
 - Missing results do not prove absence.
 - Preserve URLs and distinguish direct evidence from inference.

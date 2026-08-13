@@ -200,7 +200,14 @@ Filters such as `lang:`, `is:`, and `has:` cannot stand alone; include a keyword
 
 ### `max_results`
 
-The page size, from 10 to 100; default 50. This is not a total-result guarantee.
+The page size; default 50. Use 10–100 for `recent` and 10–500 for `all`. This is not a total-result guarantee.
+
+### `search_mode`
+
+- `recent`: search X's current recent window, currently the previous seven days;
+- `all`: request Full-archive Search for older historical coverage.
+
+Default to `recent` for current conversations. Use `all` only when the requested period extends beyond the recent window or the caller explicitly asks for historical coverage. Full-archive access depends on the configured X tier; do not silently fall back to `recent` and claim the older period was searched.
 
 ### `sort_order`
 
@@ -211,7 +218,7 @@ Do not label either option “best”. Use the one matching the caller's retriev
 
 ### `start_time` and `end_time`
 
-Timezone-aware ISO 8601 timestamps. `start_time` is inclusive; `end_time` is exclusive and must be later. X Recent Search has a limited recent window; do not promise older coverage. For a current search, normally omit `end_time`. Do not place web-search syntax such as `since:2026-08-01` in the query when these fields are available.
+Timezone-aware ISO 8601 timestamps. `start_time` is inclusive; `end_time` is exclusive and must be later. In `recent` mode the start must remain inside X's recent window; select `all` for older boundaries. For a current search, normally omit `end_time`. Do not place web-search syntax such as `since:2026-08-01` in the query when these fields are available.
 
 ### `since_id` and `until_id`
 
@@ -219,7 +226,7 @@ Known X Post ID boundaries, not dates or arbitrary counters. Use them only when 
 
 ### `next_token`
 
-Use only the token returned by the previous page with all other search inputs unchanged.
+Use only the token returned by the previous page with `search_mode`, query, page size, sort, and every time/ID boundary unchanged. Stop when it is null. Preserve returned `newest_id`, `oldest_id`, and `previous_token` as pagination context, but do not construct a forward token from them.
 
 ## X trends
 

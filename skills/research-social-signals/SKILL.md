@@ -30,7 +30,8 @@ Retrieve useful underlying social data. Help the caller form a valid, focused re
 
 ## Tool Selection
 
-- Use `search_x_posts` for recent public X posts matching a focused query expression.
+- Use `search_x_posts` with `search_mode=recent` for current X discussions, or
+  `search_mode=all` for historical research when Full-archive Search access is available.
 - Use `get_x_trends` for current X trends by country or worldwide.
 - Use `search_reddit_posts` for public Reddit posts matching a focused natural-language query.
 - Use `search_xiaohongshu_notes` for public Xiaohongshu notes matching keywords and optional native filters.
