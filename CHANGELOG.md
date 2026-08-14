@@ -6,7 +6,9 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 ### Changes
 
-- To be added.
+- Reddit post search adds native sorting and time-range filters: order results by relevance, hot, top, newest, or comment count, and limit coverage to all time or the past year, month, week, day, or hour.
+- Social data failures now prefer archive-first recovery: preserve the original inputs and idempotency key, and poll or retry the same request so already-fetched data can be reused, up to three same-request recovery attempts before a new paid request is allowed; error messages no longer expose underlying details.
+- X post search now runs through an independently published default workflow, decoupled from the legacy search workflow definition.
 
 ## [1.2.1] - 2026-08-13
 
