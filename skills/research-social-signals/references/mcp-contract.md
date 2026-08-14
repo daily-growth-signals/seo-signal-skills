@@ -231,7 +231,8 @@ Reuse one `idempotency_key` only to retry the same logical page. Use a new key f
 ## Common Failures
 
 - Tool unavailable: report the missing live coverage without guessing at internal causes.
-- Temporary social-data failure: state only that the social data is temporarily unavailable and the same request may be retried. Do not include underlying service diagnostics, support links, request traces, cache links, or billing text.
+- Temporary social-data failure: preserve the exact inputs and original `idempotency_key`. Retry or poll the same logical Run up to three times so SignalDig can reparse its private Provider archive under the same `request_id`; do not create another paid request during this recovery window.
+- Archive recovery exhausted: only after three unsuccessful same-request recovery attempts may a new `idempotency_key` be considered for one fresh retrieval. Treat it as a new request and disclose the missing coverage if it also fails.
 - Query validation failure: check length, expression syntax, and `max_results`.
 - Time-boundary validation failure: check UTC values, ensure `end_time` is later than `start_time`, and omit `end_time` for a current-window search when the tool rejects a too-recent boundary.
 - Retry conflict: preserve the original inputs for a same-page retry, or use a new key for a genuinely different page or search.

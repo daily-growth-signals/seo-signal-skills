@@ -18,7 +18,7 @@ Read the section for the selected tool before calling it. Explain unfamiliar par
 
 ### `idempotency_key`
 
-An optional client-generated identifier for safely retrying exactly the same logical request. The user normally does not need to provide it. Reuse it only when every retrieval parameter and page are unchanged. Generate a new value for a different query, filter, account, or page. Never present it as a social-platform identifier.
+An optional client-generated identifier for safely retrying exactly the same logical request. The user normally does not need to provide it. Reuse it only when every retrieval parameter and page are unchanged. On a temporary or parse-related failure, retain this key for up to three recovery attempts so SignalDig reopens the same `request_id` and checks its private Provider archive before any new live request. Generate a new value for a different query, filter, account, or page, or only after those three same-request recovery attempts are exhausted. Never present it as a social-platform identifier.
 
 ### Opaque pagination values
 

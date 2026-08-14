@@ -53,6 +53,9 @@ Retrieve useful underlying social data. Help the caller form a valid, focused re
 - Build a next-page request only from the immediately preceding successful response. If a required continuation value is absent, inconsistent, or belongs to a different context, stop and report that the next page cannot be requested safely; do not try alternate parameter combinations.
 - Reuse results already present in the conversation instead of repeating the same paid or live request.
 - Use the same `idempotency_key` only to retry the same logical page with identical inputs. Use a new key after any input or page changes.
+- When a request fails after the Provider returned data, retry recovery before making another paid request. Preserve the complete inputs and original `idempotency_key`; this lets SignalDig derive and reopen the same `request_id`, replay its private Provider archive with the current parser, and convert that Run to a successful terminal state when recovery works.
+- Make at most three same-request recovery attempts. Poll the original `request_id` when a status tool is available; otherwise call the same retrieval tool with unchanged inputs and the same `idempotency_key`. Never generate a new key, change filters, switch providers, or broaden the query during these three attempts.
+- Only after three unsuccessful same-request recovery attempts may you consider one fresh retrieval with a new `idempotency_key`. Do so only when the caller still needs live coverage, and make clear that this creates a new request rather than recovering the old one.
 
 ## Data Delivery
 
@@ -86,8 +89,9 @@ Do not add generic advice, opportunity rankings, content ideas, sentiment labels
 5. Never infer image content from an image URL alone.
 6. Deduplicate overlapping results only by a stable platform identifier, while retaining query provenance when useful.
 7. Preserve partial results when a later page fails; do not restart or conceal the missing coverage.
-8. Retry a temporary failure only for the same logical page with unchanged inputs.
-9. If a tool reports `signaldig_social_data_temporarily_unavailable`, tell the caller that the social data is temporarily unavailable and that the same request may be retried. Do not reveal or reconstruct technical error details.
+8. Retry a temporary failure only for the same logical page with unchanged inputs and the original `idempotency_key`; prefer the same `request_id` status/recovery path over a new paid call.
+9. Limit archive-first recovery to three attempts. Before that limit, never create a new idempotency key or substitute another live request. After the limit, a fresh request is a deliberate fallback, not a retry of the old Run.
+10. If a tool reports `signaldig_social_data_temporarily_unavailable`, tell the caller that the same request is being recovered or remains temporarily unavailable. Do not reveal or reconstruct technical error details, OSS keys, cache URLs, or billing text.
 
 ## Examples
 
