@@ -89,11 +89,13 @@ Search public Reddit posts for community research, user wording, pain points, qu
 Inputs:
 
 - `query`: required focused search query, 1–512 characters.
+- `sort`: `RELEVANCE`, `HOT`, `TOP`, `NEW`, or `COMMENTS`; default `RELEVANCE`.
+- `time_range`: `all`, `year`, `month`, `week`, `day`, or `hour`; default `all`.
 - `idempotency_key`: optional stable key for safely retrying the same logical search.
 
 Expected result content includes the query, `result_count`, and normalized posts with stable `post_id`, title, URL, subreddit, creation time, author when public, body when returned, language, and native score/comment/upvote metrics where available. Follow the live structured schema when exact field names differ.
 
-The current public tool exposes no sort, time-range, safe-search, or pagination parameter. Do not claim a time window, a ranking mode, exhaustive coverage, or platform-wide prevalence from its result. Do not pass X query operators, X date syntax, X Post IDs, or X `next_token` values to this tool. Do not fall back to X on failure unless the user explicitly requested cross-platform research.
+The public tool exposes Reddit-native sorting and time-range filters, but no safe-search or pagination parameter. Preserve and report the effective `sort` and `time_range`; do not claim exhaustive coverage or platform-wide prevalence from the result. Use a new `idempotency_key` when either filter changes. Do not pass X query operators, X date syntax, X Post IDs, or X `next_token` values to this tool. Do not fall back to X on failure unless the user explicitly requested cross-platform research.
 
 ## Tool: `search_xiaohongshu_notes`
 

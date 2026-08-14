@@ -33,7 +33,8 @@ Retrieve useful underlying social data. Help the caller form a valid, focused re
 - Use `search_x_posts` with `search_mode=recent` for current X discussions, or
   `search_mode=all` for historical research when Full-archive Search access is available.
 - Use `get_x_trends` for current X trends by country or worldwide.
-- Use `search_reddit_posts` for public Reddit posts matching a focused natural-language query.
+- Use `search_reddit_posts` for public Reddit posts matching a focused natural-language query,
+  with optional Reddit-native sorting and time-range filters when the caller needs them.
 - Use `search_xiaohongshu_notes` for public Xiaohongshu notes matching keywords and optional native filters.
 - Use `get_xiaohongshu_user_posts` for one Xiaohongshu creator's public profile and posted notes, identified by a 24-character profile `user_id` or profile share text/link.
 - Use `search_zhihu_articles` for public Zhihu content with explicit native filters.

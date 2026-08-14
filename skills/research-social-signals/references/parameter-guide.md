@@ -246,7 +246,34 @@ Tool: `search_reddit_posts`
 
 ### `query`
 
-A focused natural-language search query from 1 to 512 characters. Include a product/category and the relevant problem, question, or use case. Do not pass X-only operators, X timestamps, Post IDs, or pagination tokens. The tool exposes no controlled sort, time range, or pagination input, so do not claim those boundaries.
+A focused natural-language search query from 1 to 512 characters. Include a product/category and the relevant problem, question, or use case. Do not pass X-only operators, X timestamps, Post IDs, or pagination tokens.
+
+### `sort`
+
+The Reddit-native result ordering. The default is `RELEVANCE`.
+
+- `RELEVANCE`: relevance-ranked results;
+- `HOT`: currently active or hot results;
+- `TOP`: highest-ranked results within the selected `time_range`;
+- `NEW`: newest results first;
+- `COMMENTS`: results ordered by comment count.
+
+Use only these exact uppercase values. Keep `RELEVANCE` when the caller has no ranking preference. Do not describe `HOT`, `TOP`, or `COMMENTS` as a custom SignalDig score.
+
+### `time_range`
+
+The Reddit-native time window. The default is `all`.
+
+- `all`: all available time;
+- `year`: previous year;
+- `month`: previous month;
+- `week`: previous week;
+- `day`: previous day;
+- `hour`: previous hour.
+
+Use only these exact lowercase values. This filter materially affects coverage, especially with `TOP`; preserve the caller's explicit window and report it with the result boundary. Do not translate an unsupported custom date interval into one of these windows without explaining the approximation.
+
+The tool still exposes no pagination input. Changing `sort` or `time_range` creates a different logical search, so use a new `idempotency_key`.
 
 ## Zhihu search
 
