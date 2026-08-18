@@ -8,6 +8,13 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.2.3] - 2026-08-18
+
+### Changes
+
+- Clarified status semantics for SEO and social signals: freshness notes (such as stale data or unknown freshness) are quality notes, not outages; no-matching-data and empty results should not be retried, and only an explicit temporary unavailability enters the recovery or retry flow.
+- Content-opportunity decisions proceed with partial data: an empty family such as no matching data is not a service outage, and a recommendation can be given from remaining evidence with the gap disclosed; a refusal is required only when every selected family is empty or the job failed.
+
 ## [1.2.2] - 2026-08-14
 
 ### Changes
