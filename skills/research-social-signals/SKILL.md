@@ -91,7 +91,7 @@ Do not add generic advice, opportunity rankings, content ideas, sentiment labels
 7. Preserve partial results when a later page fails; do not restart or conceal the missing coverage.
 8. Retry a temporary failure only for the same logical page with unchanged inputs and the original `idempotency_key`; prefer the same `request_id` status/recovery path over a new paid call.
 9. Limit archive-first recovery to three attempts. Before that limit, never create a new idempotency key or substitute another live request. After the limit, a fresh request is a deliberate fallback, not a retry of the old Run.
-10. If a tool reports `signaldig_social_data_temporarily_unavailable`, tell the caller that the same request is being recovered or remains temporarily unavailable. Do not reveal or reconstruct technical error details, OSS keys, cache URLs, or billing text.
+10. If a tool reports `signaldig_social_no_matching_data`, say that this query returned no matching public posts; do not retry as an outage. If a tool reports `signaldig_social_data_temporarily_unavailable`, tell the caller that the same request is being recovered or remains temporarily unavailable. Do not reveal or reconstruct technical error details, OSS keys, cache URLs, or billing text.
 
 ## Examples
 

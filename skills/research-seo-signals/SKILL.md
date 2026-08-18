@@ -145,8 +145,9 @@ Handle states exactly as follows:
 - `pending`: accepted but not started; wait and poll the same `request_id`.
 - `running`: in progress; wait and poll the same `request_id`.
 - `complete`: terminal result with all required nodes completed; reuse via `get` for later questions.
-- `partial`: terminal usable result with one or more limitations; report both usable evidence and missing coverage; reuse unless the user asks to refresh or fill missing families.
-- `failed`: terminal failure; report `error.code`, summarize `error.message`, and do not fabricate a result. Retry only with the same `idempotency_key` when appropriate.
+- `complete`: terminal usable result. Freshness-only codes `signaldig_stale_data` and `signaldig_unknown_freshness` stay on complete; treat them as quality notes, not outages.
+- `partial`: terminal usable result with missing coverage such as `signaldig_no_matching_data` or `signaldig_analysis_unavailable`; report both usable evidence and missing families. Do not retry empty-result codes.
+- `failed`: terminal failure; report `error.code`, summarize `error.message`, and do not fabricate a result. Retry only with the same `idempotency_key` when appropriate. Treat `signaldig_data_unavailable` as a service outage, not as missing keyword data.
 
 Trust `is_terminal` as the primary stop signal. Use `status` to explain the outcome. A missing `result` in a non-terminal response is normal.
 
