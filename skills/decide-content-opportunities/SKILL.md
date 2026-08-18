@@ -49,9 +49,16 @@ inference, recommendation, and expected outcome.
    or execute the recommendation.
 10. Never submit a second decision job merely because the first is `pending` or
     `running`; poll the same `request_id`.
-11. Never present a terminal result without `decision_report` as a completed
-    recommendation. Report the missing Skill output or failure instead.
-12. Keep one primary recommendation. Include alternatives only when they
+11. Never treat `signaldig_no_matching_data` or an empty SEO family as a
+    service outage. Analyze whatever evidence remains, disclose the gap, and
+    only refuse a recommendation when every selected family is empty or the
+    job is `failed`.
+12. Never present a `failed` job, or a terminal result with no remaining
+    evidence, as a completed recommendation. If `decision_report` is present,
+    use it within its stated coverage; if it is absent but usable evidence
+    remains, give a bounded recommendation from that evidence and do not
+    resubmit merely because one family was empty.
+13. Keep one primary recommendation. Include alternatives only when they
     represent meaningfully different choices.
 
 ## Workflow
@@ -72,8 +79,10 @@ inference, recommendation, and expected outcome.
 6. Poll `get_keyword_decision_report` with the same `request_id` until
    `is_terminal=true`; never resubmit while pending or running.
 7. On `complete` or `partial`, verify that `result.query` matches the requested
-   identity, inventory evidence and limitations, and require a non-null
-   `result.decision_report`.
+   identity, inventory evidence and limitations, and treat
+   `signaldig_no_matching_data` as a data gap. Prefer a non-null
+   `result.decision_report` when present; if it is missing, continue from the
+   remaining evidence instead of calling the job a failure.
 8. Evaluate the report using
    [references/evidence-evaluation.md](references/evidence-evaluation.md) and
    [references/confidence-rubric.md](references/confidence-rubric.md). Do not
@@ -87,7 +96,8 @@ inference, recommendation, and expected outcome.
 ## Evidence Sufficiency
 
 Proceed with a recommendation when the available evidence directly addresses
-the decision and its limitations can be bounded.
+the decision and its limitations can be bounded. A `partial` result with some
+empty families is still usable; decide from the remaining coverage.
 
 Proceed with `low` confidence when action is reversible and a small test is
 more useful than additional research. Make the exploratory nature explicit.
@@ -99,7 +109,8 @@ Preserve a `run_validation_test` or `defer` stance when:
 - evidence cannot be traced to the terminal result;
 - compared options use incompatible markets, languages, or time windows;
 - the proposed action is costly or difficult to reverse and decisive evidence
-  is missing.
+  is missing;
+- every selected SEO family is empty or the terminal status is `failed`.
 
 Do not require social evidence for a keyword decision. If the user needs
 cross-channel comparison, collect social evidence with the separate

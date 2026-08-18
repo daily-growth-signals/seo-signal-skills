@@ -37,7 +37,7 @@ Use `medium` when the direction is supported but one or more uncertainties remai
 - freshness or durability is uncertain;
 - target-domain, product, or channel fit is inferred rather than observed;
 - counter-evidence is meaningful but does not outweigh support;
-- a `partial` result omits useful but non-decisive coverage.
+- a `partial` result omits useful but non-decisive coverage, including an empty SEO family reported as `signaldig_no_matching_data`.
 
 State the condition most likely to raise or lower confidence.
 
@@ -60,7 +60,8 @@ Do not force a label when:
 - the evidence has no traceable source;
 - the business objective or audience is missing and plausible choices reverse the answer;
 - sources cannot be compared because their scopes are incompatible;
-- a material action requires evidence that is entirely absent.
+- a material action requires evidence that is entirely absent;
+- every selected SEO family is empty or the Decision MCP job is `failed`.
 
 Return the minimum evidence or context needed to decide.
 

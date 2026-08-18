@@ -68,6 +68,7 @@ Search the available result for evidence that weakens each opportunity:
 - limitations affecting a decisive field.
 
 Absence of corroboration is a coverage limitation, not automatically counter-evidence.
+`signaldig_no_matching_data` means SignalDig found no matching data for that family in the selected market. Keep any successful families and do not treat the gap as a service failure.
 
 ## Option construction
 

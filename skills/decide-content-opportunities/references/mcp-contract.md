@@ -29,11 +29,15 @@ Query the account-scoped job by `request_id`.
 - `pending` / `running` — wait according to `poll_after_seconds` and query the
   same ID again.
 - `complete` — terminal; validate query identity, evidence references,
-  limitations, and non-null `result.decision_report`.
-- `partial` — terminal and potentially usable, but disclose unavailable
-  evidence and do not strengthen confidence.
-- `failed` — terminal; report the stable error and do not fabricate a
-  recommendation.
+  limitations, and use `result.decision_report` when present.
+- `partial` — terminal and usable for remaining evidence. Treat
+  `signaldig_no_matching_data` as a data gap, not an outage. Analyze whatever
+  families succeeded; do not resubmit because one family was empty. Prefer
+  `result.decision_report` when present, otherwise decide from remaining
+  evidence with lower confidence.
+- `failed` — terminal service or execution failure; report the stable error
+  and do not fabricate a recommendation. Empty-result codes belong on
+  `partial`, not here.
 
 The expected report contains a stance, qualitative confidence, summary,
 supporting and counter-evidence references, assumptions, conditions, risks,
