@@ -4,6 +4,7 @@ const I18N = {
     // Navigation
     "nav.install": "Install",
     "nav.workflow": "Workflow",
+    "nav.site": "Official Site",
     
     // Hero
     "hero.title": "Turn traceable signals<br />into content decisions",
@@ -66,12 +67,14 @@ const I18N = {
     "install.backToSelection": "← Choose a different installation method",
     
     // Footer
-    "footer.tagline": "Evidence before opinion."
+    "footer.tagline": "Evidence before opinion.",
+    "footer.site": "Official site: signaldig.com"
   },
   zh: {
     // Navigation
     "nav.install": "安装",
     "nav.workflow": "工作流程",
+    "nav.site": "官方网站",
     
     // Hero
     "hero.title": "将可追溯的信号<br />转化为内容决策",
@@ -134,7 +137,8 @@ const I18N = {
     "install.backToSelection": "← 选择其他安装方式",
     
     // Footer
-    "footer.tagline": "证据优先于观点。"
+    "footer.tagline": "证据优先于观点。",
+    "footer.site": "官方网站：signaldig.com"
   }
 };
 

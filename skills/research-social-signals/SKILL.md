@@ -1,11 +1,18 @@
 ---
 name: research-social-signals
-description: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts through the Daily Growth Signals Social MCP. Use when an AI needs underlying posts, notes, account profiles, account content, trends, source URLs, timestamps, pagination state, or native metrics for downstream analysis or decision support. Select the correct retrieval tool, explain unfamiliar parameters, validate user-supplied values, suggest focused searches, and return data without making marketing, content, SEO, sentiment, account-performance, or business decisions.
+description: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts through the SignalDig Social MCP. Use when an AI needs underlying posts, notes, account profiles, account content, trends, source URLs, timestamps, pagination state, or native metrics for downstream analysis or decision support. Select the correct retrieval tool, explain unfamiliar parameters, validate user-supplied values, suggest focused searches, and return data without making marketing, content, SEO, sentiment, account-performance, or business decisions.
+slug: signaldig-research-social-signals
+displayName: Retrieve Social Signals
+version: 1.2.3
+summary: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts.
+license: MIT
+homepage: https://signaldig.com/
+tags: [social, social-media, x, reddit, mcp, growth]
 ---
 
 # Retrieve Social Signals
 
-Retrieve useful underlying social data. Help the caller form a valid, focused request, then preserve the returned evidence and its collection boundary. Stop at retrieval: do not turn the data into a decision, score, strategy, recommendation, or fixed analysis report.
+Retrieve useful underlying social data through the SignalDig Social MCP. Help the caller form a valid, focused request, then preserve the returned evidence and its collection boundary. Stop at retrieval: do not turn the data into a decision, score, strategy, recommendation, or fixed analysis report.
 
 ## Core Boundary
 

@@ -148,6 +148,8 @@ The SEO skill follows the SEO MCP asynchronous submit/get contract. The Social s
 
 ## Project page
 
+Official site: <https://signaldig.com/>
+
 GitHub Pages publishes the project overview at:
 
 <https://daily-growth-signals.github.io/seo-signal-skills/>
@@ -301,6 +303,8 @@ SEO 技能遵循 SEO MCP 异步提交/获取协议。社交技能使用独立的
 ---
 
 ## 项目页面
+
+官方网站：<https://signaldig.com/>
 
 GitHub Pages 发布的项目概览页面：
 

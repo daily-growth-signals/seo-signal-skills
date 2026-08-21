@@ -1,12 +1,19 @@
 ---
 name: decide-content-opportunities
-description: Generate evidence-constrained keyword and content-opportunity decisions through the Daily Growth Signals Decision MCP, with a traceable stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test. Use when deciding whether or how to prioritize a keyword opportunity. Do not use for collecting SEO signals alone, writing finished content, publishing, or making the user's final business decision.
+description: Generate evidence-constrained keyword and content-opportunity decisions through the SignalDig Decision MCP, with a traceable stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test. Use when deciding whether or how to prioritize a keyword opportunity. Do not use for collecting SEO signals alone, writing finished content, publishing, or making the user's final business decision.
+slug: signaldig-decide-content-opportunities
+displayName: Decide Content Opportunities
+version: 1.2.3
+summary: Generate evidence-constrained keyword and content-opportunity decisions with confidence, counter-evidence, and a next validation test.
+license: MIT
+homepage: https://signaldig.com/
+tags: [content, keyword, decision, mcp, growth]
 ---
 
 # Decide Content Opportunities
 
-Use the independent Daily Growth Signals Decision MCP to produce a conditional
-keyword recommendation. Make a decision when the evidence supports one; do not
+Use the SignalDig Decision MCP to produce a
+conditional keyword recommendation. Make a decision when the evidence supports one; do not
 hide behind an unranked summary. Preserve the boundary between observation,
 inference, recommendation, and expected outcome.
 

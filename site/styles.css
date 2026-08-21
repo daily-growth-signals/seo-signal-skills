@@ -104,6 +104,10 @@ h1 { margin-bottom: 30px; font-size: clamp(48px, 6vw, 82px); line-height: 1.08; 
 .workflow code, .workflow p { color: var(--muted); font: 14px/1.55 var(--mono); overflow-wrap: anywhere; }
 .connector { font-size: 48px; font-weight: 300; }
 
+/* ── Links ── */
+.link { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.link:hover { color: #65711f; }
+
 /* ── User Type Selection ── */
 .user-type-section { background: linear-gradient(135deg, var(--paper) 0%, #eef5d8 100%); }
 
@@ -553,6 +557,8 @@ h1 { margin-bottom: 30px; font-size: clamp(48px, 6vw, 82px); line-height: 1.08; 
 /* ── Footer ── */
 footer { display: flex; justify-content: space-between; gap: 20px; padding: 42px clamp(24px, 5vw, 76px); color: white; background: var(--ink); }
 footer span { color: #b6bcaf; }
+footer a.link { color: var(--acid); }
+footer a.link:hover { color: white; }
 
 /* ── Responsive ── */
 @media (max-width: 800px) {

@@ -1,21 +1,29 @@
 ---
 name: research-seo-signals
-description: Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the Daily Growth Signals MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
+description: Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the SignalDig MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
+slug: signaldig-research-seo-signals
+displayName: Research SEO Signals
+version: 1.3.0
+summary: Collect traceable SEO demand signals for keywords, domains, markets, and languages through the SignalDig MCP server.
+license: MIT
+homepage: https://signaldig.com/
+tags: [seo, keyword-research, mcp, growth, daily-growth-signals]
 ---
 
 # Research SEO Signals
 
-Turn a natural-language SEO research goal into the smallest sufficient asynchronous Daily Growth Signals request, then return an organized, evidence-linked report. Use the MCP result as evidence, not as permission to invent facts or make the user's final prioritization decision.
+Turn a natural-language SEO research goal into the smallest sufficient asynchronous SignalDig MCP request, then return an organized, evidence-linked report. Use the MCP result as evidence, not as permission to invent facts or make the user's final prioritization decision.
 
 **Efficiency stance:** Prefer reuse of prior terminal results, narrow scopes, and a concise default report. Do not re-fetch the same logical research or re-dump full arrays unless the user asks for a refresh or a full export.
 
 ## Execution Contract
 
-- Use the Daily Growth Signals MCP tools for live demand-signal research.
+- Use the SignalDig MCP tools for live demand-signal research.
 - Use only the SEO MCP product surface. Social evidence belongs to
   `research-social-signals`; conditional recommendations belong to
   `decide-content-opportunities` and the Decision MCP.
 - Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job.
+- Use `submit_competitor_analysis` for competitor research, `submit_geo_analysis` for AI-search/GEO visibility, and `submit_backlink_analysis` for a site's backlinks and referring domains. These tools own provider query details; do not construct low-level provider requests.
 - Treat the MCP tool schema and returned fields as the source of truth.
 - Preserve every `request_id` and `idempotency_key` used in this conversation until the task is finished.
 - Separate observed evidence from interpretation in every answer.
@@ -48,12 +56,13 @@ Treat two research goals as the same logical request when all of the following m
 - `market` (ISO alpha-2)
 - `language` (research language)
 - selected `data_scope` / `data_scopes` set (order-independent)
+- `search_engine` when the selected scope includes `serp`
 - optional user-declared refresh flag is absent
 
 Build:
 
 ```text
-idempotency_key = "seo-signals:" + keyword + "|" + domain + "|" + market + "|" + language + "|" + sorted_scopes
+idempotency_key = "seo-signals:" + keyword + "|" + domain + "|" + market + "|" + language + "|" + sorted_scopes + "|engine=" + search_engine
 ```
 
 Where `sorted_scopes` is the selected scopes joined by commas in stable sorted order, or `all` when the complete set is intentionally requested. Do not put personal or confidential data into the key.
@@ -101,6 +110,8 @@ Use the following exact mapping:
 - `serp`: organic results, SERP features, target-domain presence, and traceability URL.
 - `google_trends`: interest timeline, geographic interest, and related top/rising queries.
 
+Use the dedicated analysis tools when the request is about competitors, AI-search visibility/LLM mentions, or backlinks/referring domains. Keep those analysis families separate from the traditional SEO scope selection.
+
 Map common user wording without another question when the intent is clear:
 
 - “搜索量、CPC、竞争度、关键词属性或搜索意图” → `keyword_overview`
@@ -109,6 +120,8 @@ Map common user wording without another question when the intent is clear:
 - “热度变化、时间趋势、地区热度或上升查询” → `google_trends`
 
 If wording spans multiple rows, select only those rows. If it matches none clearly, ask a short scope question before calling. Do not propose all families as the default or describe them as a mandatory bundle.
+
+For SERP requests, use `search_engine="bing"` when the user explicitly asks for Bing/必应; otherwise omit it and keep the Google default. Do not expose or construct DataForSEO task parameters, endpoint paths, device settings, depth, or location payloads in the MCP call; the service implementation owns those details.
 
 Use one combined submit when the answer needs two or more families; do not split one logical combination into several requests. Omit `data_scopes` only for a complete all-family research request.
 
@@ -125,6 +138,7 @@ Translate the user's request into these fields:
 - `market`: a two-letter country code. Do not send city names or free-form country names.
 - `language`: the research language sent to the data service; it does not control the final answer language.
 - `data_scope` / `data_scopes`: the smallest single family or multi-family combination needed for the goal.
+- `search_engine`: optional SERP engine selector, `google` or `bing`; it defaults to `google` and does not change non-SERP data families.
 - `idempotency_key`: stable retry and reuse identifier for the same logical request.
 
 Use these defaults:
@@ -135,6 +149,9 @@ Use these defaults:
 - Default polling behavior: follow `poll_after_seconds`.
 - Default decision stance: evidence summary, not recommendation.
 - Default freshness: reuse prior terminal result in-session; refresh only when the user asks.
+- Default SERP engine: use Google when the user does not name an engine. If the user asks for Bing/必应, pass `search_engine="bing"`; do not fetch Bing by default.
+
+The traditional SEO function remains `submit_specific_seo_data`; it supports the existing SEO families and can select Google or Bing for `serp`. Bing fields may differ from Google, so interpret the returned result and `field_semantics` rather than assuming identical structure.
 
 Do not silently replace an unsupported market-language pair with another country or language. Report the rejected pair and ask the user to choose a supported alternative.
 

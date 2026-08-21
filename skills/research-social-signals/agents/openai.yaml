@@ -2,6 +2,5 @@ interface:
   display_name: "Social Signal Retrieval"
   short_description: "Retrieve public social media account and content data"
   icon_small: "./assets/small-logo.svg"
-  icon_large: "./assets/large-logo.png"
   brand_color: "#EF4444"
   default_prompt: "Use $research-social-signals to check my account link or search parameters, then retrieve only the public social account, content, and platform metrics I need. Return the source data without scoring the account or recommending a strategy."

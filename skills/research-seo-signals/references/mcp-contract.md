@@ -10,6 +10,7 @@ Inputs:
 - `domain` — required hostname without scheme or path.
 - `market` — required ISO 3166-1 alpha-2 country code.
 - `language` — required research-language code; it scopes the returned research data and does not select the user-facing response language.
+- `search_engine` — optional SERP engine selector, `google` or `bing`; defaults to `google`. Use `bing` only when the user explicitly requests Bing/必应 data.
 - `data_scopes` — optional non-empty combination of `keyword_overview`, `related_keywords`, `serp`, and `google_trends`; omission selects all SEO families. Use the separate Social MCP for X evidence.
 - `idempotency_key` — strongly recommended stable retry key for the logical research identity.
 
@@ -37,11 +38,30 @@ Inputs:
 
 - `data_scope` — required; one of `keyword_overview`, `related_keywords`, `serp`, or `google_trends`.
 - `keyword`, `domain`, `market`, `language` — same validation rules as the aggregate submit tool.
+- `search_engine` — optional SERP engine selector, same rules as the aggregate submit tool.
 - `idempotency_key` — strongly recommended; do not reuse one key across different scopes.
 
 The ticket fields and polling behavior are identical to `submit_keyword_research_signals`. Its functional behavior is equivalent to `submit_keyword_research_signals(data_scopes=[data_scope])`. The terminal result contains only the selected data family and its derived evidence/signals. Other intentionally unrequested families can be null or empty and are not limitations.
 
 Prefer this tool whenever one data family fully answers the request.
+
+## Tool: `submit_competitor_analysis`
+
+Use for competitor analysis of a keyword and target domain. Inputs are `keyword`, `domain`, `market`, `language`, and optional `idempotency_key`. The service internally collects competitor domains, SERP competitors, keywords for the site, and domain-rank context. Poll with `get_keyword_research_signals` using the returned `request_id`.
+
+The terminal result exposes the public `competitor_analysis` section, shared `evidence`, `signals`, `limitations`, `usage`, and `field_semantics`. Treat each returned subsection as observed data; do not assume that every subsection has non-empty rows.
+
+## Tool: `submit_geo_analysis`
+
+Use for GEO/AI-search visibility analysis. Inputs are `keyword`, `domain`, `market`, `language`, and optional `idempotency_key`. The service internally collects search-volume context, Google AI-mode observations, LLM target metrics, and top-mentioned pages. Do not pass provider endpoint details.
+
+The terminal result exposes the public `geo_analysis` section and shared `analysis_coverage`, `evidence`, `signals`, `limitations`, `usage`, and `field_semantics`. An empty LLM mentions subsection is valid coverage; do not convert it into a claim that the target has no visibility without checking returned counts and limitations.
+
+## Tool: `submit_backlink_analysis`
+
+Use for website backlink analysis. Inputs are `keyword`, `domain`, `market`, `language`, and optional `idempotency_key`. The service internally collects backlinks and referring domains. Poll with the same get tool and interpret the returned `backlink_analysis` plus `field_semantics`.
+
+The terminal result contains the public backlink/referring-domain subsections, shared `evidence`, `signals`, `limitations`, `usage`, and `field_semantics`. Report sample counts and total counts separately; do not treat a capped sample as the complete backlink inventory.
 
 Plain-language scope mapping:
 
@@ -49,6 +69,8 @@ Plain-language scope mapping:
 - related, expanded, or long-tail queries: `related_keywords`
 - rankings, organic results, SERP features, or target-domain presence: `serp`
 - interest over time, geography, top queries, or rising queries: `google_trends`
+
+For SERP requests, infer the engine from the user's wording and pass `search_engine="bing"` for Bing/必应; otherwise preserve the Google default. The MCP function does not require DataForSEO endpoint details or low-level search settings.
 
 When the user only says to “look up” or “research” a keyword, ask which of these data families they need before making a paid/live request. When their wording already identifies the family, submit directly without an unnecessary confirmation.
 

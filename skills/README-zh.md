@@ -6,6 +6,16 @@
 
 SEO Signal Skills 是一套结构化的技能集，旨在通过 MCP（模型上下文协议）增强 AI Agent 与 SEO 及社交媒体数据服务交互时的精确性。这些技能提供标准化工作流程、清晰的使用指南以及预处理的数据解读，确保决策的准确性、高效性和证据支撑性。
 
+### 技能集概述
+
+SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，覆盖从信号采集到决策的完整证据链：
+
+- **研究 SEO 信号**（`research-seo-signals`）：检索有据可依的 SEO 需求信号——关键词概览与搜索意图、相关关键词、SERP 观察、Google Trends 趋势，支持多市场多语言，以最小必要范围提交、幂等复用请求。
+- **检索社交信号**（`research-social-signals`）：从 X、Reddit、小红书、知乎、LinkedIn、微信公众号检索公开、可追溯、平台原生的社交数据，保留原始字段、时间戳与原生指标，只做检索不做决策。
+- **决策内容机会**（`decide-content-opportunities`）：基于上述证据生成条件化的关键词与内容机会决策——明确立场、定性置信度、反证、条件、风险与下一步验证测试。
+
+三个技能共享同一套原则：**一切结论必须有可追溯的证据 ID，绝不臆造指标，绝不把数据当决策，绝不越界替用户做最终判断**。适合搭建"证据驱动的增长工作流"，让 AI Agent 从"猜测型执行"升级为"证据约束型执行"。
+
 ### 为什么使用 Skills？
 
 虽然 AI Agent 可以直接调用 MCP 工具，但使用结构化技能具有显著优势：
@@ -38,7 +48,8 @@ SEO Signal Skills 是一套结构化的技能集，旨在通过 MCP（模型上�
 - Google Trends（搜索趋势随时间变化、地理分布、相关查询）
 - 关键词概览与意图分析（搜索量、CPC、竞争指标）
 - 相关关键词发现（语义扩展、长尾机会）
-- Google SERP 数据（自然排名、SERP 特征、竞争格局）
+- Google/Bing SERP 数据（自然排名、SERP 特征、竞争格局）
+- GEO 可见性、竞品上下文、网站外链与引用域名
 
 **价值主张**：
 与仅返回数字而无上下文的原始数据提供商不同，本服务：
@@ -49,7 +60,12 @@ SEO Signal Skills 是一套结构化的技能集，旨在通过 MCP（模型上�
 **可用工具**：
 - `submit_keyword_research_signals` – 提交多范围 SEO 研究请求
 - `submit_specific_seo_data` – 提交单类数据请求
+- `submit_competitor_analysis` – 提交关键词与域名的竞品分析
+- `submit_geo_analysis` – 提交 GEO/AI 搜索可见性分析
+- `submit_backlink_analysis` – 提交外链与引用域名分析
 - `get_keyword_research_signals` – 按请求 ID 获取研究结果
+
+传统 SEO 使用 `submit_specific_seo_data` 获取单一数据族；其中 `serp` 默认使用 Google，只有用户明确要求 Bing/必应时才传入 `search_engine: "bing"`。竞品、GEO 和网站外链分析分别使用专用工具，接口内部负责供应商端点和检索细节。解读终态结果时必须结合返回的 `field_semantics`、`limitations`、`usage` 和 evidence 引用。
 
 **适用场景**：
 - 关键词验证和需求分析
@@ -224,6 +240,12 @@ graph TB
   }
 }
 ```
+
+---
+
+### 获取 API Key
+
+访问 <https://signaldig.com/> 注册并登录后，在账号设置中创建并获取 API Key，用于替换上方配置示例中的 `{your_api_key}`。
 
 ---
 

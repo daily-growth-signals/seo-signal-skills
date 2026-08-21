@@ -6,6 +6,16 @@
 
 SEO Signal Skills is a structured skill set designed to enhance AI agent precision when interacting with SEO and social media data services through MCP (Model Context Protocol). These skills provide standardized workflows, clear usage guidelines, and pre-processed data interpretations to ensure accurate, efficient, and evidence-based decision-making.
 
+### Skill Set Overview
+
+SignalDig Skills is an MCP-based SEO and content-growth skill set covering a complete evidence chain from signal collection to decision:
+
+- **Research SEO Signals** (`research-seo-signals`): retrieves evidence-backed SEO demand signals — keyword overview and intent, related keywords, SERP observations, and Google Trends — across markets and languages, with minimal-scope submits and idempotent request reuse.
+- **Retrieve Social Signals** (`research-social-signals`): retrieves traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts, preserving raw fields, timestamps, and native metrics — retrieval only, no decisions.
+- **Decide Content Opportunities** (`decide-content-opportunities`): turns the gathered evidence into conditional keyword and content-opportunity decisions with an explicit stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test.
+
+All three skills share one principle: every claim must cite traceable evidence, never invent metrics, never turn data into an automatic decision, and never override the user's final call. Built for evidence-constrained growth workflows where AI agents execute with proof, not guesses.
+
 ### Why Use Skills?
 
 While AI agents can directly invoke MCP tools, using structured skills offers significant advantages:
@@ -38,7 +48,8 @@ While AI agents can directly invoke MCP tools, using structured skills offers si
 - Google Trends (interest over time, geographic distribution, related queries)
 - Keyword Overview & Intent Analysis (search volume, CPC, competition metrics)
 - Related Keywords Discovery (semantic expansions, long-tail opportunities)
-- Google SERP Data (organic rankings, SERP features, competitive landscape)
+- Google/Bing SERP Data (organic rankings, SERP features, competitive landscape)
+- GEO visibility, competitor context, backlinks, and referring domains
 
 **Value Proposition**:
 Unlike raw data providers that return numbers without context, this service:
@@ -49,7 +60,12 @@ Unlike raw data providers that return numbers without context, this service:
 **Tools Available**:
 - `submit_keyword_research_signals` – Submit multi-scope SEO research request
 - `submit_specific_seo_data` – Submit single-family data request
+- `submit_competitor_analysis` – Submit competitor analysis for a keyword and domain
+- `submit_geo_analysis` – Submit GEO/AI-search visibility analysis
+- `submit_backlink_analysis` – Submit backlink and referring-domain analysis
 - `get_keyword_research_signals` – Retrieve research results by request ID
+
+Traditional SEO uses `submit_specific_seo_data` for one data family. Its `serp` scope defaults to Google; pass `search_engine: "bing"` only when Bing is explicitly requested. Competitor, GEO, and backlink requests use dedicated tools that hide provider endpoints and search-task details. Interpret terminal results through their returned `field_semantics`, `limitations`, `usage`, and evidence references.
 
 **Use Cases**:
 - Keyword validation and demand analysis
@@ -189,5 +205,11 @@ graph TB
 | `research-seo-signals` | daily-growth-signals | SEO data collection | Keyword research, demand analysis |
 | `research-social-signals` | social-growth-signals | Social media listening | Brand monitoring, user feedback |
 | `decide-content-opportunities` | keyword_decision_report | Decision recommendations | Content prioritization, strategy |
+
+---
+
+### Get Your API Key
+
+Sign up and log in at <https://signaldig.com/>, then create and retrieve your API key from your account settings to replace `{your_api_key}` in the configuration example above.
 
 ---
