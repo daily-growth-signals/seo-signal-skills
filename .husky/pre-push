@@ -1,0 +1,18 @@
+#!/bin/sh
+# 推送前校验：
+#   - 发版（推 tag）时跑完整发布前检查（远程 tag diff + 版本规范 + changelog）
+#   - 推分支时跑轻量校验（frontmatter + 双语同步）
+pushing_tag=false
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
+    case "$remote_ref" in
+        refs/tags/*) pushing_tag=true ;;
+    esac
+done
+
+if [ "$pushing_tag" = true ]; then
+    echo "[pre-push] 检测到推送 tag，执行完整发布前检查..."
+    bash scripts/preflight-check.sh
+else
+    echo "[pre-push] 推送分支，执行轻量校验..."
+    bash scripts/preflight-check.sh --no-fetch --light
+fi

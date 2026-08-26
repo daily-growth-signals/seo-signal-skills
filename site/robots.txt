@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://daily-growth-signals.github.io/seo-signal-skills/sitemap.xml

@@ -1,0 +1,12 @@
+{
+  "name": "seo-signal-skills",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SignalDig SEO / social / content-decision signal research skills",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

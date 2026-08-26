@@ -1,9 +1,9 @@
 ---
 name: decide-content-opportunities
-description: Generate evidence-constrained keyword and content-opportunity decisions through the SignalDig Decision MCP, with a traceable stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test. Use when deciding whether or how to prioritize a keyword opportunity. Do not use for collecting SEO signals alone, writing finished content, publishing, or making the user's final business decision.
+description: SignalDig content decision skill — REQUIRES the keyword_decision_report MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Generate evidence-constrained keyword and content-opportunity decisions through the SignalDig Decision MCP, with a traceable stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test. Use when deciding whether or how to prioritize a keyword opportunity. Do not use for collecting SEO signals alone, writing finished content, publishing, or making the user's final business decision.
 slug: signaldig-decide-content-opportunities
 displayName: Decide Content Opportunities
-version: 1.2.3
+version: 1.3.1
 summary: Generate evidence-constrained keyword and content-opportunity decisions with confidence, counter-evidence, and a next validation test.
 license: MIT
 homepage: https://signaldig.com/
@@ -16,6 +16,34 @@ Use the SignalDig Decision MCP to produce a
 conditional keyword recommendation. Make a decision when the evidence supports one; do not
 hide behind an unranked summary. Preserve the boundary between observation,
 inference, recommendation, and expected outcome.
+
+## MCP Availability Gate (Mandatory)
+
+> This Skill is a **workflow spec only**; it has no data of its own. Every
+> decision input comes from the `keyword_decision_report` MCP server, which
+> requires a valid SignalDig API key. **Installing this Skill does not connect
+> the MCP server** — the two are separate installs.
+
+Before producing any decision, verify that the `keyword_decision_report` MCP
+server is connected and its tools are visible (e.g.
+`submit_keyword_decision_report`, `get_keyword_decision_report`).
+
+If the MCP server is not configured, its tools are missing, the API key is
+invalid, or an initial connection fails:
+
+- **Stop immediately.** Do not start the workflow, and do not emit any stance,
+  confidence, evidence IDs, risks, or "recommendations".
+- **Never simulate, guess, or answer from general knowledge.** A
+  knowledge-based reply is NOT a valid Skill output and misleads the user into
+  thinking the Skill ran.
+- Tell the user plainly: this Skill needs the `keyword_decision_report` MCP
+  server at `https://mcp.signaldig.com/signals/seo/mcp` and a SignalDig API key
+  (get one at <https://signaldig.com/> → API Keys). Point to
+  [references/setup-guide.md](references/setup-guide.md) for client-specific
+  steps, then stop.
+
+Only when the tools are available may the workflow proceed, and every
+decision claim must cite a real tool result.
 
 ## Decision Contract
 

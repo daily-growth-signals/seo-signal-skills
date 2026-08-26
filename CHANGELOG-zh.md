@@ -8,6 +8,15 @@
 
 - 待补充。
 
+## [1.3.0] - 2026-08-26
+
+### 更新内容
+
+- SEO 信号检索新增三类分析：竞品分析（submit_competitor_analysis）、GEO/AI 搜索可见性分析（submit_geo_analysis）、外链与引用域名分析（submit_backlink_analysis），在关键词与域名维度上补充竞品、AI 搜索可见性与外链数据。
+- 三个技能（SEO 信号检索、社媒信号检索、内容机会决策）新增 MCP 可用性门槛：当所需的 MCP 服务未连接、工具缺失或 API Key 无效时，技能会立即停止，不再模拟、猜测或凭通用知识作答，并明确引导用户连接对应服务，避免误以为已获取真实数据。
+- 每个技能新增客户端连接指南（references/setup-guide.md），提供 Claude Code、Cursor、Codex、Windsurf 等客户端的 MCP 连接步骤、连接验证与常见问题排查。
+- 技能说明开头明确安装边界：安装 Skill 不会自动连接 MCP 服务，需单独配置 SignalDig API Key 与对应 MCP 服务，避免误以为安装后即可直接使用。
+
 ## [1.2.3] - 2026-08-18
 
 ### 更新内容

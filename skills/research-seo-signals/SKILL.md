@@ -1,9 +1,9 @@
 ---
 name: research-seo-signals
-description: Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the SignalDig MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
+description: SignalDig SEO research skill — REQUIRES the daily-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the SignalDig MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
 slug: signaldig-research-seo-signals
 displayName: Research SEO Signals
-version: 1.3.0
+version: 1.4.1
 summary: Collect traceable SEO demand signals for keywords, domains, markets, and languages through the SignalDig MCP server.
 license: MIT
 homepage: https://signaldig.com/
@@ -15,6 +15,36 @@ tags: [seo, keyword-research, mcp, growth, daily-growth-signals]
 Turn a natural-language SEO research goal into the smallest sufficient asynchronous SignalDig MCP request, then return an organized, evidence-linked report. Use the MCP result as evidence, not as permission to invent facts or make the user's final prioritization decision.
 
 **Efficiency stance:** Prefer reuse of prior terminal results, narrow scopes, and a concise default report. Do not re-fetch the same logical research or re-dump full arrays unless the user asks for a refresh or a full export.
+
+## MCP Availability Gate (Mandatory)
+
+> This Skill is a **workflow spec only**; it has no data of its own. Every live
+> result comes from the `daily-growth-signals` MCP server, which requires a
+> valid SignalDig API key. **Installing this Skill does not connect the MCP
+> server** — the two are separate installs.
+
+Before starting any research, verify that the `daily-growth-signals` MCP
+server is connected and its tools are visible (e.g.
+`submit_keyword_research_signals`, `submit_specific_seo_data`,
+`get_keyword_research_signals`, `submit_competitor_analysis`,
+`submit_geo_analysis`, `submit_backlink_analysis`).
+
+If the MCP server is not configured, its tools are missing, the API key is
+invalid, or an initial connection fails:
+
+- **Stop immediately.** Do not start the workflow, do not poll, and do not
+  emit any metrics, rankings, evidence IDs, source URLs, or "results".
+- **Never simulate, guess, or answer from general knowledge.** A
+  knowledge-based reply is NOT a valid Skill output and misleads the user into
+  thinking the Skill ran.
+- Tell the user plainly: this Skill needs the `daily-growth-signals` MCP
+  server at `https://mcp.signaldig.com/data/seo/mcp` and a SignalDig API key
+  (get one at <https://signaldig.com/> → API Keys). Point to
+  [references/setup-guide.md](references/setup-guide.md) for client-specific
+  steps, then stop.
+
+Only when the tools are available may the workflow proceed, and every
+substantive claim must cite a real tool result.
 
 ## Execution Contract
 

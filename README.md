@@ -1,4 +1,4 @@
-# Daily Growth Signals Skills / SEO 信号技能集
+# SignalDig Skills / SEO 信号技能集
 
 [English](#english) | [中文](#中文)
 
@@ -7,7 +7,7 @@
 <a id="english"></a>
 ## English
 
-Give AI agents focused workflows for collecting traceable SEO and social-media signals through the Daily Growth Signals MCP products, then turning that evidence into content-opportunity decisions.
+Give AI agents focused workflows for collecting traceable SEO and social-media signals through the SignalDig MCP products, then turning that evidence into content-opportunity decisions.
 
 This repository provides three product-specific skills:
 
@@ -85,7 +85,7 @@ Create the destination directory with `mkdir -p` if needed. Copying the skill di
 
 ## Connect the MCP servers
 
-Add the Daily Growth Signals MCP endpoints to your AI client's configuration:
+Add the SignalDig MCP endpoints to your AI client's configuration:
 
 ```json
 {
@@ -118,7 +118,7 @@ Add the Daily Growth Signals MCP endpoints to your AI client's configuration:
 }
 ```
 
-Replace `{your_api_key}` with your actual API key from your Daily Growth Signals workspace.
+Replace `{your_api_key}` with your actual API key from your SignalDig workspace.
 
 **Server mapping:**
 
@@ -163,7 +163,7 @@ GitHub Pages publishes the project overview at:
 <a id="中文"></a>
 ## 中文
 
-为 AI Agent 提供聚焦的工作流程，通过 Daily Growth Signals MCP 产品收集可追溯的 SEO 和社交媒体信号，并将这些证据转化为内容机会决策。
+为 AI Agent 提供聚焦的工作流程，通过 SignalDig MCP 产品收集可追溯的 SEO 和社交媒体信号，并将这些证据转化为内容机会决策。
 
 本仓库提供三个产品专属技能：
 
@@ -241,7 +241,7 @@ ln -s "$(pwd)/seo-signal-skills/skills/decide-content-opportunities" \
 
 ## 连接 MCP 服务器
 
-将 Daily Growth Signals MCP 端点添加到您的 AI 客户端配置中：
+将 SignalDig MCP 端点添加到您的 AI 客户端配置中：
 
 ```json
 {
@@ -274,7 +274,7 @@ ln -s "$(pwd)/seo-signal-skills/skills/decide-content-opportunities" \
 }
 ```
 
-将 `{your_api_key}` 替换为您的 Daily Growth Signals 工作空间中的实际 API 密钥。
+将 `{your_api_key}` 替换为您的 SignalDig 工作空间中的实际 API 密钥。
 
 **服务映射：**
 

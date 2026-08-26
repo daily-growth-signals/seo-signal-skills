@@ -1,0 +1,3 @@
+#!/bin/sh
+# 提交前强制校验：SKILL.md frontmatter 规范 + CHANGELOG 双语同步（离线、轻量）
+bash scripts/preflight-check.sh --no-fetch --light

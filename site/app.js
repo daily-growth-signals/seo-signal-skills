@@ -22,9 +22,28 @@ const I18N = {
     
     // Workflow
     "workflow.title": "Research first. Decide from evidence.",
+    "workflow.subtitle": "Each skill is a step in a loop: gather evidence, retrieve the result, then decide what to test next.",
     "workflow.step1.title": "Submit research",
+    "workflow.step1.desc": "Ask your agent to research a keyword, topic, or market. It submits a traceable evidence run.",
     "workflow.step2.title": "Poll the result",
+    "workflow.step2.desc": "Retrieve the finished evidence — search demand, social conversations, and native metrics.",
     "workflow.step3.title": "Decide and test",
+    "workflow.step3.desc": "Review confidence, counter-evidence, and alternatives, then ship the recommendation and schedule the next test.",
+
+    // Features
+    "features.title": "What SignalDig does",
+    "features.subtitle": "Three focused skills turn traceable SEO and social evidence into a clear, testable content decision.",
+    "features.s1.title": "Research SEO demand signals",
+    "features.s1.desc": "Find evidence-backed SEO demand for keywords, domains, markets, and languages — Google Trends, keyword volume, and SERP data.",
+    "features.s2.title": "Retrieve social signals",
+    "features.s2.desc": "Validate platform inputs and pull traceable public conversations, creator histories, account content, and native metrics from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat.",
+    "features.s3.title": "Decide content opportunities",
+    "features.s3.desc": "Turn completed SEO and social evidence into a recommended content direction — with confidence, counter-evidence, alternatives, and a next test.",
+    "features.uc.title": "When to use it",
+    "features.uc.1": "Pick the right keyword — confirm which keyword or topic has real, traceable search demand before you write.",
+    "features.uc.2": "Validate a trending topic — check the evidence when a topic is buzzing on social platforms, before investing in content.",
+    "features.uc.3": "Plan your content roadmap — turn research evidence into a prioritized content direction with a clear next test.",
+    "features.uc.4": "Research a new market or language — gauge keyword, domain, and market demand across languages.",
     
     // Developer Install
     "install.dev.title": "Developer Installation",
@@ -40,7 +59,7 @@ const I18N = {
     "install.mcp.social.desc": "X, Reddit, Xiaohongshu, Zhihu, LinkedIn, WeChat",
     "install.mcp.decision.title": "Decision Engine",
     "install.mcp.decision.desc": "Content opportunity recommendations",
-    "install.apikey.note": "Get your API key from your Daily Growth Signals workspace dashboard.",
+    "install.apikey.note": "Get your API key from your SignalDig workspace dashboard.",
     
     // Non-Developer Install
     "install.nondev.title": "Simple Download Installation",
@@ -92,9 +111,28 @@ const I18N = {
     
     // Workflow
     "workflow.title": "先研究，基于证据做决策。",
+    "workflow.subtitle": "每个技能都是循环中的一步：收集证据、获取结果、决定下一步测试什么。",
     "workflow.step1.title": "提交研究请求",
+    "workflow.step1.desc": "让您的 Agent 研究某个关键词、话题或市场，它会提交一次可追溯的证据采集任务。",
     "workflow.step2.title": "获取研究结果",
+    "workflow.step2.desc": "取回已完成的证据——搜索需求、社交对话和原生指标。",
     "workflow.step3.title": "决策并测试",
+    "workflow.step3.desc": "审阅置信度、反证和替代方案，然后落地建议并安排下一次测试。",
+
+    // Features
+    "features.title": "SignalDig 能做什么",
+    "features.subtitle": "三个专注的技能将可追溯的 SEO 与社交证据转化为清晰、可测试的内容决策。",
+    "features.s1.title": "研究 SEO 需求信号",
+    "features.s1.desc": "查找关键词、域名、市场和语言层面有据可依的 SEO 需求——Google Trends、关键词量与 SERP 数据。",
+    "features.s2.title": "检索社交信号",
+    "features.s2.desc": "校验平台参数，并抓取 X、Reddit、小红书、知乎、LinkedIn、微信公众号上可追溯的公开对话、创作者历史、账号内容与原生指标。",
+    "features.s3.title": "决策内容机会",
+    "features.s3.desc": "将完成的 SEO 与社交证据转化为推荐的内容方向——包含置信度、反证、替代方案与下一步测试。",
+    "features.uc.title": "何时使用",
+    "features.uc.1": "选对关键词——在动笔前确认哪个关键词或话题具有真实、可追溯的搜索需求。",
+    "features.uc.2": "验证热门话题——当某个话题在社交平台发酵时，先核实证据再投入内容。",
+    "features.uc.3": "规划内容路线——将研究证据转化为有优先级的、带下一步测试的内容方向。",
+    "features.uc.4": "研究新市场或语言——衡量跨语言的关键词、域名与市场需求。",
     
     // Developer Install
     "install.dev.title": "开发者安装",
@@ -110,7 +148,7 @@ const I18N = {
     "install.mcp.social.desc": "X、Reddit、小红书、知乎、LinkedIn、微信公众号",
     "install.mcp.decision.title": "决策引擎",
     "install.mcp.decision.desc": "内容机会建议",
-    "install.apikey.note": "从您的 Daily Growth Signals 工作空间控制台获取 API 密钥。",
+    "install.apikey.note": "从您的 SignalDig 工作空间控制台获取 API 密钥。",
     
     // Non-Developer Install
     "install.nondev.title": "简易下载安装",
@@ -168,8 +206,8 @@ const SKILLS = [
     id: "research-seo-signals",
     name: { en: "SEO Signal Research", zh: "SEO 信号研究" },
     desc: { 
-      en: "Research evidence-backed SEO demand signals for keywords, domains, markets, and languages via Daily Growth Signals MCP.",
-      zh: "通过 Daily Growth Signals MCP 研究有据可依的 SEO 需求信号（关键词、域名、市场、语言）。"
+      en: "Research evidence-backed SEO demand signals for keywords, domains, markets, and languages via SignalDig MCP.",
+      zh: "通过 SignalDig MCP 研究有据可依的 SEO 需求信号（关键词、域名、市场、语言）。"
     },
     files: [
       { name: "SKILL.md",           type: "file" },

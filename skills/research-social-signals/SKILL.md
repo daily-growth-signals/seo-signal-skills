@@ -1,9 +1,9 @@
 ---
 name: research-social-signals
-description: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts through the SignalDig Social MCP. Use when an AI needs underlying posts, notes, account profiles, account content, trends, source URLs, timestamps, pagination state, or native metrics for downstream analysis or decision support. Select the correct retrieval tool, explain unfamiliar parameters, validate user-supplied values, suggest focused searches, and return data without making marketing, content, SEO, sentiment, account-performance, or business decisions.
+description: SignalDig social research skill — REQUIRES the social-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts through the SignalDig Social MCP. Use when an AI needs underlying posts, notes, account profiles, account content, trends, source URLs, timestamps, pagination state, or native metrics for downstream analysis or decision support. Select the correct retrieval tool, explain unfamiliar parameters, validate user-supplied values, suggest focused searches, and return data without making marketing, content, SEO, sentiment, account-performance, or business decisions.
 slug: signaldig-research-social-signals
 displayName: Retrieve Social Signals
-version: 1.2.3
+version: 1.3.1
 summary: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts.
 license: MIT
 homepage: https://signaldig.com/
@@ -13,6 +13,36 @@ tags: [social, social-media, x, reddit, mcp, growth]
 # Retrieve Social Signals
 
 Retrieve useful underlying social data through the SignalDig Social MCP. Help the caller form a valid, focused request, then preserve the returned evidence and its collection boundary. Stop at retrieval: do not turn the data into a decision, score, strategy, recommendation, or fixed analysis report.
+
+## MCP Availability Gate (Mandatory)
+
+> This Skill is a **workflow spec only**; it has no data of its own. Every live
+> result comes from the `social-growth-signals` MCP server, which requires a
+> valid SignalDig API key. **Installing this Skill does not connect the MCP
+> server** — the two are separate installs.
+
+Before starting any retrieval, verify that the `social-growth-signals` MCP
+server is connected and its tools are visible (e.g. `search_x_posts`,
+`get_x_trends`, `search_reddit_posts`, `search_xiaohongshu_notes`,
+`get_xiaohongshu_user_posts`, `search_zhihu_articles`,
+`get_linkedin_user_posts`, `get_wechat_account_articles`).
+
+If the MCP server is not configured, its tools are missing, the API key is
+invalid, or an initial connection fails:
+
+- **Stop immediately.** Do not start the workflow, and do not emit any posts,
+  notes, account content, source URLs, metrics, or "results".
+- **Never simulate, guess, or answer from general knowledge.** A
+  knowledge-based reply is NOT a valid Skill output and misleads the user into
+  thinking the Skill ran.
+- Tell the user plainly: this Skill needs the `social-growth-signals` MCP
+  server at `https://mcp.signaldig.com/data/social/mcp` and a SignalDig API
+  key (get one at <https://signaldig.com/> → API Keys). Point to
+  [references/setup-guide.md](references/setup-guide.md) for client-specific
+  steps, then stop.
+
+Only when the tools are available may the workflow proceed, and every
+returned item must come from a real tool result.
 
 ## Core Boundary
 

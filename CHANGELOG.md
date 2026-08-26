@@ -8,6 +8,15 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.3.0] - 2026-08-26
+
+### Changes
+
+- SEO signal research adds three analysis types: competitor analysis (`submit_competitor_analysis`), GEO/AI-search visibility analysis (`submit_geo_analysis`), and backlink and referring-domain analysis (`submit_backlink_analysis`), extending keyword-and-domain research with competitor, AI-search visibility, and backlink data.
+- The three skills (SEO signal research, social signal research, and content opportunity decisions) now gate on MCP availability: when the required MCP server is not connected, its tools are missing, or the API key is invalid, the skill stops immediately instead of simulating, guessing, or answering from general knowledge, and directs the user to connect the required server so they are not misled into thinking real data was returned.
+- Each skill adds a client setup guide (references/setup-guide.md) with MCP connection steps, verification, and troubleshooting for Claude Code, Cursor, Codex, Windsurf, and other clients.
+- Skill descriptions now state the install boundary up front: installing a Skill does not connect the MCP server; a SignalDig API key and the matching MCP server must be configured separately so users do not assume it works immediately after install.
+
 ## [1.2.3] - 2026-08-18
 
 ### Changes

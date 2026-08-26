@@ -136,6 +136,9 @@ for SKILL in "${SKILLS[@]}"; do
         PUBLISH_FAILED=1
     fi
     echo ""
+
+    # 并发安全：skill 平台对连续发布有限流/冲突风险，每个发布之间间隔 3s
+    sleep 3
 done
 
 if [ "$DRY_RUN" = true ]; then

@@ -3,3 +3,4 @@
 dist/
 *.zip
 .AGENT_GUIDE.md
+node_modules/

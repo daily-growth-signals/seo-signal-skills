@@ -1,0 +1,14 @@
+{
+  "name": "SignalDig — Agent Skills",
+  "short_name": "SignalDig",
+  "description": "Collect traceable SEO and social signals, then turn the evidence into content-opportunity decisions.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7f0",
+  "theme_color": "#d8f238",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,54 @@
+name: Publish Skills to Skill Hubs
+
+# GitHub is the single source of truth. When a GitHub Release is published
+# (usually from `git tag v* && git push --tags` -> release.yml), this workflow
+# automatically distributes the skills to ClawHub and SkillHub.
+#
+# Required repository secrets:
+#   - CLAWHUB_TOKEN   : ClawHub token (or run `clawhub login` locally and use
+#                       workflow_dispatch after configuring the CLI)
+#   - CLAWHUB_OWNER   : optional, ClawHub owner to publish as
+#   - SKILLHUB_API_KEY: SkillHub API key
+#
+# A step is skipped when its secret is not configured, so the workflow is safe
+# to add even before all tokens exist.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish-hubs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install hub CLIs
+        run: npm i -g clawhub
+
+      - name: Publish to ClawHub
+        if: ${{ secrets.CLAWHUB_TOKEN != '' }}
+        env:
+          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
+          CLAWHUB_OWNER: ${{ secrets.CLAWHUB_OWNER }}
+        run: |
+          bash scripts/publish-clawhub.sh --publish \
+            --changelog "Release ${{ github.event.release.tag_name }}"
+
+      - name: Publish to SkillHub
+        if: ${{ secrets.SKILLHUB_API_KEY != '' }}
+        env:
+          SKILLHUB_API_KEY: ${{ secrets.SKILLHUB_API_KEY }}
+        run: |
+          bash scripts/publish-skillhub.sh --publish \
+            --changelog "Release ${{ github.event.release.tag_name }}"
