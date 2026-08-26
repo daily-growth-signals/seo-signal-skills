@@ -1,8 +1,16 @@
 name: Publish Skills to Skill Hubs
 
-# GitHub is the single source of truth. When a GitHub Release is published
-# (usually from `git tag v* && git push --tags` -> release.yml), this workflow
-# automatically distributes the skills to ClawHub and SkillHub.
+# GitHub is the single source of truth. This workflow distributes the skills
+# to ClawHub and SkillHub.
+#
+# Trigger:
+#   - push a `v*` tag (`git tag v* && git push --tags`) -> runs directly.
+#     This is the primary path. It intentionally does NOT depend on the
+#     `release` event chain: releases created by release.yml use the default
+#     GITHUB_TOKEN, and GITHUB_TOKEN-triggered events do not start new
+#     workflow runs (GitHub limitation). Listening to `push.tags` avoids that.
+#   - `release` published -> fallback for releases created manually in the UI.
+#   - workflow_dispatch -> manual run for debugging.
 #
 # Required repository secrets:
 #   - CLAWHUB_TOKEN   : ClawHub token (or run `clawhub login` locally and use
@@ -14,6 +22,9 @@ name: Publish Skills to Skill Hubs
 # to add even before all tokens exist.
 
 on:
+  push:
+    tags:
+      - 'v*'
   release:
     types: [published]
   workflow_dispatch:
@@ -24,6 +35,10 @@ permissions:
 jobs:
   publish-hubs:
     runs-on: ubuntu-latest
+    env:
+      # Tag name used in the changelog. On `push tags` this is ref_name; on
+      # `release` events it's the release tag; manual runs fall back to ref_name.
+      TAG_NAME: ${{ github.event.release.tag_name || github.ref_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,7 +48,9 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install hub CLIs
+      # ClawHub publishes first, before the SkillHub CLI install, so a SkillHub
+      # install failure never blocks the ClawHub release.
+      - name: Install ClawHub CLI
         run: npm i -g clawhub
 
       - name: Publish to ClawHub
@@ -43,7 +60,12 @@ jobs:
           CLAWHUB_OWNER: ${{ secrets.CLAWHUB_OWNER }}
         run: |
           bash scripts/publish-clawhub.sh --publish \
-            --changelog "Release ${{ github.event.release.tag_name }}"
+            --changelog "Release $TAG_NAME"
+
+      - name: Install SkillHub CLI
+        if: ${{ secrets.SKILLHUB_API_KEY != '' }}
+        run: |
+          curl -fsSL https://skillhub-1388575217.cos.ap-guangzhou.myqcloud.com/install/install.sh | bash -s -- --cli-only
 
       - name: Publish to SkillHub
         if: ${{ secrets.SKILLHUB_API_KEY != '' }}
@@ -51,4 +73,4 @@ jobs:
           SKILLHUB_API_KEY: ${{ secrets.SKILLHUB_API_KEY }}
         run: |
           bash scripts/publish-skillhub.sh --publish \
-            --changelog "Release ${{ github.event.release.tag_name }}"
+            --changelog "Release $TAG_NAME"
