@@ -8,6 +8,12 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.4.0] - 2026-08-26
+
+### Changes
+
+- Normalize skill versions to the `1.x.0` format, and keep each skill's SKILL.md version consistent with its SkillHub metadata version.
+
 ## [1.3.0] - 2026-08-26
 
 ### Changes
