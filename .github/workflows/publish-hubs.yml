@@ -39,6 +39,11 @@ jobs:
       # Tag name used in the changelog. On `push tags` this is ref_name; on
       # `release` events it's the release tag; manual runs fall back to ref_name.
       TAG_NAME: ${{ github.event.release.tag_name || github.ref_name }}
+      # Secrets are exposed as job-level env vars because the `secrets` context
+      # is NOT allowed inside step `if:` conditionals; steps gate on env instead.
+      CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
+      CLAWHUB_OWNER: ${{ secrets.CLAWHUB_OWNER }}
+      SKILLHUB_API_KEY: ${{ secrets.SKILLHUB_API_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,23 +59,18 @@ jobs:
         run: npm i -g clawhub
 
       - name: Publish to ClawHub
-        if: ${{ secrets.CLAWHUB_TOKEN != '' }}
-        env:
-          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
-          CLAWHUB_OWNER: ${{ secrets.CLAWHUB_OWNER }}
+        if: ${{ env.CLAWHUB_TOKEN != '' }}
         run: |
           bash scripts/publish-clawhub.sh --publish \
             --changelog "Release $TAG_NAME"
 
       - name: Install SkillHub CLI
-        if: ${{ secrets.SKILLHUB_API_KEY != '' }}
+        if: ${{ env.SKILLHUB_API_KEY != '' }}
         run: |
           curl -fsSL https://skillhub-1388575217.cos.ap-guangzhou.myqcloud.com/install/install.sh | bash -s -- --cli-only
 
       - name: Publish to SkillHub
-        if: ${{ secrets.SKILLHUB_API_KEY != '' }}
-        env:
-          SKILLHUB_API_KEY: ${{ secrets.SKILLHUB_API_KEY }}
+        if: ${{ env.SKILLHUB_API_KEY != '' }}
         run: |
           bash scripts/publish-skillhub.sh --publish \
             --changelog "Release $TAG_NAME"
