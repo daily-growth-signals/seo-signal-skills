@@ -69,6 +69,11 @@ Plain-language scope mapping:
 - related, expanded, or long-tail queries: `related_keywords`
 - rankings, organic results, SERP features, or target-domain presence: `serp`
 - interest over time, geography, top queries, or rising queries: `google_trends`
+- competitor domains, organic competitors, site keywords, or domain-rank context:
+  `submit_competitor_analysis`
+- AI Mode/AI Overview, LLM mentions, or AI-search visibility:
+  `submit_geo_analysis`
+- backlinks or referring domains: `submit_backlink_analysis`
 
 For SERP requests, infer the engine from the user's wording and pass `search_engine="bing"` for Bing/必应; otherwise preserve the Google default. The MCP function does not require DataForSEO endpoint details or low-level search settings.
 
@@ -76,7 +81,7 @@ When the user only says to “look up” or “research” a keyword, ask which 
 
 ## Tool: `get_keyword_research_signals`
 
-Retrieve the current state and terminal result for either submit tool.
+Retrieve the current state and terminal result for any SEO submit tool.
 
 Input:
 
@@ -129,6 +134,9 @@ A result can include:
 - all related keywords;
 - all DataForSEO SERP observations and traceability links;
 - all Google Trends time, geography, and related-query evidence;
+- `competitor_analysis` for a competitor-analysis job;
+- `geo_analysis` and its `analysis_coverage` for a GEO-analysis job;
+- `backlink_analysis` for a backlink-analysis job;
 - `field_semantics`, containing the live units, meanings, and caveats for result
   fields present in this response;
 - evidence-linked synthesized signals;
@@ -146,7 +154,7 @@ Read `result.field_semantics` before interpreting raw or normalized fields.
 if known_request_id:
     state = get(known_request_id)
 else:
-    ticket = submit_specific(...) or submit_aggregate(..., idempotency_key=stable_key)
+    ticket = selected_submit_tool(..., idempotency_key=stable_key)
     request_id = ticket.request_id
     state = ticket
 

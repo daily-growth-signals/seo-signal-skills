@@ -57,12 +57,48 @@ Add to `.mcp.json` in your project:
 
 Then restart Claude Code (or run `/mcp`) and approve the server.
 
-### Other clients (Cursor, Codex, Windsurf, etc.)
+### Codex
+
+Codex does not read `mcpServers` JSON. Add the server to your **user-level**
+`~/.codex/config.toml` (not the project `.codex/config.toml` — account-level
+config):
+
+```toml
+[mcp_servers.signaldig_decision]
+url = "https://mcp.signaldig.com/signals/seo/mcp"
+bearer_token_env_var = "SIGNALDIG_API_KEY"
+enabled = true
+default_tools_approval_mode = "prompt"
+tool_timeout_sec = 120
+```
+
+On Windows the user-level file is `%USERPROFILE%\.codex\config.toml`.
+
+Set your API key as a user environment variable — never in `config.toml`, a
+project file, the repository, or chat:
+
+```bash
+# macOS / Linux — add to ~/.zshrc or ~/.bashrc
+export SIGNALDIG_API_KEY="your_api_key"
+```
+
+```powershell
+# Windows — PowerShell (open a new terminal afterwards; setx persists)
+setx SIGNALDIG_API_KEY "your_api_key"
+```
+
+Codex automatically sends `Authorization: Bearer $SIGNALDIG_API_KEY`. Fully
+quit and reopen Codex Desktop (or run `/reload-plugins` from Claude Code),
+start a new task, and confirm the tools from section 3 are listed.
+
+### Other clients (Cursor, Windsurf, etc.)
 
 Every client stores MCP servers in its own settings file, but the entry has
 the same shape: server name + `type: "http"` + URL + `headers`. Open your
 client's MCP settings, add the server above with your real API key, and
-restart the client.
+restart the client. Where the client supports an environment-variable auth
+option (like Codex's `bearer_token_env_var`), prefer it over hardcoding the
+key in the config file.
 
 ---
 

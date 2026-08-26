@@ -3,7 +3,7 @@ name: decide-content-opportunities
 description: SignalDig content decision skill — REQUIRES the keyword_decision_report MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Generate evidence-constrained keyword and content-opportunity decisions through the SignalDig Decision MCP, with a traceable stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test. Use when deciding whether or how to prioritize a keyword opportunity. Do not use for collecting SEO signals alone, writing finished content, publishing, or making the user's final business decision.
 slug: signaldig-decide-content-opportunities
 displayName: Decide Content Opportunities
-version: 1.3.1
+version: 1.4.0
 summary: Generate evidence-constrained keyword and content-opportunity decisions with confidence, counter-evidence, and a next validation test.
 license: MIT
 homepage: https://signaldig.com/
@@ -56,6 +56,12 @@ decision claim must cite a real tool result.
   submitting. Keep one stable `idempotency_key` across retries.
 - Select the smallest sufficient SEO `data_scopes`; omit it only when the
   decision genuinely needs every SEO evidence family.
+- The public Decision MCP submit schema does **not** expose `search_engine`.
+  A decision job that includes `serp` therefore uses its service default
+  (Google). Do not claim that it contains Bing evidence or submit a Bing
+  comparison through this tool. Use `research-seo-signals` for standalone Bing
+  SERP retrieval, and label it as supplemental context rather than input
+  consumed by the Decision MCP.
 - Treat live `field_semantics`, evidence IDs, request IDs, limitations, and
   timestamps as authoritative.
 - Recommend an action only within the evidence coverage. State conditions that
@@ -103,6 +109,9 @@ decision claim must cite a real tool result.
    channels, and material constraints.
 2. Select the smallest sufficient `data_scopes`: `keyword_overview`,
    `related_keywords`, `serp`, and/or `google_trends`.
+   When `serp` is selected, treat Google as the only engine available through
+   this Decision MCP contract; do not add an unsupported `search_engine`
+   argument.
 3. Build a stable key:
    `keyword-decision:` + keyword + `|` + domain + `|` + market + `|` +
    language + `|` + sorted scopes.

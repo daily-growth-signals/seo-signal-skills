@@ -102,7 +102,7 @@
           <p data-i18n="hero.subtitle">Three focused skills.<br />From research evidence to a testable recommendation.</p>
           <div class="actions">
             <a class="button button-dark" href="#install" data-i18n="hero.btnInstall">Install Skills</a>
-            <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills/releases/latest" data-i18n="hero.btnDownload">Download Release</a>
+            <a class="button button-light" href="https://signaldig.com/skills#install" data-i18n="hero.btnDownload">Download Release</a>
             <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills">View on GitHub</a>
           </div>
         </div>
@@ -225,7 +225,7 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
 
         <!-- Step 2: Platform tabs + skill list -->
         <div class="install-step">
-          <h3 data-i18n="install.step2">Step 2: Choose your agent & create symlinks</h3>
+          <h3 data-i18n="install.step2">Step 2: Choose your agent & copy the skill folders</h3>
           <p class="step-hint" data-i18n="install.step2.hint">Select an agent platform to see the exact commands for each skill.</p>
 
           <div class="platform-tabs" role="tablist" aria-label="Agent platform">
@@ -296,8 +296,98 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
             </div>
           </div>
 
-          <div class="api-key-note" data-i18n="install.apikey.note">
-            Get your API key from your SignalDig workspace dashboard.
+          <div class="mcp-note" data-i18n="install.mcp.clients.note">
+            <strong>Tip:</strong> Register the SignalDig MCP server once per agent — connection parameters are fixed. Examples for common clients:
+          </div>
+
+          <div class="mcp-services-grid">
+            <div class="mcp-service-card">
+              <h4>Claude Code</h4>
+              <p class="mcp-service-desc"><code>.mcp.json</code> (project root)</p>
+              <div class="code-row code-row-small">
+                <pre><code>{
+  "mcpServers": {
+    "signaldig-seo": {
+      "type": "http",
+      "url": "https://mcp.signaldig.com/data/seo/mcp",
+      "headers": {
+        "Authorization": "Bearer ${SIGNALDIG_API_KEY}"
+      }
+    }
+  }
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="mcp-service-card">
+              <h4>Codex</h4>
+              <p class="mcp-service-desc"><code>~/.codex/config.toml</code></p>
+              <div class="code-row code-row-small">
+                <pre><code>[mcp_servers.signaldig_seo]
+url = "https://mcp.signaldig.com/data/seo/mcp"
+bearer_token_env_var = "SIGNALDIG_API_KEY"
+enabled = true
+default_tools_approval_mode = "prompt"
+tool_timeout_sec = 120</code></pre>
+              </div>
+            </div>
+
+            <div class="mcp-service-card">
+              <h4>Cursor</h4>
+              <p class="mcp-service-desc">Settings &rarr; Tools &amp; MCP &rarr; Streamable HTTP</p>
+              <div class="code-row code-row-small">
+                <pre><code>url:    https://mcp.signaldig.com/data/seo/mcp
+header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
+              </div>
+            </div>
+
+            <div class="mcp-service-card">
+              <h4>Windsurf</h4>
+              <p class="mcp-service-desc"><code>~/.codeium/mcp_config.json</code></p>
+              <div class="code-row code-row-small">
+                <pre><code>{
+  "mcpServers": {
+    "signaldig-seo": {
+      "serverUrl": "https://mcp.signaldig.com/data/seo/mcp",
+      "headers": {
+        "Authorization": "Bearer ${env:SIGNALDIG_API_KEY}"
+      }
+    }
+  }
+}</code></pre>
+              </div>
+            </div>
+
+            <div class="mcp-service-card">
+              <h4>VS Code / GitHub Copilot</h4>
+              <p class="mcp-service-desc"><code>.vscode/mcp.json</code></p>
+              <div class="code-row code-row-small">
+                <pre><code>{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "signaldig-api-key",
+      "description": "SignalDig API Key",
+      "password": true
+    }
+  ],
+  "servers": {
+    "signaldig-seo": {
+      "type": "http",
+      "url": "https://mcp.signaldig.com/data/seo/mcp",
+      "headers": {
+        "Authorization": "Bearer ${input:signaldig-api-key}"
+      }
+    }
+  }
+}</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="api-key-note">
+            <span data-i18n="install.apikey.note">Get your API key from your SignalDig workspace dashboard.</span>
+            <a class="button button-light" href="https://signaldig.com/skills#install" target="_blank" rel="noopener" data-i18n="install.apikey.cta">Get your API Key →</a>
           </div>
         </div>
       </section>
@@ -306,46 +396,89 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
       <section id="install-nondev" class="section install install-nondev-section" style="display: none;">
         <h2 data-i18n="install.nondev.title">Simple Download Installation</h2>
         <p class="section-lede" data-i18n="install.nondev.subtitle">
-          Download the pre-packaged skills zip file and extract it to your agent's skills directory.
-          No Git or command line experience required.
+          Download the skills zip file, unzip it, and paste the skill folders into your AI agent.
+          No coding or command line needed — just follow each step below.
         </p>
 
         <!-- Step 1: Download -->
         <div class="install-step">
-          <h3 data-i18n="install.nondev.step1">Step 1: Download the latest release</h3>
+          <h3 data-i18n="install.nondev.step1">Step 1: Download the skills</h3>
           <div class="download-box">
-            <a class="button button-dark download-btn" href="https://github.com/daily-growth-signals/seo-signal-skills/releases/latest" target="_blank" rel="noopener">
+            <a class="button button-dark download-btn" href="https://signaldig.com/skills#install" target="_blank" rel="noopener">
               <span data-i18n="install.nondev.downloadBtn">Download seo-signal-skills.zip</span>
               <span class="download-arrow">↓</span>
             </a>
-            <p class="download-hint" data-i18n="install.nondev.downloadHint">Contains all three skill folders ready to use</p>
+            <p class="download-hint" data-i18n="install.nondev.downloadHint">Contains all three skill folders, ready to use</p>
           </div>
-        </div>
-
-        <!-- Step 2: Extract -->
-        <div class="install-step">
-          <h3 data-i18n="install.nondev.step2">Step 2: Extract the zip file</h3>
           <div class="extract-steps">
             <div class="extract-step-item">
               <span class="extract-num">1</span>
-              <p data-i18n="install.nondev.extract1">Locate the downloaded <code>seo-signal-skills-*.zip</code> file</p>
+              <p data-i18n="install.nondev.step1.1">Click the button above — a GitHub "Releases" page opens in a new tab.</p>
             </div>
             <div class="extract-step-item">
               <span class="extract-num">2</span>
-              <p data-i18n="install.nondev.extract2">Right-click and choose "Extract All" (Windows) or double-click (Mac)</p>
+              <p data-i18n="install.nondev.step1.2">Find the newest version (marked <strong>Latest</strong>) and click the <code>seo-signal-skills-*.zip</code> file to download it.</p>
             </div>
             <div class="extract-step-item">
               <span class="extract-num">3</span>
-              <p data-i18n="install.nondev.extract3">You'll see three folders: <code>research-seo-signals</code>, <code>research-social-signals</code>, <code>decide-content-opportunities</code></p>
+              <p data-i18n="install.nondev.step1.3">The file is saved to your <strong>Downloads</strong> folder — a download prompt also appears in your browser.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Unzip -->
+        <div class="install-step">
+          <h3 data-i18n="install.nondev.step2">Step 2: Unzip the downloaded file</h3>
+          <div class="extract-steps">
+            <div class="extract-step-item">
+              <span class="extract-num">1</span>
+              <p data-i18n="install.nondev.extract1">Open your <strong>Downloads</strong> folder and find the <code>seo-signal-skills-*.zip</code> file.</p>
+            </div>
+            <div class="extract-step-item">
+              <span class="extract-num">2</span>
+              <p data-i18n="install.nondev.extract2">Windows: right-click the file → choose <strong>"Extract All…"</strong> → click <strong>Extract</strong>. Mac: just double-click the file — it unzips automatically.</p>
+            </div>
+            <div class="extract-step-item">
+              <span class="extract-num">3</span>
+              <p data-i18n="install.nondev.extract3">A new folder with a similar name appears (e.g. <code>seo-signal-skills-1.2.0</code>). Double-click it to open it.</p>
+            </div>
+            <div class="extract-step-item">
+              <span class="extract-num">4</span>
+              <p data-i18n="install.nondev.extract4">Inside you will see exactly three skill folders: <code>research-seo-signals</code>, <code>research-social-signals</code> and <code>decide-content-opportunities</code>.</p>
             </div>
           </div>
         </div>
 
         <!-- Step 3: Copy to agent -->
         <div class="install-step">
-          <h3 data-i18n="install.nondev.step3">Step 3: Copy folders to your agent</h3>
-          <p class="step-hint" data-i18n="install.nondev.step3.hint">Find your agent's skills folder and copy all three skill folders there:</p>
-          
+          <h3 data-i18n="install.nondev.step3">Step 3: Put the skills into your AI agent</h3>
+          <p class="step-hint" data-i18n="install.nondev.step3.hint">
+            Every AI client (Claude Code, Codex, Cursor, Windsurf…) has its own <strong>skills folder</strong>.
+            Anything inside it becomes a skill your AI can use. Copy all three skill folders there.
+          </p>
+
+          <details class="folder-help">
+            <summary data-i18n="install.nondev.findFolder.title">Can't find the skills folder? Do this:</summary>
+            <div class="extract-steps">
+              <div class="extract-step-item">
+                <span class="extract-num">1</span>
+                <p data-i18n="install.nondev.findFolder.1">Open your home folder. Mac: press <code>Cmd + Shift + H</code> in Finder. Windows: open File Explorer and go to <code>C:\Users\YourUserName</code>.</p>
+              </div>
+              <div class="extract-step-item">
+                <span class="extract-num">2</span>
+                <p data-i18n="install.nondev.findFolder.2">The skills folder is <strong>hidden</strong> (its name starts with a dot). To see hidden files: Mac — press <code>Cmd + Shift + .</code>; Windows — click <strong>View</strong> at the top, then tick <strong>Hidden items</strong>.</p>
+              </div>
+              <div class="extract-step-item">
+                <span class="extract-num">3</span>
+                <p data-i18n="install.nondev.findFolder.3">Look for the folder named after your AI client: <code>.claude</code>, <code>.codex</code>, <code>.cursor</code> or <code>.windsurf</code>. Open it, then open the <code>skills</code> sub-folder inside.</p>
+              </div>
+              <div class="extract-step-item">
+                <span class="extract-num">4</span>
+                <p data-i18n="install.nondev.findFolder.4">No <code>skills</code> folder? Right-click → <strong>New Folder</strong> → name it exactly <code>skills</code>.</p>
+              </div>
+            </div>
+          </details>
+
           <div class="agent-paths">
             <div class="agent-path-card">
               <h4>Claude Code</h4>
@@ -368,36 +501,61 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
           <div class="visual-guide">
             <div class="guide-step">
               <span class="guide-icon">📁</span>
-              <p data-i18n="install.nondev.guide1">Open the extracted folder</p>
+              <p data-i18n="install.nondev.guide1">Open the folder you unzipped (the one holding the three skill folders)</p>
             </div>
             <span class="guide-arrow">→</span>
             <div class="guide-step">
               <span class="guide-icon">✂️</span>
-              <p data-i18n="install.nondev.guide2">Select all three skill folders</p>
+              <p data-i18n="install.nondev.guide2">Select all three skill folders — click the first, hold <code>Shift</code>, click the last</p>
             </div>
             <span class="guide-arrow">→</span>
             <div class="guide-step">
               <span class="guide-icon">📋</span>
-              <p data-i18n="install.nondev.guide3">Copy/Cut them</p>
+              <p data-i18n="install.nondev.guide3">Copy them: <code>Ctrl + C</code> (Windows) / <code>Cmd + C</code> (Mac)</p>
             </div>
             <span class="guide-arrow">→</span>
             <div class="guide-step">
               <span class="guide-icon">📌</span>
-              <p data-i18n="install.nondev.guide4">Paste into your agent's skills folder</p>
+              <p data-i18n="install.nondev.guide4">Open your AI's <code>skills</code> folder and paste: <code>Ctrl + V</code> / <code>Cmd + V</code></p>
             </div>
           </div>
+
+          <p class="step-done" data-i18n="install.nondev.step3.done">
+            <strong>Done!</strong> Your skills folder should now contain the three folders. Fully quit and reopen your AI app so it notices the new skills.
+          </p>
         </div>
 
-        <!-- Step 4: MCP config (simplified) -->
+        <!-- Step 4: Connect the data service -->
         <div class="install-step">
-          <h3 data-i18n="install.nondev.step4">Step 4: Configure MCP (optional)</h3>
+          <h3 data-i18n="install.nondev.step4">Step 4: Connect the data service (required)</h3>
           <p class="step-hint" data-i18n="install.nondev.step4.hint">
-            If you want to use the full features, you need to connect to our MCP services. 
-            Ask your AI agent to help you configure this, or follow your client's documentation.
+            The skills fetch real data through SignalDig's data service (called MCP).
+            Without this step the AI cannot get real data — so this step cannot be skipped.
           </p>
           <div class="mcp-simple-config">
-            <p data-i18n="install.nondev.mcpSimple">The MCP server URLs are provided in the included SKILL.md files in each skill folder.</p>
-            <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills#connect-the-mcp-servers" target="_blank" rel="noopener" data-i18n="install.nondev.viewDocs">View Full Documentation →</a>
+            <p data-i18n="install.nondev.mcpWhat">MCP is like a <strong>bridge</strong> between your AI and SignalDig's data service. Here is the easiest way to set it up:</p>
+            <div class="extract-steps">
+              <div class="extract-step-item">
+                <span class="extract-num">1</span>
+                <p data-i18n="install.nondev.mcp1">Open any skill folder you unzipped (e.g. <code>research-seo-signals</code>) and open its <code>SKILL.md</code> file with a text editor (Notepad / TextEdit).</p>
+              </div>
+              <div class="extract-step-item">
+                <span class="extract-num">2</span>
+                <p data-i18n="install.nondev.mcp2">Copy the whole content of <code>SKILL.md</code>, paste it into your AI chat, and tell it: <em>"Please configure this MCP connection for me."</em></p>
+              </div>
+              <div class="extract-step-item">
+                <span class="extract-num">3</span>
+                <p data-i18n="install.nondev.mcp3">The AI will guide you or configure it directly. If it asks for an API Key, click the button below to get a free one.</p>
+              </div>
+            </div>
+            <div class="api-key-note">
+              <span data-i18n="install.apikey.note">Get your API key from your SignalDig workspace dashboard.</span>
+              <a class="button button-light" href="https://signaldig.com/skills#install" target="_blank" rel="noopener" data-i18n="install.apikey.cta">Get your API Key →</a>
+            </div>
+            <p class="mcp-key-hint" data-i18n="install.nondev.mcpKeyHint">
+              The API Key is like your <strong>data pass</strong> for SignalDig services. Keep it private — don't paste it into chats you don't trust.
+            </p>
+            <a class="button button-light" href="https://signaldig.com/mcp#ai-client-setup" target="_blank" rel="noopener" data-i18n="install.nondev.viewDocs">View Full Documentation →</a>
           </div>
         </div>
       </section>

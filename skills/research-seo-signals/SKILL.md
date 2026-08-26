@@ -3,7 +3,7 @@ name: research-seo-signals
 description: SignalDig SEO research skill — REQUIRES the daily-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the SignalDig MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
 slug: signaldig-research-seo-signals
 displayName: Research SEO Signals
-version: 1.4.1
+version: 1.5.0
 summary: Collect traceable SEO demand signals for keywords, domains, markets, and languages through the SignalDig MCP server.
 license: MIT
 homepage: https://signaldig.com/
@@ -54,6 +54,11 @@ substantive claim must cite a real tool result.
   `decide-content-opportunities` and the Decision MCP.
 - Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job.
 - Use `submit_competitor_analysis` for competitor research, `submit_geo_analysis` for AI-search/GEO visibility, and `submit_backlink_analysis` for a site's backlinks and referring domains. These tools own provider query details; do not construct low-level provider requests.
+- `search_engine="bing"` is supported here, but is not available on the public
+  `submit_keyword_decision_report` Decision MCP tool. Do not route a Bing
+  comparison through the Decision MCP or claim its report consumed Bing
+  evidence. If both are needed, label the Bing result from this Skill as
+  supplemental context beside the Google-default decision report.
 - Treat the MCP tool schema and returned fields as the source of truth.
 - Preserve every `request_id` and `idempotency_key` used in this conversation until the task is finished.
 - Separate observed evidence from interpretation in every answer.
@@ -86,7 +91,9 @@ Treat two research goals as the same logical request when all of the following m
 - `market` (ISO alpha-2)
 - `language` (research language)
 - selected `data_scope` / `data_scopes` set (order-independent)
-- `search_engine` when the selected scope includes `serp`
+- `search_engine` when the selected traditional scope includes `serp`
+- dedicated `analysis_kind` (`competitor`, `geo`, or `backlink`) instead of
+  `data_scope` / `data_scopes` for a dedicated analysis tool
 - optional user-declared refresh flag is absent
 
 Build:
@@ -95,7 +102,11 @@ Build:
 idempotency_key = "seo-signals:" + keyword + "|" + domain + "|" + market + "|" + language + "|" + sorted_scopes + "|engine=" + search_engine
 ```
 
-Where `sorted_scopes` is the selected scopes joined by commas in stable sorted order, or `all` when the complete set is intentionally requested. Do not put personal or confidential data into the key.
+Where `sorted_scopes` is the selected traditional scopes joined by commas in
+stable sorted order, `all` when the complete set is intentionally requested,
+or `analysis=competitor`, `analysis=geo`, or `analysis=backlink` for a
+dedicated analysis. Include `engine=` only for a traditional SERP scope. Do
+not put personal or confidential data into the key.
 
 Keep a session ledger (in agent working memory) shaped like:
 
@@ -113,8 +124,8 @@ Update the ledger after every successful submit or get.
 4. If research language is absent, infer it from the target market and keyword only when unambiguous; otherwise default to `en`.
 5. Determine response language separately from research language: honor an explicit answer-language request, otherwise use the user's conversation language, and default to English only when neither is clear.
 6. Ask for a missing keyword or domain that cannot be safely inferred.
-7. Inventory the data families needed to answer the request. If the user only names a keyword or asks for generic “keyword data/research,” pause before any live call and ask which of these they need: keyword metrics and intent, related keywords, current search results/SERP, or search trends. Allow one or more choices and explain them in user language, not only enum names.
-8. If exactly one family is needed, plan `submit_specific_seo_data`. If two or more families are needed, plan `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported families are required.
+7. Identify whether the request is for traditional keyword research, competitor analysis, GEO/AI-search visibility, or backlink/referring-domain analysis. If the user only names a keyword or asks for generic “keyword data/research,” pause before any live call and ask which traditional data families they need: keyword metrics and intent, related keywords, current search results/SERP, or search trends.
+8. Route traditional research with exactly one family to `submit_specific_seo_data`, and two or more families to `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported traditional families are required. Route a dedicated analysis directly to its matching submit tool; do not encode it as a traditional data scope.
 9. Build the stable `idempotency_key` from the logical research identity.
 10. **Reuse gate (mandatory before submit):**
     1. If the session ledger or conversation already has a `request_id` for this identity, call `get_keyword_research_signals(request_id)` only.
@@ -122,7 +133,7 @@ Update the ledger after every successful submit or get.
     3. If status is `pending` or `running`, continue polling that `request_id` only. Do not submit again.
     4. If status is `failed` and the user wants a retry, prefer **resubmit with the same `idempotency_key`** so the retry keeps the same logical identity.
     5. If no prior `request_id` is known, still send the stable `idempotency_key` on first submit so client retries collapse to one run.
-11. Call the selected submit tool only when the reuse gate requires a new submit: pass `keyword`, `domain`, `market`, research `language`, scopes, and the same `idempotency_key`.
+11. Call the selected submit tool only when the reuse gate requires a new submit: pass `keyword`, `domain`, `market`, research `language`, and the same `idempotency_key`; pass `data_scope` / `data_scopes` only for traditional research. For a dedicated analysis, call only its matching tool.
 12. Store the returned `request_id`, `status`, `is_terminal`, `poll_after_seconds`, and `execution_deadline_at` in the session ledger.
 13. If `is_terminal` is false, wait for `poll_after_seconds` when provided, then call `get_keyword_research_signals` with the same `request_id`.
 14. Continue polling while status is `pending` or `running`. Do not resubmit.
@@ -141,6 +152,16 @@ Use the following exact mapping:
 - `google_trends`: interest timeline, geographic interest, and related top/rising queries.
 
 Use the dedicated analysis tools when the request is about competitors, AI-search visibility/LLM mentions, or backlinks/referring domains. Keep those analysis families separate from the traditional SEO scope selection.
+
+Map clear requests directly:
+
+- competitor domains, organic competitors, competitor keywords, or domain-rank context → `submit_competitor_analysis`
+- AI Overviews/AI Mode, LLM mentions, or AI-search visibility → `submit_geo_analysis`
+- backlinks, referring domains, link sample, or referring-domain sample → `submit_backlink_analysis`
+
+These tools are separate asynchronous jobs. Reuse and poll each job by its own
+`request_id`; do not pretend their observations were returned by a traditional
+`data_scope` request.
 
 Map common user wording without another question when the intent is clear:
 
@@ -208,7 +229,7 @@ Before writing the answer:
    interpreting any raw or normalized result field. Apply each matching entry's
    `unit`, `meaning`, and `caveats`; do not replace the live glossary with
    remembered source definitions.
-4. Inventory all families expected for the selected request before summarizing. For a scoped request, require only its selected family plus `evidence`, `signals`, `limitations`, and `usage`; do not misreport intentionally unrequested families as missing.
+4. Inventory all output sections expected for the selected request before summarizing. For a scoped traditional request, require only its selected family plus `evidence`, `signals`, `limitations`, and `usage`. For dedicated analysis, require its matching public section (`competitor_analysis`, `geo_analysis`, or `backlink_analysis`) and shared result metadata; for GEO also read `analysis_coverage`. Do not misreport intentionally unrequested sections as missing.
 5. For **full** depth only: count every array and include every relevant item. For **concise** depth: report counts and the strongest items, and state that more rows are available from the same `request_id`.
 6. Build a set of available `evidence_id` values for any claim you make.
 7. Verify every cited `evidence_refs` and `counter_evidence_refs` item points to that set.
@@ -261,10 +282,12 @@ Provide every section relevant to the selected request:
 3. `Related keywords` (every item)
 4. `SERP` (every organic result and feature)
 5. `Google Trends` (every returned point/query/region)
-6. `X recent search` (every returned post)
-7. `Evidence and signals` (every item and reference IDs)
-8. `Limitations and usage`
-9. `Next steps`
+6. `Competitor analysis` (every returned subsection, only when requested)
+7. `GEO / AI-search analysis` (every returned subsection and coverage, only when requested)
+8. `Backlink analysis` (all returned samples and total counts, only when requested)
+9. `Evidence and signals` (every item and reference IDs)
+10. `Limitations and usage`
+11. `Next steps`
 
 For a comparison request, use one row per keyword or market and keep definitions consistent across rows. Reuse prior jobs per row when available. Do not compare requests with different markets or languages without labeling that difference.
 

@@ -18,6 +18,12 @@ Inputs:
   set that can support the decision.
 - `idempotency_key` — stable retry key for the logical decision identity.
 
+`search_engine` is **not** a public input of this tool. When `data_scopes`
+includes `serp`, the report uses the service default Google evidence. Do not
+pass `search_engine`, and do not represent the result as a Bing comparison. A
+Bing-only SERP lookup belongs to `research-seo-signals`; it is supplemental
+context and is not evidence consumed by this Decision MCP job.
+
 The ticket includes `request_id`, `status`, `is_terminal`,
 `poll_after_seconds`, `result_path`, and optionally `execution_deadline_at`.
 Store it and poll; do not submit again while the job is pending or running.
