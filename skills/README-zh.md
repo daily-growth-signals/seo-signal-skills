@@ -10,7 +10,7 @@ SEO Signal Skills 是一套结构化的技能集，旨在通过 MCP（模型上�
 
 SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含三个相互独立、各自绑定一个 MCP 服务的技能：
 
-- **研究 SEO 信号**（`research-seo-signals`）：检索有据可依的 SEO 需求信号——关键词概览与搜索意图、相关关键词、SERP 观察、Google Trends 趋势，支持多市场多语言，以最小必要范围提交、幂等复用请求。
+- **研究 SEO 信号**（`research-seo-signals`）：检索有据可依的 SEO 需求信号——关键词概览与搜索意图、相关关键词、SERP 观察、Google Trends、排名关键词清单、GEO、竞品和外链分析，支持多市场多语言，以最小必要范围提交、幂等复用请求。
 - **检索社交信号**（`research-social-signals`）：从 X、Reddit、小红书、知乎、LinkedIn、微信公众号检索公开、可追溯、平台原生的社交数据，保留原始字段、时间戳与原生指标，只做检索不做决策。
 - **决策内容机会**（`decide-content-opportunities`）：基于 Decision MCP 返回的 SEO 证据生成条件化的关键词与内容机会决策——明确立场、定性置信度、反证、条件、风险与下一步验证测试。
 
@@ -49,7 +49,7 @@ SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含�
 - 关键词概览与意图分析（搜索量、CPC、竞争指标）
 - 相关关键词发现（语义扩展、长尾机会）
 - Google/Bing SERP 数据（自然排名、SERP 特征、竞争格局）
-- GEO 可见性、竞品上下文、网站外链与引用域名
+- GEO 可见性、竞品上下文、域名/页面排名关键词清单、网站外链与引用域名
 
 **价值主张**：
 与仅返回数字而无上下文的原始数据提供商不同，本服务：
@@ -63,9 +63,11 @@ SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含�
 - `submit_competitor_analysis` – 提交关键词与域名的竞品分析
 - `submit_geo_analysis` – 提交 GEO/AI 搜索可见性分析
 - `submit_backlink_analysis` – 提交外链与引用域名分析
+- `submit_ranked_keywords` – 提交域名、子域名或网页当前排名关键词清单
+- `submit_bulk_traffic_estimation` – 提交域名、子域名或网页的估算搜索流量
 - `get_keyword_research_signals` – 按请求 ID 获取研究结果
 
-传统 SEO 使用 `submit_specific_seo_data` 获取单一数据族；其中 `serp` 默认使用 Google，只有用户明确要求 Bing/必应时才传入 `search_engine: "bing"`。竞品、GEO 和网站外链分析分别使用专用工具，接口内部负责供应商端点和检索细节。解读终态结果时必须结合返回的 `field_semantics`、`limitations`、`usage` 和 evidence 引用。
+传统 SEO 使用 `submit_specific_seo_data` 获取单一数据族；其中 `serp` 默认使用 Google，只有用户明确要求 Bing/必应时才传入 `search_engine: "bing"`。竞品、GEO、网站外链和排名关键词分别使用专用工具，接口内部负责供应商端点和检索细节。排名关键词和流量估算不是传统 `data_scope`，应分别调用 `submit_ranked_keywords` / `submit_bulk_traffic_estimation`，并读取 `competitor_analysis["ranked-keywords"]` 或 `competitor_analysis["bulk-traffic-estimation"]`。解读终态结果时必须结合返回的 `field_semantics`、`limitations`、`usage` 和 evidence 引用。
 
 **适用场景**：
 - 关键词验证和需求分析

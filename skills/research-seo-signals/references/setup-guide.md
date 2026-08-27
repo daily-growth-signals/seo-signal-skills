@@ -111,6 +111,8 @@ The following tools should become visible in your client:
 - `submit_competitor_analysis`
 - `submit_geo_analysis`
 - `submit_backlink_analysis`
+- `submit_ranked_keywords`
+- `submit_bulk_traffic_estimation`
 - `get_keyword_research_signals`
 
 If the tools are missing, check the URL, the header name (`Authorization`),

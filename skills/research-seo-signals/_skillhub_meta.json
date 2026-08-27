@@ -1,1 +1,11 @@
-{"name": "SEO Signal Research", "installedAt": 1754841600000, "source": "local", "version": "1.6.0", "skillId": "skill_seo_signal_research", "description_zh": "通过 SignalDig 检索关键词、搜索结果、趋势、GEO、竞品和外链数据，为 SEO 研究与分析提供可追溯证据。", "description_en": "Retrieve traceable keyword, search result, trend, GEO, competitor, and backlink data for SEO research and analysis via SignalDig.", "iconSource": "./assets/small-logo.svg", "iconLocalPath": "./assets/small-logo.svg"}
+{
+  "name": "SEO Signal Research",
+  "installedAt": 1754841600000,
+  "source": "local",
+  "version": "1.8.0",
+  "skillId": "skill_seo_signal_research",
+  "description_zh": "通过 SignalDig 检索关键词、搜索结果、趋势、排名关键词、流量估算、GEO、竞品和外链数据，为 SEO 研究与分析提供可追溯证据。",
+  "description_en": "Retrieve traceable keyword, search result, trend, ranked-keyword, traffic-estimation, GEO, competitor, and backlink data for SEO research and analysis via SignalDig.",
+  "iconSource": "./assets/small-logo.svg",
+  "iconLocalPath": "./assets/small-logo.svg"
+}

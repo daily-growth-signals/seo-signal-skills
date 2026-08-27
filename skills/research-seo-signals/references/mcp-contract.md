@@ -57,6 +57,18 @@ Use for GEO/AI-search visibility analysis. Inputs are `keyword`, `domain`, `mark
 
 The terminal result exposes the public `geo_analysis` section and shared `analysis_coverage`, `evidence`, `signals`, `limitations`, `usage`, and `field_semantics`. An empty LLM mentions subsection is valid coverage; do not convert it into a claim that the target has no visibility without checking returned counts and limitations.
 
+## Tool: `submit_ranked_keywords`
+
+Use for keywords that a domain, subdomain, or webpage currently ranks for. Inputs are `keyword`, `target`, `market`, `language`, and optional `idempotency_key`. For `target`, pass a domain or subdomain without scheme and `www.`, or pass a webpage as an absolute `http://` or `https://` URL. Poll with `get_keyword_research_signals` using the returned `request_id`.
+
+The terminal result exposes `competitor_analysis["ranked-keywords"]` plus shared `evidence`, `signals`, `limitations`, `usage`, and `field_semantics`. Treat the returned keyword list as an observed sample for the requested target; do not invent ranking positions that are not in the result.
+
+## Tool: `submit_bulk_traffic_estimation`
+
+Use for estimated organic and paid search traffic of a domain, subdomain, or webpage. Inputs are `keyword`, `target`, `market`, `language`, and optional `idempotency_key`. For `target`, pass a domain or subdomain without scheme and `www.`, or pass a webpage as an absolute `http://` or `https://` URL. Poll with `get_keyword_research_signals`.
+
+The terminal result exposes `competitor_analysis["bulk-traffic-estimation"]` plus shared `evidence`, `signals`, `limitations`, `usage`, and `field_semantics`. Treat returned traffic figures as estimated observations, not guaranteed analytics.
+
 ## Tool: `submit_backlink_analysis`
 
 Use for website backlink analysis. Inputs are `keyword`, `target`, `market`, `language`, and optional `idempotency_key`. For `target`, pass a domain or subdomain without scheme and `www.`, or pass a webpage as an absolute `http://` or `https://` URL. The service internally collects backlinks and referring domains. Poll with the same get tool and interpret the returned `backlink_analysis` plus `field_semantics`.
@@ -74,6 +86,8 @@ Plain-language scope mapping:
 - AI Mode/AI Overview, LLM mentions, or AI-search visibility:
   `submit_geo_analysis`
 - backlinks or referring domains: `submit_backlink_analysis`
+- keywords a domain or page currently ranks for: `submit_ranked_keywords`
+- estimated search traffic for a domain or page: `submit_bulk_traffic_estimation`
 
 For SERP requests, infer the engine from the user's wording and pass `search_engine="bing"` for Bing/必应; otherwise preserve the Google default. The MCP function does not require DataForSEO endpoint details or low-level search settings.
 
@@ -137,6 +151,8 @@ A result can include:
 - `competitor_analysis` for a competitor-analysis job;
 - `geo_analysis` and its `analysis_coverage` for a GEO-analysis job;
 - `backlink_analysis` for a backlink-analysis job;
+- `competitor_analysis["ranked-keywords"]` for a ranked-keyword inventory job;
+- `competitor_analysis["bulk-traffic-estimation"]` for a traffic-estimation job;
 - `field_semantics`, containing the live units, meanings, and caveats for result
   fields present in this response;
 - evidence-linked synthesized signals;
@@ -174,7 +190,7 @@ Do not call submit inside the polling loop.
 ## Consistency Checks
 
 - The terminal `request_id` must equal the submitted or reused `request_id`.
-- The terminal query must match the requested keyword, domain, market, and language.
+- The terminal query must match the requested keyword, market, and language, plus `domain` or `target` for the selected tool.
 - Every signal reference you cite must point to an evidence item present in the same result.
 - Limitations must be read before describing coverage as complete.
 - Matching `field_semantics` entries must be applied before reporting units,

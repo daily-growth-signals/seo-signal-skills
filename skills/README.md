@@ -10,7 +10,7 @@ SEO Signal Skills is a structured skill set designed to enhance AI agent precisi
 
 SignalDig Skills is an MCP-based SEO and content-growth skill set of three independent skills, each bound to its own MCP service:
 
-- **Research SEO Signals** (`research-seo-signals`): retrieves evidence-backed SEO demand signals — keyword overview and intent, related keywords, SERP observations, and Google Trends — across markets and languages, with minimal-scope submits and idempotent request reuse.
+- **Research SEO Signals** (`research-seo-signals`): retrieves evidence-backed SEO demand signals — keyword overview and intent, related keywords, SERP observations, Google Trends, ranked-keyword inventories, GEO, competitor, and backlink analysis — across markets and languages, with minimal-scope submits and idempotent request reuse.
 - **Retrieve Social Signals** (`research-social-signals`): retrieves traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts, preserving raw fields, timestamps, and native metrics — retrieval only, no decisions.
 - **Decide Content Opportunities** (`decide-content-opportunities`): turns the SEO evidence its own Decision MCP returns into conditional keyword and content-opportunity decisions with an explicit stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test.
 
@@ -49,7 +49,7 @@ While AI agents can directly invoke MCP tools, using structured skills offers si
 - Keyword Overview & Intent Analysis (search volume, CPC, competition metrics)
 - Related Keywords Discovery (semantic expansions, long-tail opportunities)
 - Google/Bing SERP Data (organic rankings, SERP features, competitive landscape)
-- GEO visibility, competitor context, backlinks, and referring domains
+- GEO visibility, competitor context, ranked-keyword inventories, backlinks, and referring domains
 
 **Value Proposition**:
 Unlike raw data providers that return numbers without context, this service:
@@ -63,9 +63,11 @@ Unlike raw data providers that return numbers without context, this service:
 - `submit_competitor_analysis` – Submit competitor analysis for a keyword and domain
 - `submit_geo_analysis` – Submit GEO/AI-search visibility analysis
 - `submit_backlink_analysis` – Submit backlink and referring-domain analysis
+- `submit_ranked_keywords` – Submit ranked-keyword inventory for a domain, subdomain, or webpage
+- `submit_bulk_traffic_estimation` – Submit estimated search traffic for a domain, subdomain, or webpage
 - `get_keyword_research_signals` – Retrieve research results by request ID
 
-Traditional SEO uses `submit_specific_seo_data` for one data family. Its `serp` scope defaults to Google; pass `search_engine: "bing"` only when Bing is explicitly requested. Competitor, GEO, and backlink requests use dedicated tools that hide provider endpoints and search-task details. Interpret terminal results through their returned `field_semantics`, `limitations`, `usage`, and evidence references.
+Traditional SEO uses `submit_specific_seo_data` for one data family. Its `serp` scope defaults to Google; pass `search_engine: "bing"` only when Bing is explicitly requested. Competitor, GEO, backlink, and ranked-keyword requests use dedicated tools that hide provider endpoints and search-task details. Ranked keywords and traffic estimation are not traditional `data_scope` values; use `submit_ranked_keywords` / `submit_bulk_traffic_estimation` and read `competitor_analysis["ranked-keywords"]` or `competitor_analysis["bulk-traffic-estimation"]`. Interpret terminal results through their returned `field_semantics`, `limitations`, `usage`, and evidence references.
 
 **Use Cases**:
 - Keyword validation and demand analysis

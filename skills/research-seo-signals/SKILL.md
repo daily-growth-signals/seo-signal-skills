@@ -1,10 +1,10 @@
 ---
 name: research-seo-signals
-description: SignalDig SEO research skill — REQUIRES the daily-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the SignalDig MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
+description: SignalDig SEO research skill — REQUIRES the daily-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the SignalDig MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, ranked-keyword inventories, competitor/GEO/backlink analysis, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
 slug: signaldig-research-seo-signals
 displayName: Research SEO Signals
-version: 1.6.0
-summary: Collect traceable SEO demand signals for keywords, domains, markets, and languages through the SignalDig MCP server.
+version: 1.8.0
+summary: Collect traceable SEO demand signals for keywords, domains, ranked-keyword inventories, markets, and languages through the SignalDig MCP server.
 license: MIT
 homepage: https://signaldig.com/
 tags: [seo, keyword-research, mcp, growth, daily-growth-signals]
@@ -27,7 +27,7 @@ Before starting any research, verify that the `daily-growth-signals` MCP
 server is connected and its tools are visible (e.g.
 `submit_keyword_research_signals`, `submit_specific_seo_data`,
 `get_keyword_research_signals`, `submit_competitor_analysis`,
-`submit_geo_analysis`, `submit_backlink_analysis`).
+`submit_geo_analysis`, `submit_backlink_analysis`, `submit_ranked_keywords`, `submit_bulk_traffic_estimation`).
 
 If the MCP server is not configured, its tools are missing, the API key is
 invalid, or an initial connection fails:
@@ -53,7 +53,7 @@ substantive claim must cite a real tool result.
   Skill returns evidence summaries only; it does not collect social evidence
   and does not produce conditional recommendations.
 - Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job.
-- Use `submit_competitor_analysis` for competitor research, `submit_geo_analysis` for AI-search/GEO visibility, and `submit_backlink_analysis` for a site's backlinks and referring domains. These tools own provider query details; do not construct low-level provider requests.
+- Use `submit_competitor_analysis` for competitor research, `submit_geo_analysis` for AI-search/GEO visibility, `submit_backlink_analysis` for a site's backlinks and referring domains, and `submit_ranked_keywords` for keywords a domain or page currently ranks for, and `submit_bulk_traffic_estimation` for estimated search traffic of a domain or page. These tools own provider query details; do not construct low-level provider requests.
 - `search_engine="bing"` is supported here. When the user explicitly requests
   Bing, pass `search_engine="bing"` and label every SERP observation with the
   engine that produced it.
@@ -90,7 +90,7 @@ Treat two research goals as the same logical request when all of the following m
 - `language` (research language)
 - selected `data_scope` / `data_scopes` set (order-independent)
 - `search_engine` when the selected traditional scope includes `serp`
-- dedicated `analysis_kind` (`competitor`, `geo`, or `backlink`) instead of
+- dedicated `analysis_kind` (`competitor`, `geo`, `backlink`, `ranked_keywords`, or `bulk_traffic`) instead of
   `data_scope` / `data_scopes` for a dedicated analysis tool
 - optional user-declared refresh flag is absent
 
@@ -101,9 +101,9 @@ idempotency_key = "seo-signals:" + keyword + "|" + target_identity + "|" + marke
 ```
 
 Where `target_identity` is `domain` for traditional, competitor, and GEO
-research, and `target` for backlink analysis. `sorted_scopes` is the selected traditional scopes joined by commas in
+research, and `target` for backlink analysis, ranked-keyword inventory, and traffic estimation. `sorted_scopes` is the selected traditional scopes joined by commas in
 stable sorted order, `all` when the complete set is intentionally requested,
-or `analysis=competitor`, `analysis=geo`, or `analysis=backlink` for a
+or `analysis=competitor`, `analysis=geo`, `analysis=backlink`, `analysis=ranked_keywords`, or `analysis=bulk_traffic` for a
 dedicated analysis. Include `engine=` only for a traditional SERP scope. Do
 not put personal or confidential data into the key.
 
@@ -123,8 +123,8 @@ Update the ledger after every successful submit or get.
 4. If research language is absent, infer it from the target market and keyword only when unambiguous; otherwise default to `en`.
 5. Determine response language separately from research language: honor an explicit answer-language request, otherwise use the user's conversation language, and default to English only when neither is clear.
 6. Ask for a missing keyword and target identity that cannot be safely inferred: `domain`
-   for traditional, competitor, or GEO research, and `target` for backlink analysis.
-7. Identify whether the request is for traditional keyword research, competitor analysis, GEO/AI-search visibility, or backlink/referring-domain analysis. If the user only names a keyword or asks for generic “keyword data/research,” pause before any live call and ask which traditional data families they need: keyword metrics and intent, related keywords, current search results/SERP, or search trends.
+   for traditional, competitor, or GEO research, and `target` for backlink analysis, ranked-keyword inventory, or traffic estimation.
+7. Identify whether the request is for traditional keyword research, competitor analysis, GEO/AI-search visibility, backlink/referring-domain analysis, a ranked-keyword inventory, or traffic estimation. If the user only names a keyword or asks for generic “keyword data/research,” pause before any live call and ask which traditional data families they need: keyword metrics and intent, related keywords, current search results/SERP, or search trends.
 8. Route traditional research with exactly one family to `submit_specific_seo_data`, and two or more families to `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported traditional families are required. Route a dedicated analysis directly to its matching submit tool; do not encode it as a traditional data scope.
 9. Build the stable `idempotency_key` from the logical research identity.
 10. **Reuse gate (mandatory before submit):**
@@ -151,13 +151,15 @@ Use the following exact mapping:
 - `serp`: organic results, SERP features, target-domain presence, and traceability URL.
 - `google_trends`: interest timeline, geographic interest, and related top/rising queries.
 
-Use the dedicated analysis tools when the request is about competitors, AI-search visibility/LLM mentions, or backlinks/referring domains. Keep those analysis families separate from the traditional SEO scope selection.
+Use the dedicated analysis tools when the request is about competitors, AI-search visibility/LLM mentions, backlinks/referring domains, keywords a domain/page currently ranks for, or estimated search traffic for a domain/page. Keep those analysis families separate from the traditional SEO scope selection. Do not use `related_keywords` or `serp` as a substitute for `submit_ranked_keywords`.
 
 Map clear requests directly:
 
 - competitor domains, organic competitors, competitor keywords, or domain-rank context → `submit_competitor_analysis`
 - AI Overviews/AI Mode, LLM mentions, or AI-search visibility → `submit_geo_analysis`
 - backlinks, referring domains, link sample, or referring-domain sample → `submit_backlink_analysis`
+- keywords a domain, subdomain, or page currently ranks for → `submit_ranked_keywords`
+- estimated organic/paid search traffic for a domain, subdomain, or page → `submit_bulk_traffic_estimation`
 
 These tools are separate asynchronous jobs. Reuse and poll each job by its own
 `request_id`; do not pretend their observations were returned by a traditional
@@ -187,7 +189,7 @@ Translate the user's request into these fields:
 - `keyword`: the exact seed query to investigate; preserve meaningful punctuation and product names.
 - `domain`: the target hostname without scheme, path, query, or fragment for traditional,
   competitor, and GEO research.
-- `target`: only for `submit_backlink_analysis`; pass a domain or subdomain without
+- `target`: for `submit_backlink_analysis`, `submit_ranked_keywords`, and `submit_bulk_traffic_estimation`; pass a domain or subdomain without
   scheme and `www.`, or pass a webpage as an absolute `http://` or `https://` URL.
 - `market`: a two-letter country code. Do not send city names or free-form country names.
 - `language`: the research language sent to the data service; it does not control the final answer language.
@@ -227,12 +229,12 @@ Trust `is_terminal` as the primary stop signal. Use `status` to explain the outc
 Before writing the answer:
 
 1. Confirm the terminal envelope has the same `request_id` returned by submit or previously reused.
-2. Confirm `result.query` matches the requested keyword, domain, market, and language.
+2. Confirm `result.query` matches the requested keyword, market, and language, plus `domain` or `target` for the selected tool.
 3. Read `status`, `limitations`, `usage`, and `result.field_semantics` before
    interpreting any raw or normalized result field. Apply each matching entry's
    `unit`, `meaning`, and `caveats`; do not replace the live glossary with
    remembered source definitions.
-4. Inventory all output sections expected for the selected request before summarizing. For a scoped traditional request, require only its selected family plus `evidence`, `signals`, `limitations`, and `usage`. For dedicated analysis, require its matching public section (`competitor_analysis`, `geo_analysis`, or `backlink_analysis`) and shared result metadata; for GEO also read `analysis_coverage`. Do not misreport intentionally unrequested sections as missing.
+4. Inventory all output sections expected for the selected request before summarizing. For a scoped traditional request, require only its selected family plus `evidence`, `signals`, `limitations`, and `usage`. For dedicated analysis, require its matching public section (`competitor_analysis`, `geo_analysis`, or `backlink_analysis`) and shared result metadata; for GEO also read `analysis_coverage`. For ranked keywords, require `competitor_analysis["ranked-keywords"]`; for traffic estimation, require `competitor_analysis["bulk-traffic-estimation"]`. Include shared result metadata. Do not misreport intentionally unrequested sections as missing.
 5. For **full** depth only: count every array and include every relevant item. For **concise** depth: report counts and the strongest items, and state that more rows are available from the same `request_id`.
 6. Build a set of available `evidence_id` values for any claim you make.
 7. Verify every cited `evidence_refs` and `counter_evidence_refs` item points to that set.
@@ -288,9 +290,11 @@ Provide every section relevant to the selected request:
 6. `Competitor analysis` (every returned subsection, only when requested)
 7. `GEO / AI-search analysis` (every returned subsection and coverage, only when requested)
 8. `Backlink analysis` (all returned samples and total counts, only when requested)
-9. `Evidence and signals` (every item and reference IDs)
-10. `Limitations and usage`
-11. `Next steps`
+9. `Ranked keywords` (`competitor_analysis["ranked-keywords"]`, only when requested)
+10. `Traffic estimation` (`competitor_analysis["bulk-traffic-estimation"]`, only when requested)
+11. `Evidence and signals` (every item and reference IDs)
+12. `Limitations and usage`
+13. `Next steps`
 
 For a comparison request, use one row per keyword or market and keep definitions consistent across rows. Reuse prior jobs per row when available. Do not compare requests with different markets or languages without labeling that difference.
 
@@ -325,6 +329,12 @@ Localized research:
 
 ```text
 Use $research-seo-signals to research "herramientas SEO con IA" for example.com in the US Spanish market and answer in Spanish.
+```
+
+Ranked-keyword inventory:
+
+```text
+Use $research-seo-signals to list the keywords example.com currently ranks for in the US English market.
 ```
 
 Evidence-focused follow-up (must reuse prior terminal job when available):
