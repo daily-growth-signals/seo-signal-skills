@@ -59,7 +59,7 @@ The terminal result exposes the public `geo_analysis` section and shared `analys
 
 ## Tool: `submit_backlink_analysis`
 
-Use for website backlink analysis. Inputs are `keyword`, `domain`, `market`, `language`, and optional `idempotency_key`. The service internally collects backlinks and referring domains. Poll with the same get tool and interpret the returned `backlink_analysis` plus `field_semantics`.
+Use for website backlink analysis. Inputs are `keyword`, `target`, `market`, `language`, and optional `idempotency_key`. For `target`, pass a domain or subdomain without scheme and `www.`, or pass a webpage as an absolute `http://` or `https://` URL. The service internally collects backlinks and referring domains. Poll with the same get tool and interpret the returned `backlink_analysis` plus `field_semantics`.
 
 The terminal result contains the public backlink/referring-domain subsections, shared `evidence`, `signals`, `limitations`, `usage`, and `field_semantics`. Report sample counts and total counts separately; do not treat a capped sample as the complete backlink inventory.
 

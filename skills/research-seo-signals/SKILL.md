@@ -97,10 +97,11 @@ Treat two research goals as the same logical request when all of the following m
 Build:
 
 ```text
-idempotency_key = "seo-signals:" + keyword + "|" + domain + "|" + market + "|" + language + "|" + sorted_scopes + "|engine=" + search_engine
+idempotency_key = "seo-signals:" + keyword + "|" + target_identity + "|" + market + "|" + language + "|" + sorted_scopes + "|engine=" + search_engine
 ```
 
-Where `sorted_scopes` is the selected traditional scopes joined by commas in
+Where `target_identity` is `domain` for traditional, competitor, and GEO
+research, and `target` for backlink analysis. `sorted_scopes` is the selected traditional scopes joined by commas in
 stable sorted order, `all` when the complete set is intentionally requested,
 or `analysis=competitor`, `analysis=geo`, or `analysis=backlink` for a
 dedicated analysis. Include `engine=` only for a traditional SERP scope. Do
@@ -121,7 +122,8 @@ Update the ledger after every successful submit or get.
 3. Normalize research `language` to an ISO language or supported BCP 47 code such as `en` or `zh-TW`.
 4. If research language is absent, infer it from the target market and keyword only when unambiguous; otherwise default to `en`.
 5. Determine response language separately from research language: honor an explicit answer-language request, otherwise use the user's conversation language, and default to English only when neither is clear.
-6. Ask for a missing keyword or domain that cannot be safely inferred.
+6. Ask for a missing keyword and target identity that cannot be safely inferred: `domain`
+   for traditional, competitor, or GEO research, and `target` for backlink analysis.
 7. Identify whether the request is for traditional keyword research, competitor analysis, GEO/AI-search visibility, or backlink/referring-domain analysis. If the user only names a keyword or asks for generic “keyword data/research,” pause before any live call and ask which traditional data families they need: keyword metrics and intent, related keywords, current search results/SERP, or search trends.
 8. Route traditional research with exactly one family to `submit_specific_seo_data`, and two or more families to `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported traditional families are required. Route a dedicated analysis directly to its matching submit tool; do not encode it as a traditional data scope.
 9. Build the stable `idempotency_key` from the logical research identity.
@@ -183,7 +185,10 @@ When a prior result is a **subset** of what is now needed, submit only for the m
 Translate the user's request into these fields:
 
 - `keyword`: the exact seed query to investigate; preserve meaningful punctuation and product names.
-- `domain`: the target hostname without scheme, path, query, or fragment.
+- `domain`: the target hostname without scheme, path, query, or fragment for traditional,
+  competitor, and GEO research.
+- `target`: only for `submit_backlink_analysis`; pass a domain or subdomain without
+  scheme and `www.`, or pass a webpage as an absolute `http://` or `https://` URL.
 - `market`: a two-letter country code. Do not send city names or free-form country names.
 - `language`: the research language sent to the data service; it does not control the final answer language.
 - `data_scope` / `data_scopes`: the smallest single family or multi-family combination needed for the goal.
