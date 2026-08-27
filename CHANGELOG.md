@@ -8,6 +8,13 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.6.0] - 2026-08-27
+
+### Changes
+
+- `research-seo-signals` adds ranked-keyword inventory (`submit_ranked_keywords`) and bulk traffic estimation (`submit_bulk_traffic_estimation`) tools to list the keywords a domain currently ranks for and estimate their traffic.
+- Backlink-analysis input now uses `target`: pass a domain or subdomain without a scheme and `www.`, or an absolute webpage URL; added the `domain` vs `target` distinction and missing-target prompts.
+
 ## [1.5.0] - 2026-08-27
 
 ### Changes

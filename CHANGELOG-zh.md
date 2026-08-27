@@ -8,6 +8,13 @@
 
 - 待补充。
 
+## [1.6.0] - 2026-08-27
+
+### 更新内容
+
+- `research-seo-signals` 新增排名关键词清单（`submit_ranked_keywords`）与批量流量估算（`submit_bulk_traffic_estimation`）工具，可列出某域名当前排名的关键词及其流量估算。
+- 外链分析输入统一为 `target`：接受不带协议与 `www.` 的域名或子域名，或绝对 URL 的网页地址，并补充 `domain` 与 `target` 目标身份的区分及缺省提示。
+
 ## [1.5.0] - 2026-08-27
 
 ### 更新内容
