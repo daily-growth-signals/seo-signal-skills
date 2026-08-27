@@ -8,6 +8,14 @@
 
 - 待补充。
 
+## [1.5.0] - 2026-08-27
+
+### 更新内容
+
+- 解耦 SEO 研究与内容决策技能：`research-seo-signals`、`research-social-signals` 与 `decide-content-opportunities` 现为完全独立的技能，互不交叉引用，使用任一技能时不再被引导至其他技能。
+- `research-seo-signals` 现在只返回证据摘要，不产出任何推荐或决策；`decide-content-opportunities` 只消费自身 Decision MCP 返回的证据。
+- 中英文 README 已同步更新，将各技能描述为独立工具，而非单一证据流水线。
+
 ## [1.4.0] - 2026-08-26
 
 ### 更新内容

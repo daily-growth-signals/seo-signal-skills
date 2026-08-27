@@ -3,7 +3,7 @@ name: decide-content-opportunities
 description: SignalDig content decision skill — REQUIRES the keyword_decision_report MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Generate evidence-constrained keyword and content-opportunity decisions through the SignalDig Decision MCP, with a traceable stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test. Use when deciding whether or how to prioritize a keyword opportunity. Do not use for collecting SEO signals alone, writing finished content, publishing, or making the user's final business decision.
 slug: signaldig-decide-content-opportunities
 displayName: Decide Content Opportunities
-version: 1.4.0
+version: 1.5.0
 summary: Generate evidence-constrained keyword and content-opportunity decisions with confidence, counter-evidence, and a next validation test.
 license: MIT
 homepage: https://signaldig.com/
@@ -48,8 +48,9 @@ decision claim must cite a real tool result.
 ## Decision Contract
 
 - Use `submit_keyword_decision_report` and `get_keyword_decision_report` from
-  the Decision MCP. Do not use the SEO MCP merely to manufacture a
-  recommendation.
+  the Decision MCP. Never manufacture a recommendation from raw data or
+  general knowledge; the recommendation must come from the live Decision MCP
+  result.
 - Start from the keyword, target domain, market, language, business goal,
   audience, channel constraints, and time horizon.
 - Reuse a prior Decision MCP `request_id` for the same logical decision before
@@ -58,10 +59,9 @@ decision claim must cite a real tool result.
   decision genuinely needs every SEO evidence family.
 - The public Decision MCP submit schema does **not** expose `search_engine`.
   A decision job that includes `serp` therefore uses its service default
-  (Google). Do not claim that it contains Bing evidence or submit a Bing
-  comparison through this tool. Use `research-seo-signals` for standalone Bing
-  SERP retrieval, and label it as supplemental context rather than input
-  consumed by the Decision MCP.
+  (Google). Do not claim that a decision report contains Bing evidence. If the
+  caller supplies Bing data from another source, treat it as supplemental
+  context, not as input consumed by the Decision MCP.
 - Treat live `field_semantics`, evidence IDs, request IDs, limitations, and
   timestamps as authoritative.
 - Recommend an action only within the evidence coverage. State conditions that
@@ -156,11 +156,10 @@ Preserve a `run_validation_test` or `defer` stance when:
   is missing;
 - every selected SEO family is empty or the terminal status is `failed`.
 
-Do not require social evidence for a keyword decision. If the user needs
-cross-channel comparison, collect social evidence with the separate
-`research-social-signals` Skill and label it as supplemental context; do not
-imply that it was consumed by the Decision MCP unless the live schema supports
-it.
+Do not require social evidence for a keyword decision. This Skill consumes
+only the evidence the Decision MCP returns. Social or other cross-channel
+data, when supplied by the caller, is supplemental context at most; do not
+imply that the Decision MCP consumed it.
 
 ## Response Format
 

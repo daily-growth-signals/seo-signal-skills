@@ -1,7 +1,7 @@
 # Decision MCP Functional Contract
 
-The Decision MCP is separate from the SEO research MCP. Use it when the caller
-needs a conditional recommendation rather than SEO data retrieval alone.
+The Decision MCP produces conditional keyword decisions. Use it when the
+caller needs a decision rather than SEO data retrieval alone.
 
 ## Tool: `submit_keyword_decision_report`
 
@@ -20,8 +20,8 @@ Inputs:
 
 `search_engine` is **not** a public input of this tool. When `data_scopes`
 includes `serp`, the report uses the service default Google evidence. Do not
-pass `search_engine`, and do not represent the result as a Bing comparison. A
-Bing-only SERP lookup belongs to `research-seo-signals`; it is supplemental
+pass `search_engine`, and never represent the result as a Bing comparison.
+Bing or social data supplied by the caller from another source is supplemental
 context and is not evidence consumed by this Decision MCP job.
 
 The ticket includes `request_id`, `status`, `is_terminal`,

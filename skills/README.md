@@ -8,11 +8,11 @@ SEO Signal Skills is a structured skill set designed to enhance AI agent precisi
 
 ### Skill Set Overview
 
-SignalDig Skills is an MCP-based SEO and content-growth skill set covering a complete evidence chain from signal collection to decision:
+SignalDig Skills is an MCP-based SEO and content-growth skill set of three independent skills, each bound to its own MCP service:
 
 - **Research SEO Signals** (`research-seo-signals`): retrieves evidence-backed SEO demand signals — keyword overview and intent, related keywords, SERP observations, and Google Trends — across markets and languages, with minimal-scope submits and idempotent request reuse.
 - **Retrieve Social Signals** (`research-social-signals`): retrieves traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts, preserving raw fields, timestamps, and native metrics — retrieval only, no decisions.
-- **Decide Content Opportunities** (`decide-content-opportunities`): turns the gathered evidence into conditional keyword and content-opportunity decisions with an explicit stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test.
+- **Decide Content Opportunities** (`decide-content-opportunities`): turns the SEO evidence its own Decision MCP returns into conditional keyword and content-opportunity decisions with an explicit stance, qualitative confidence, counter-evidence, conditions, risks, and a next validation test.
 
 All three skills share one principle: every claim must cite traceable evidence, never invent metrics, never turn data into an automatic decision, and never override the user's final call. Built for evidence-constrained growth workflows where AI agents execute with proof, not guesses.
 
@@ -126,8 +126,8 @@ This skill specifically addresses the needs of:
 │                    Decision Pipeline                        │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
-│  1. Data Collection Layer                                   │
-│     (Research SEO Signals + Social Signals)                 │
+│  1. Evidence Retrieval Layer                                │
+│     (Decision MCP's own SEO data_scopes)                    │
 │                    ↓                                        │
 │  2. Pre-Agent Reasoning Layer ◄── KEY DIFFERENTIATOR       │
 │     • Extract core insights                                 │

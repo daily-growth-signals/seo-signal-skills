@@ -8,6 +8,14 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.5.0] - 2026-08-27
+
+### Changes
+
+- Decoupled the SEO research and content-decision skills: `research-seo-signals`, `research-social-signals`, and `decide-content-opportunities` are now fully independent skills with no cross-references. Using one skill no longer redirects you to another.
+- `research-seo-signals` now returns evidence summaries only and never produces recommendations or decisions; `decide-content-opportunities` now consumes only the evidence its own Decision MCP returns.
+- Updated the English and Chinese READMEs to describe the skills as independent tools rather than a single evidence pipeline.
+
 ## [1.4.0] - 2026-08-26
 
 ### Changes

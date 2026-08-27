@@ -170,7 +170,7 @@ fi
 # 提取某版本段落的 body
 section_body() {
     awk -v v="## [$1]" '
-        $0 == v { cap = 1; next }
+        index($0, v) == 1 && ($0 == v || $0 ~ / - [0-9]{4}-[0-9]{2}-[0-9]{2}$/) { cap = 1; next }
         cap && /^## \[/ { exit }
         cap { print }
     ' "$2"

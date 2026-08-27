@@ -3,7 +3,7 @@ name: research-seo-signals
 description: SignalDig SEO research skill — REQUIRES the daily-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the SignalDig MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
 slug: signaldig-research-seo-signals
 displayName: Research SEO Signals
-version: 1.5.0
+version: 1.6.0
 summary: Collect traceable SEO demand signals for keywords, domains, markets, and languages through the SignalDig MCP server.
 license: MIT
 homepage: https://signaldig.com/
@@ -49,16 +49,14 @@ substantive claim must cite a real tool result.
 ## Execution Contract
 
 - Use the SignalDig MCP tools for live demand-signal research.
-- Use only the SEO MCP product surface. Social evidence belongs to
-  `research-social-signals`; conditional recommendations belong to
-  `decide-content-opportunities` and the Decision MCP.
+- Use only the SEO MCP product surface for live demand-signal research. This
+  Skill returns evidence summaries only; it does not collect social evidence
+  and does not produce conditional recommendations.
 - Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job.
 - Use `submit_competitor_analysis` for competitor research, `submit_geo_analysis` for AI-search/GEO visibility, and `submit_backlink_analysis` for a site's backlinks and referring domains. These tools own provider query details; do not construct low-level provider requests.
-- `search_engine="bing"` is supported here, but is not available on the public
-  `submit_keyword_decision_report` Decision MCP tool. Do not route a Bing
-  comparison through the Decision MCP or claim its report consumed Bing
-  evidence. If both are needed, label the Bing result from this Skill as
-  supplemental context beside the Google-default decision report.
+- `search_engine="bing"` is supported here. When the user explicitly requests
+  Bing, pass `search_engine="bing"` and label every SERP observation with the
+  engine that produced it.
 - Treat the MCP tool schema and returned fields as the source of truth.
 - Preserve every `request_id` and `idempotency_key` used in this conversation until the task is finished.
 - Separate observed evidence from interpretation in every answer.

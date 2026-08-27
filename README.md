@@ -7,13 +7,13 @@
 <a id="english"></a>
 ## English
 
-Pre-built [Agent Skills](https://openagentskills.dev/docs/specification) that give AI agents focused workflows for collecting traceable SEO and social-media signals through the SignalDig MCP products, then turning that evidence into content-opportunity decisions.
+Pre-built [Agent Skills](https://openagentskills.dev/docs/specification) that give AI agents focused workflows for collecting traceable SEO and social-media signals through the SignalDig MCP products, and for turning Decision-MCP-returned SEO evidence into content-opportunity decisions. Each skill is independent and bound to its own MCP service.
 
 ### Skills
 
 - **`research-seo-signals`** — submit and poll asynchronous SEO research (keywords, domains, markets) and read metrics, evidence, and limitations without making the final decision.
 - **`research-social-signals`** — retrieve focused, deduplicated social data (X, Reddit, Xiaohongshu, Zhihu, LinkedIn, WeChat) with source URLs and coverage limits.
-- **`decide-content-opportunities`** — reuse completed SEO/social evidence, compare options, and recommend one content direction with traceable rationale, confidence, counter-evidence, and a next test.
+- **`decide-content-opportunities`** — turn Decision-MCP-returned SEO evidence into conditional content-opportunity decisions with traceable rationale, confidence, counter-evidence, and a next test.
 
 Each skill ships with a `SKILL.md` that documents its full workflow.
 
@@ -116,7 +116,7 @@ Use $research-seo-signals to research "AI SEO tools" for example.com in the US E
 
 Use $research-social-signals to find recent X conversations about PDF translation tools that preserve layout, with source links and coverage limitations.
 
-Use $decide-content-opportunities to compare the opportunities in the completed SEO and social results and recommend one content direction.
+Use $decide-content-opportunities to turn the Decision-MCP-returned SEO evidence for a keyword into a conditional go/validate/defer recommendation with rationale, confidence, and a next test.
 ```
 
 The SEO skill follows the async submit/get contract; the Social skill uses the synchronous `search_x_posts` contract; the decision skill uses the async `submit_keyword_decision_report` / `get_keyword_decision_report` contract.
@@ -136,13 +136,13 @@ The SEO skill follows the async submit/get contract; the Social skill uses the s
 <a id="中文"></a>
 ## 中文
 
-预构建的 [Agent Skills](https://openagentskills.dev/docs/specification)：为 AI Agent 提供聚焦的工作流程，通过 SignalDig MCP 产品收集可追溯的 SEO 与社交媒体信号，并将证据转化为内容机会决策。
+预构建的 [Agent Skills](https://openagentskills.dev/docs/specification)：为 AI Agent 提供聚焦的工作流程，通过 SignalDig MCP 产品收集可追溯的 SEO 与社交媒体信号，并将 Decision MCP 返回的 SEO 证据转化为内容机会决策。每个技能相互独立，各自绑定一个 MCP 服务。
 
 ### 技能
 
 - **`research-seo-signals`** —— 提交并轮询异步 SEO 研究任务（关键词、域名、市场），读取指标、证据与限制，不替用户做最终决策。
 - **`research-social-signals`** —— 检索聚焦、去重的社交数据（X、Reddit、小红书、知乎、LinkedIn、微信），保留源链接与覆盖限制。
-- **`decide-content-opportunities`** —— 复用已完成的 SEO/社交证据，比较选项，推荐一个内容方向，附可追溯理由、置信度、反证与下一步测试。
+- **`decide-content-opportunities`** —— 将 Decision MCP 返回的 SEO 证据转化为条件化的内容机会决策，附可追溯理由、置信度、反证与下一步测试。
 
 每个技能自带 `SKILL.md`，记录完整工作流程。
 
@@ -245,7 +245,7 @@ macOS/Linux 在 `~/.zshrc` 或 `~/.bashrc` 中执行 `export SIGNALDIG_API_KEY="
 
 使用 $research-social-signals 查找关于保持版式的 PDF 翻译工具的最新 X 对话，包含源链接和覆盖限制。
 
-使用 $decide-content-opportunities 比较已完成 SEO 和社交结果中的机会，推荐一个内容方向。
+使用 $decide-content-opportunities 将某个关键词的 Decision MCP 返回的 SEO 证据转化为条件化的 go/validate/defer 推荐，附理由、置信度与下一步测试。
 ```
 
 SEO 技能遵循异步提交/获取协议；社交技能使用同步 `search_x_posts` 协议；决策技能使用异步 `submit_keyword_decision_report` / `get_keyword_decision_report` 协议。
