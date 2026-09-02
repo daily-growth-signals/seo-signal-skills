@@ -130,6 +130,23 @@ Expected result content includes the resolved `woeid`, `captured_at`, trend `ite
 
 Convert a localized user country name to the canonical English name before calling the tool. Do not pass an ISO code, WOEID, or city name. If the tool rejects the country, preserve the user's original wording and return `unsupported country name: <original user input>` without guessing or falling back to worldwide. Do not interpret the result as personalized trends, a representative opinion sample, or evidence that an unlisted topic is absent.
 
+## Tool: `get_x_posts_by_ids`
+
+Return specific public X posts by trusted Post IDs. Use IDs from a prior X search or another
+trusted source; do not invent, derive, or silently repair an ID.
+
+Inputs:
+
+- `post_ids`: 1–100 unique decimal X Post IDs, each up to 19 digits.
+- `idempotency_key`: optional stable key for safely retrying the same batch.
+
+Expected results include matching normalized posts, authors, timestamps, source URLs, native
+public metrics, `result_count`, and safe retrieval errors. A missing ID may appear in the safe
+error list or simply be absent from `posts`; it is not evidence that the post never existed.
+The response uses the same normalized post shape as `search_x_posts`, but has no search
+pagination state. Keep the supplied ID list as the retrieval boundary and do not fall back to
+keyword search when a specific ID lookup fails.
+
 ## Tool: `search_x_posts`
 
 Search X using one raw X API v2 expression. Select the recent seven-day endpoint or the Full-archive endpoint explicitly; always treat the live tool boundary as authoritative if X changes access or retention.

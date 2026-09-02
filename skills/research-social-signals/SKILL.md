@@ -3,7 +3,7 @@ name: research-social-signals
 description: SignalDig social research skill — REQUIRES the social-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts through the SignalDig Social MCP. Use when an AI needs underlying posts, notes, account profiles, account content, trends, source URLs, timestamps, pagination state, or native metrics for downstream analysis or decision support. Select the correct retrieval tool, explain unfamiliar parameters, validate user-supplied values, suggest focused searches, and return data without making marketing, content, SEO, sentiment, account-performance, or business decisions.
 slug: signaldig-research-social-signals
 displayName: Retrieve Social Signals
-version: 1.4.0
+version: 1.5.0
 summary: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts.
 license: MIT
 homepage: https://signaldig.com/
@@ -22,7 +22,7 @@ Retrieve useful underlying social data through the SignalDig Social MCP. Help th
 > server** — the two are separate installs.
 
 Before starting any retrieval, verify that the `social-growth-signals` MCP
-server is connected and its tools are visible (e.g. `search_x_posts`,
+server is connected and its tools are visible (e.g. `search_x_posts`, `get_x_posts_by_ids`,
 `get_x_trends`, `search_reddit_posts`, `search_xiaohongshu_notes`,
 `get_xiaohongshu_user_posts`, `search_zhihu_articles`,
 `get_linkedin_user_posts`, `get_wechat_account_articles`).
@@ -69,6 +69,8 @@ returned item must come from a real tool result.
 
 - Use `search_x_posts` with `search_mode=recent` for current X discussions, or
   `search_mode=all` for historical research when Full-archive Search access is available.
+- Use `get_x_posts_by_ids` when the caller supplies trusted X Post IDs, especially IDs
+  returned by `search_x_posts`, and needs those specific public post details.
 - Use `get_x_trends` for current X trends by country or worldwide.
 - Use `search_reddit_posts` for public Reddit posts matching a focused natural-language query,
   with optional Reddit-native sorting and time-range filters when the caller needs them.
