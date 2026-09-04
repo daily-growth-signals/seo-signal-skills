@@ -3,7 +3,7 @@ name: research-social-signals
 description: SignalDig social research skill — REQUIRES the social-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts through the SignalDig Social MCP. Use when an AI needs underlying posts, notes, account profiles, account content, trends, source URLs, timestamps, pagination state, or native metrics for downstream analysis or decision support. Select the correct retrieval tool, explain unfamiliar parameters, validate user-supplied values, suggest focused searches, and return data without making marketing, content, SEO, sentiment, account-performance, or business decisions.
 slug: signaldig-research-social-signals
 displayName: Retrieve Social Signals
-version: 1.5.0
+version: 1.6.0
 summary: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts.
 license: MIT
 homepage: https://signaldig.com/
@@ -69,8 +69,9 @@ returned item must come from a real tool result.
 
 - Use `search_x_posts` with `search_mode=recent` for current X discussions, or
   `search_mode=all` for historical research when Full-archive Search access is available.
-- Use `get_x_posts_by_ids` when the caller supplies trusted X Post IDs, especially IDs
-  returned by `search_x_posts`, and needs those specific public post details.
+- Use `get_x_posts_by_ids` when the caller supplies trusted X Post IDs or public X post URLs
+  that can be safely resolved to IDs, especially IDs returned by `search_x_posts`, and needs
+  those specific public post details.
 - Use `get_x_trends` for current X trends by country or worldwide.
 - Use `search_reddit_posts` for public Reddit posts matching a focused natural-language query,
   with optional Reddit-native sorting and time-range filters when the caller needs them.
@@ -79,6 +80,25 @@ returned item must come from a real tool result.
 - Use `search_zhihu_articles` for public Zhihu content with explicit native filters.
 - Use `get_linkedin_user_posts` for one LinkedIn member's public profile plus one page of activity under `/in/`.
 - Use `get_wechat_account_articles` for content published by one WeChat Official Account identified by its original ID beginning with `gh_`.
+
+## X Post URL Resolution
+
+When the caller supplies an X post URL instead of a Post ID, explain that the numeric segment
+after `/status/` is the Post ID, resolve it first, and then call `get_x_posts_by_ids` with the
+resolved ID. Accept a public HTTPS URL on `x.com` or `twitter.com` in one of these forms:
+`/<username>/status/<numeric_id>` or `/i/web/status/<numeric_id>`. Ignore a URL query string or
+fragment for ID parsing, but preserve the original URL for the retrieval summary.
+
+For multiple URLs, keep each original URL paired with its resolved ID and deduplicate only the
+ID list sent to the tool. Do not use the username, URL timestamp, status slug, ranking position,
+or any other digits as the ID. If the URL is malformed, is not an X post URL, or has no unambiguous
+1–19 digit status ID, do not call the tool; ask for a valid public post URL or the numeric ID.
+
+After resolution, call `get_x_posts_by_ids` once with the resolved IDs, without falling back to
+keyword search. In the response, report the original URL-to-ID mapping, the exact ID boundary
+requested, and the returned post's canonical URL when available. Confirm that each returned
+`post_id` matches the resolved ID; a missing post is a retrieval gap, not proof that it never
+existed. Reuse an `idempotency_key` only for a retry with the identical resolved ID batch.
 
 ## Search Guidance
 
@@ -148,6 +168,12 @@ Use $research-social-signals to retrieve articles and raw engagement data for th
 
 ```text
 Use $research-social-signals to search Xiaohongshu for portable coffee makers. Check whether my requested sort and time filter are valid, then return the underlying notes and pagination state only.
+```
+
+```text
+User: https://x.com/example/status/1234567890123456789
+Action: Explain that `1234567890123456789` is the resolved Post ID, then call
+`get_x_posts_by_ids` with that ID and return the original URL-to-ID mapping with the post data.
 ```
 
 ```text

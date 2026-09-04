@@ -133,19 +133,29 @@ Convert a localized user country name to the canonical English name before calli
 ## Tool: `get_x_posts_by_ids`
 
 Return specific public X posts by trusted Post IDs. Use IDs from a prior X search or another
-trusted source; do not invent, derive, or silently repair an ID.
+trusted source. When the caller provides a public X post URL, first explain and resolve the
+numeric path segment after `/status/` to a Post ID; the tool itself receives IDs, not URLs.
 
 Inputs:
 
 - `post_ids`: 1–100 unique decimal X Post IDs, each up to 19 digits.
 - `idempotency_key`: optional stable key for safely retrying the same batch.
 
+URL resolution accepts public HTTPS URLs on `x.com` or `twitter.com` shaped like
+`/<username>/status/<id>` or `/i/web/status/<id>`. Ignore query strings and fragments for parsing,
+but preserve the original URL and its URL-to-ID mapping in the response summary. Never use a
+username, timestamp, status slug, ranking position, or arbitrary digits as the ID. If a URL is
+malformed or ambiguous, stop before the tool call and request a valid URL or numeric ID. For a
+batch, deduplicate only after resolving each URL and keep the exact resolved ID list as the
+retrieval boundary.
+
 Expected results include matching normalized posts, authors, timestamps, source URLs, native
 public metrics, `result_count`, and safe retrieval errors. A missing ID may appear in the safe
 error list or simply be absent from `posts`; it is not evidence that the post never existed.
 The response uses the same normalized post shape as `search_x_posts`, but has no search
 pagination state. Keep the supplied ID list as the retrieval boundary and do not fall back to
-keyword search when a specific ID lookup fails.
+keyword search when a specific ID lookup fails. Validate each returned `post_id` against the
+resolved ID list and preserve the returned canonical `url` when available.
 
 ## Tool: `search_x_posts`
 

@@ -8,6 +8,12 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.6.1] - 2026-09-04
+
+### Changes
+
+- `research-social-signals` can resolve public X post URLs to numeric Post IDs before calling the specific-post retrieval tool, preserving the original URL-to-ID mapping and retrieval boundary.
+
 ## [1.6.0] - 2026-08-27
 
 ### Changes

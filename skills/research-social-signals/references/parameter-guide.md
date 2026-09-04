@@ -193,11 +193,19 @@ For every later page, advance `start` by 50 and replace `pagination_token` with 
 Tool: `get_x_posts_by_ids`
 
 Use this tool when the caller needs details for specific posts returned by an earlier X search
-or provided by another trusted source. Pass 1–100 unique decimal Post IDs, each up to 19 digits.
-Do not derive an ID from a URL timestamp, username, ranking position, or other text. The result
-contains the matching normalized posts, authors, timestamps, source URLs, native public metrics,
-result count, and safe errors. A post that is absent from the result is not proof that it never
-existed. Use a stable `idempotency_key` only when retrying the same ID batch.
+or provided by another trusted source. If the caller provides a public X post URL, resolve the
+numeric path segment after `/status/` first, then pass 1–100 unique decimal Post IDs, each up to
+19 digits. Supported URL shapes are `https://x.com/<username>/status/<id>`,
+`https://twitter.com/<username>/status/<id>`, and `https://x.com/i/web/status/<id>`; query strings
+and fragments do not change the ID. Explain the resolution before calling the tool.
+
+Do not derive an ID from a URL timestamp, username, ranking position, status slug, or other text.
+If the URL is not a public X post URL or the status ID is missing or ambiguous, do not guess and
+ask for a valid URL or numeric ID. For multiple URLs, preserve the URL-to-ID mapping and deduplicate
+only the IDs sent to the tool. The result contains matching normalized posts, authors, timestamps,
+source URLs, native public metrics, result count, and safe errors. A post absent from the result is
+not proof that it never existed. Use a stable `idempotency_key` only when retrying the same resolved
+ID batch.
 
 ## X post search
 
