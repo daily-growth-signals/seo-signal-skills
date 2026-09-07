@@ -29,14 +29,15 @@ SKILLS=(
 )
 
 DRY_RUN=true
-OWNER="${CLAUWHUB_OWNER:-}"
+OWNER="${CLAWHUB_OWNER:-}"
 CHANGELOG=""
+SKIP_UNCHANGED_SKILLS="${SKIP_UNCHANGED_SKILLS:-false}"
 
 usage() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  --owner OWNER     Publish as this ClawHub owner (default: \$CLAUWHUB_OWNER)"
+    echo "  --owner OWNER     Publish as this ClawHub owner (default: \$CLAWHUB_OWNER)"
     echo "  --changelog TXT   Release note for this publish (required with --publish)"
     echo "  --publish         Actually publish (default is a dry run)"
     echo "  -h, --help        Show this help message"
@@ -106,11 +107,22 @@ else
 fi
 echo ""
 
+# When enabled in CI, only publish skills changed since the previous tag.
+# This avoids expected ClawHub rejections for unchanged versions.
+BASE_TAG=""
+if [ "$SKIP_UNCHANGED_SKILLS" = "true" ] && git rev-parse --git-dir >/dev/null 2>&1; then
+    BASE_TAG="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)"
+    if [ -n "$BASE_TAG" ]; then
+        echo "Skipping unchanged skills since ${BASE_TAG}."
+        echo ""
+    fi
+fi
+
 # Auto-login with a token if provided
-if [ -n "${CLAUWHUB_TOKEN:-}" ]; then
+if [ -n "${CLAWHUB_TOKEN:-}" ]; then
     echo "=== Logging in with CLAWHUB_TOKEN ==="
-    if ! clawhub login --token "$CLAUWHUB_TOKEN" >/dev/null 2>&1; then
-        clawhub auth login --token "$CLAUWHUB_TOKEN" >/dev/null 2>&1 || \
+    if ! clawhub login --token "$CLAWHUB_TOKEN" >/dev/null 2>&1; then
+        clawhub auth login --token "$CLAWHUB_TOKEN" >/dev/null 2>&1 || \
             echo "Warning: auto-login failed; run 'clawhub login' manually if needed" >&2
     fi
     echo ""
@@ -137,6 +149,12 @@ for SKILL in "${SKILLS[@]}"; do
 
     echo "=== ${SKILL} v${VERSION} ==="
     echo "ClawHub page will be: https://clawhub.ai/${OWNER:-<owner>}/${SKILL}"
+
+    if [ -n "$BASE_TAG" ] && git diff --quiet "$BASE_TAG" HEAD -- "$SKILL_DIR"; then
+        echo "Skipped: ${SKILL} is unchanged since ${BASE_TAG}"
+        echo ""
+        continue
+    fi
 
     # The official CLI requires the skill directory as the positional argument
     # (it locates SKILL.md inside it). Always run the dry-run validation first.

@@ -44,9 +44,12 @@ jobs:
       CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
       CLAWHUB_OWNER: ${{ secrets.CLAWHUB_OWNER }}
       SKILLHUB_API_KEY: ${{ secrets.SKILLHUB_API_KEY }}
+      SKIP_UNCHANGED_SKILLS: 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
