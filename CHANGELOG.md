@@ -8,6 +8,18 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.7.0] - 2026-09-08
+
+### Changes
+
+- Skills now discover required SignalDig MCP operations from the client's visible tools instead of requiring a configured server alias. Server aliases in setup examples are explicitly configurable.
+- Corrected the Social MCP tool documentation to use `get_xiaohongshu_user_posts` and include `get_x_posts_by_ids`.
+- Added a preflight check that rejects alias-bound runtime instructions and verifies each setup guide documents every operation in its MCP contract.
+- Aligned the SEO and Social Skill contracts with the public backend: added `x_recent_search`, made evidence-only SEO submits pass `include_skills=false`, and documented X recent-window clamping and the Social source-unavailable error.
+- All SignalDig Skills now keep service-unavailable codes internal and return plain English service explanations to users.
+- Tightened terminal-failure handling, documented X's effective end-time clamp, and completed Skill UI icon metadata.
+- Shortened Skill discovery descriptions while preserving MCP dependencies and misrouting boundaries.
+
 ## [1.6.1] - 2026-09-04
 
 ### Changes

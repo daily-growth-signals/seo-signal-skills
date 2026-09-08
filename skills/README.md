@@ -8,7 +8,7 @@ SEO Signal Skills is a structured skill set designed to enhance AI agent precisi
 
 ### Skill Set Overview
 
-SignalDig Skills is an MCP-based SEO and content-growth skill set of three independent skills, each bound to its own MCP service:
+SignalDig Skills is an MCP-based SEO and content-growth skill set of three independent skills. Each discovers the required SignalDig MCP operations from the client's visible tool inventory and does not depend on a configured server alias:
 
 - **Research SEO Signals** (`research-seo-signals`): retrieves evidence-backed SEO demand signals — keyword overview and intent, related keywords, SERP observations, Google Trends, ranked-keyword inventories, GEO, competitor, and backlink analysis — across markets and languages, with minimal-scope submits and idempotent request reuse.
 - **Retrieve Social Signals** (`research-social-signals`): retrieves traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts, preserving raw fields, timestamps, and native metrics — retrieval only, no decisions.
@@ -40,7 +40,7 @@ While AI agents can directly invoke MCP tools, using structured skills offers si
 
 #### 1. Research SEO Signals (`research-seo-signals`)
 
-**MCP Service**: `daily-growth-signals`
+**Required MCP product**: SignalDig SEO Data MCP (server alias is configurable)
 
 **Purpose**: Gather evidence-backed SEO demand signals from multiple authoritative sources.
 
@@ -49,6 +49,7 @@ While AI agents can directly invoke MCP tools, using structured skills offers si
 - Keyword Overview & Intent Analysis (search volume, CPC, competition metrics)
 - Related Keywords Discovery (semantic expansions, long-tail opportunities)
 - Google/Bing SERP Data (organic rankings, SERP features, competitive landscape)
+- Bounded X recent-search evidence for the seed keyword
 - GEO visibility, competitor context, ranked-keyword inventories, backlinks, and referring domains
 
 **Value Proposition**:
@@ -79,7 +80,7 @@ Traditional SEO uses `submit_specific_seo_data` for one data family. Its `serp` 
 
 #### 2. Retrieve Social Signals (`research-social-signals`)
 
-**MCP Service**: `social-growth-signals`
+**Required MCP product**: SignalDig Social Data MCP (server alias is configurable)
 
 **Purpose**: Validate retrieval inputs and collect traceable underlying social data without making analysis decisions.
 
@@ -93,9 +94,10 @@ Traditional SEO uses `submit_specific_seo_data` for one data family. Its `serp` 
 
 **Tools Available**:
 - `search_x_posts` – Query-bounded X/Twitter post retrieval
+- `get_x_posts_by_ids` – Retrieve public X posts by their trusted IDs
 - `search_reddit_posts` – Reddit community post discovery
 - `search_xiaohongshu_notes` – Xiaohongshu note search with image support
-- `get_xiaohongshu_user_notes` – Xiaohongshu creator note history with cursor paging
+- `get_xiaohongshu_user_posts` – Xiaohongshu creator note history with cursor paging
 - `get_linkedin_user_posts` – LinkedIn member activity and available engagement evidence
 - `get_wechat_account_articles` – Raw WeChat Official Account articles with parsed metrics
 - `search_zhihu_articles` – Zhihu content search with exact parameter preservation
@@ -111,7 +113,7 @@ Traditional SEO uses `submit_specific_seo_data` for one data family. Its `serp` 
 
 #### 3. Decide Content Opportunities (`decide-content-opportunities`)
 
-**MCP Service**: `keyword_decision_report`
+**Required MCP product**: SignalDig SEO Decision MCP (server alias is configurable)
 
 **Purpose**: Generate actionable keyword and content prioritization recommendations based on synthesized SEO evidence.
 
@@ -169,9 +171,9 @@ Although AI agents have built-in LLM reasoning capabilities (depending on the mo
 ```mermaid
 graph TB
     subgraph "MCP Services"
-        A[daily-growth-signals<br/>SEO Data Service]
-        B[social-growth-signals<br/>Social Media Service]
-        C[keyword_decision_report<br/>Decision Engine]
+        A[SignalDig SEO Data MCP]
+        B[SignalDig Social Data MCP]
+        C[SignalDig SEO Decision MCP]
     end
     
     subgraph "Skills Layer"
@@ -202,11 +204,11 @@ graph TB
 
 ### Quick Reference
 
-| Skill Name | MCP Service | Primary Function | Best For |
-|------------|-------------|------------------|----------|
-| `research-seo-signals` | daily-growth-signals | SEO data collection | Keyword research, demand analysis |
-| `research-social-signals` | social-growth-signals | Social media listening | Brand monitoring, user feedback |
-| `decide-content-opportunities` | keyword_decision_report | Decision recommendations | Content prioritization, strategy |
+| Skill Name | Required MCP product | Primary Function | Best For |
+|------------|----------------------|------------------|----------|
+| `research-seo-signals` | SEO Data MCP | SEO data collection | Keyword research, demand analysis |
+| `research-social-signals` | Social Data MCP | Social media listening | Brand monitoring, user feedback |
+| `decide-content-opportunities` | SEO Decision MCP | Decision recommendations | Content prioritization, strategy |
 
 ---
 

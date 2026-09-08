@@ -1,13 +1,13 @@
 ---
 name: research-seo-signals
-description: SignalDig SEO research skill — REQUIRES the daily-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve evidence-backed SEO data for a keyword, domain, market, and language through the SignalDig MCP server. Use for keyword metrics, related-keyword discovery, SERP observations, Google Trends evidence, ranked-keyword inventories, competitor/GEO/backlink analysis, market comparison, and other requests that need traceable SEO data. Confirm which data family the user actually needs when a generic keyword request is ambiguous, call only the smallest sufficient scope, and reuse a prior request_id or stable idempotency_key before creating a duplicate submit. Do not make the user's SEO or growth decision.
+description: Retrieve traceable keyword, SERP, trend, ranked-keyword, traffic, competitor, GEO, and backlink evidence through the SignalDig SEO Data MCP. Use for evidence-only SEO research, scoped market comparisons, and reuse of existing research jobs; do not use for final prioritization decisions. Requires a connected MCP capability and SignalDig API key—installing this Skill does not connect the server, and unavailable tools must never be simulated.
 slug: signaldig-research-seo-signals
 displayName: Research SEO Signals
-version: 1.8.0
+version: 1.8.3
 summary: Collect traceable SEO demand signals for keywords, domains, ranked-keyword inventories, markets, and languages through the SignalDig MCP server.
 license: MIT
 homepage: https://signaldig.com/
-tags: [seo, keyword-research, mcp, growth, daily-growth-signals]
+tags: [seo, keyword-research, mcp, growth, signaldig]
 ---
 
 # Research SEO Signals
@@ -19,27 +19,30 @@ Turn a natural-language SEO research goal into the smallest sufficient asynchron
 ## MCP Availability Gate (Mandatory)
 
 > This Skill is a **workflow spec only**; it has no data of its own. Every live
-> result comes from the `daily-growth-signals` MCP server, which requires a
-> valid SignalDig API key. **Installing this Skill does not connect the MCP
-> server** — the two are separate installs.
+> result comes from a connected SignalDig SEO Data MCP capability, which
+> requires a valid SignalDig API key. **Installing this Skill does not connect
+> the MCP server** — the two are separate installs.
 
-Before starting any research, verify that the `daily-growth-signals` MCP
-server is connected and its tools are visible (e.g.
-`submit_keyword_research_signals`, `submit_specific_seo_data`,
+Before starting research, inspect the current MCP tool inventory for the
+required operations (e.g. `submit_keyword_research_signals`, `submit_specific_seo_data`,
 `get_keyword_research_signals`, `submit_competitor_analysis`,
 `submit_geo_analysis`, `submit_backlink_analysis`, `submit_ranked_keywords`, `submit_bulk_traffic_estimation`).
+The server alias and any local tool namespace are client-defined. Use the exact
+visible tool identifier that implements the required operation; never require,
+construct, or infer a server alias or an `mcp__<alias>__<tool>` identifier.
 
-If the MCP server is not configured, its tools are missing, the API key is
-invalid, or an initial connection fails:
+If a required operation is unavailable, its source cannot be identified as the
+SignalDig SEO Data MCP, the API key is invalid, or an initial connection fails:
 
 - **Stop immediately.** Do not start the workflow, do not poll, and do not
   emit any metrics, rankings, evidence IDs, source URLs, or "results".
 - **Never simulate, guess, or answer from general knowledge.** A
   knowledge-based reply is NOT a valid Skill output and misleads the user into
   thinking the Skill ran.
-- Tell the user plainly: this Skill needs the `daily-growth-signals` MCP
-  server at `https://mcp.signaldig.com/data/seo/mcp` and a SignalDig API key
-  (get one at <https://signaldig.com/> → API Keys). Point to
+- Tell the user plainly: this Skill needs the SignalDig SEO Data MCP endpoint
+  at `https://mcp.signaldig.com/data/seo/mcp` and a SignalDig API key (get one
+  at <https://signaldig.com/> → API Keys). Its configured server alias may use
+  any client-valid name. Point to
   [references/setup-guide.md](references/setup-guide.md) for client-specific
   steps, then stop.
 
@@ -49,10 +52,12 @@ substantive claim must cite a real tool result.
 ## Execution Contract
 
 - Use the SignalDig MCP tools for live demand-signal research.
-- Use only the SEO MCP product surface for live demand-signal research. This
-  Skill returns evidence summaries only; it does not collect social evidence
-  and does not produce conditional recommendations.
-- Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job.
+- Use only the SEO MCP product surface for live demand-signal research. Its
+  `x_recent_search` scope is a bounded keyword-level X evidence family, not a
+  replacement for the Social MCP's raw X-query, historical-search, or
+  pagination capabilities. This Skill returns evidence summaries only and does
+  not produce conditional recommendations.
+- Map the user's goal to the smallest sufficient data-scope combination. Use `submit_specific_seo_data` for one family, `submit_keyword_research_signals` with `data_scopes` for any multi-family subset, and `get_keyword_research_signals` to query either job. Always pass `include_skills=false` to retain this Skill's evidence-only boundary.
 - Use `submit_competitor_analysis` for competitor research, `submit_geo_analysis` for AI-search/GEO visibility, `submit_backlink_analysis` for a site's backlinks and referring domains, and `submit_ranked_keywords` for keywords a domain or page currently ranks for, and `submit_bulk_traffic_estimation` for estimated search traffic of a domain or page. These tools own provider query details; do not construct low-level provider requests.
 - `search_engine="bing"` is supported here. When the user explicitly requests
   Bing, pass `search_engine="bing"` and label every SERP observation with the
@@ -73,12 +78,13 @@ substantive claim must cite a real tool result.
 7. Never fetch or summarize the body of a search-result page as part of this Skill. Use only returned links and structured observations.
 8. Never turn signals into an automatic go/no-go SEO decision. Explain what the evidence supports and let the user decide.
 9. Keep machine field names unchanged, but write the user-facing answer in the requested language.
-10. Never use the aggregate submit tool merely to obtain one data family. Use the narrowest `data_scope` that satisfies the user's goal.
-11. Default report depth is **concise**. Do not paste every array item unless the user explicitly asks for a full export or complete dump. When concise, still preserve exact metric values you do cite and disclose the full counts returned.
-12. Do not refresh live data just to rephrase an earlier answer. Reuse the prior terminal result unless the user asks for a refresh or the prior result is missing required scopes.
-13. **Confirm ambiguous scope before calling.** A generic request such as “查一下这个关键词”“研究这个词” or “看看关键词数据” does not authorize all data families. Briefly ask which data the user needs, using plain-language choices. Do not submit while the required scope remains ambiguous.
-14. Do not ask a scope question when the user's goal already identifies the needed family or families. Map the goal directly and retrieve only those scopes.
-15. Omit `data_scopes` only when the user explicitly asks for comprehensive/all-family research or when every family is demonstrably necessary to answer an already specific request. Never equate a unified MCP endpoint with permission for full retrieval.
+10. Never expose machine error codes in a user-facing response. Use a safe English explanation instead. When the SEO data service is unavailable, say: “The SignalDig SEO data service is currently unavailable. No research results were retrieved. Please try again later.”
+11. Never use the aggregate submit tool merely to obtain one data family. Use the narrowest `data_scope` that satisfies the user's goal.
+12. Default report depth is **concise**. Do not paste every array item unless the user explicitly asks for a full export or complete dump. When concise, still preserve exact metric values you do cite and disclose the full counts returned.
+13. Do not refresh live data just to rephrase an earlier answer. Reuse the prior terminal result unless the user asks for a refresh or the prior result is missing required scopes.
+14. **Confirm ambiguous scope before calling.** A generic request such as “查一下这个关键词”“研究这个词” or “看看关键词数据” does not authorize all data families. Briefly ask which data the user needs, using plain-language choices. Do not submit while the required scope remains ambiguous.
+15. Do not ask a scope question when the user's goal already identifies the needed family or families. Map the goal directly and retrieve only those scopes.
+16. Omit `data_scopes` only when the user explicitly asks for comprehensive/all-family research or when every family is demonstrably necessary to answer an already specific request. Never equate a unified MCP endpoint with permission for full retrieval.
 
 ## Logical Research Identity
 
@@ -124,8 +130,8 @@ Update the ledger after every successful submit or get.
 5. Determine response language separately from research language: honor an explicit answer-language request, otherwise use the user's conversation language, and default to English only when neither is clear.
 6. Ask for a missing keyword and target identity that cannot be safely inferred: `domain`
    for traditional, competitor, or GEO research, and `target` for backlink analysis, ranked-keyword inventory, or traffic estimation.
-7. Identify whether the request is for traditional keyword research, competitor analysis, GEO/AI-search visibility, backlink/referring-domain analysis, a ranked-keyword inventory, or traffic estimation. If the user only names a keyword or asks for generic “keyword data/research,” pause before any live call and ask which traditional data families they need: keyword metrics and intent, related keywords, current search results/SERP, or search trends.
-8. Route traditional research with exactly one family to `submit_specific_seo_data`, and two or more families to `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported traditional families are required. Route a dedicated analysis directly to its matching submit tool; do not encode it as a traditional data scope.
+7. Identify whether the request is for traditional keyword research, bounded X recent-search evidence, competitor analysis, GEO/AI-search visibility, backlink/referring-domain analysis, a ranked-keyword inventory, or traffic estimation. If the user only names a keyword or asks for generic “keyword data/research,” pause before any live call and ask which traditional data families they need: keyword metrics and intent, related keywords, current search results/SERP, search trends, or bounded X recent-search evidence.
+8. Route scoped research with exactly one family to `submit_specific_seo_data`, and two or more families to `submit_keyword_research_signals` with exactly those values in `data_scopes`. Omit `data_scopes` only when all supported families are required. Route a dedicated analysis directly to its matching submit tool; do not encode it as a data scope.
 9. Build the stable `idempotency_key` from the logical research identity.
 10. **Reuse gate (mandatory before submit):**
     1. If the session ledger or conversation already has a `request_id` for this identity, call `get_keyword_research_signals(request_id)` only.
@@ -133,13 +139,13 @@ Update the ledger after every successful submit or get.
     3. If status is `pending` or `running`, continue polling that `request_id` only. Do not submit again.
     4. If status is `failed` and the user wants a retry, prefer **resubmit with the same `idempotency_key`** so the retry keeps the same logical identity.
     5. If no prior `request_id` is known, still send the stable `idempotency_key` on first submit so client retries collapse to one run.
-11. Call the selected submit tool only when the reuse gate requires a new submit: pass `keyword`, `domain`, `market`, research `language`, and the same `idempotency_key`; pass `data_scope` / `data_scopes` only for traditional research. For a dedicated analysis, call only its matching tool.
+11. Call the selected submit tool only when the reuse gate requires a new submit: for aggregate or single-family research, pass `keyword`, `domain`, `market`, research `language`, `include_skills=false`, and the same `idempotency_key`; pass `data_scope` / `data_scopes` only to those two tools. For a dedicated analysis, call only its matching tool with its documented inputs and omit `include_skills`.
 12. Store the returned `request_id`, `status`, `is_terminal`, `poll_after_seconds`, and `execution_deadline_at` in the session ledger.
 13. If `is_terminal` is false, wait for `poll_after_seconds` when provided, then call `get_keyword_research_signals` with the same `request_id`.
 14. Continue polling while status is `pending` or `running`. Do not resubmit.
 15. Stop when `is_terminal` is true or the client reaches a firm execution deadline.
 16. For `complete` or `partial`, validate the result before interpreting it.
-17. For `failed`, report the stable error and a safe next step. Retry only when the error is explicitly retryable or the user requests a new attempt, always reusing the prior `idempotency_key` for that logical identity.
+17. For `failed`, give a safe plain-English explanation and next step without exposing a machine error code. Retry only when the error is explicitly retryable or the user requests a new attempt, always reusing the prior `idempotency_key` for that logical identity.
 18. Return observations first, evidence second, limitations third, and optional follow-up research last.
 
 ## Data Scope Selection
@@ -193,8 +199,9 @@ Translate the user's request into these fields:
   scheme and `www.`, or pass a webpage as an absolute `http://` or `https://` URL.
 - `market`: a two-letter country code. Do not send city names or free-form country names.
 - `language`: the research language sent to the data service; it does not control the final answer language.
-- `data_scope` / `data_scopes`: the smallest single family or multi-family combination needed for the goal.
+- `data_scope` / `data_scopes`: the smallest single family or multi-family combination needed for the goal, including `x_recent_search` only for bounded keyword-level X evidence.
 - `search_engine`: optional SERP engine selector, `google` or `bing`; it defaults to `google` and does not change non-SERP data families.
+- `include_skills`: always pass `false`; the backend default varies by submit tool and enables SignalDig analysis, which is outside this Skill's evidence-only boundary.
 - `idempotency_key`: stable retry and reuse identifier for the same logical request.
 
 Use these defaults:
@@ -220,7 +227,7 @@ Handle states exactly as follows:
 - `complete`: terminal result with all required nodes completed; reuse via `get` for later questions.
 - `complete`: terminal usable result. Freshness-only codes `signaldig_stale_data` and `signaldig_unknown_freshness` stay on complete; treat them as quality notes, not outages.
 - `partial`: terminal usable result with missing coverage such as `signaldig_no_matching_data` or `signaldig_analysis_unavailable`; report both usable evidence and missing families. Do not retry empty-result codes.
-- `failed`: terminal failure; report `error.code`, summarize `error.message`, and do not fabricate a result. Retry only with the same `idempotency_key` when appropriate. Treat `signaldig_data_unavailable` as a service outage, not as missing keyword data.
+- `failed`: terminal failure; use the safe English `error.message` when available, but never expose `error.code`, and do not fabricate a result. For a service-unavailable condition, use the service-unavailable message in Hard Rule 10. Retry only with the same `idempotency_key` when appropriate.
 
 Trust `is_terminal` as the primary stop signal. Use `status` to explain the outcome. A missing `result` in a non-terminal response is normal.
 

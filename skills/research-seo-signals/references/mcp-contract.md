@@ -11,7 +11,8 @@ Inputs:
 - `market` — required ISO 3166-1 alpha-2 country code.
 - `language` — required research-language code; it scopes the returned research data and does not select the user-facing response language.
 - `search_engine` — optional SERP engine selector, `google` or `bing`; defaults to `google`. Use `bing` only when the user explicitly requests Bing/必应 data.
-- `data_scopes` — optional non-empty combination of `keyword_overview`, `related_keywords`, `serp`, and `google_trends`; omission selects all SEO families. Use the separate Social MCP for X evidence.
+- `data_scopes` — optional non-empty combination of `keyword_overview`, `related_keywords`, `serp`, `google_trends`, and `x_recent_search`; omission selects all SEO families. `x_recent_search` is bounded keyword-level X evidence. Use the Social MCP instead for raw X queries, historical coverage, or X pagination.
+- `include_skills` — backend default is `true`; this evidence-only Skill must explicitly pass `false` to prevent server-side SignalDig analysis.
 - `idempotency_key` — strongly recommended stable retry key for the logical research identity.
 
 Expected response fields:
@@ -36,9 +37,10 @@ Submit one asynchronous request that executes only the selected data Capability.
 
 Inputs:
 
-- `data_scope` — required; one of `keyword_overview`, `related_keywords`, `serp`, or `google_trends`.
+- `data_scope` — required; one of `keyword_overview`, `related_keywords`, `serp`, `google_trends`, or `x_recent_search`.
 - `keyword`, `domain`, `market`, `language` — same validation rules as the aggregate submit tool.
 - `search_engine` — optional SERP engine selector, same rules as the aggregate submit tool.
+- `include_skills` — backend default is `false`; pass `false` explicitly to preserve the Skill boundary.
 - `idempotency_key` — strongly recommended; do not reuse one key across different scopes.
 
 The ticket fields and polling behavior are identical to `submit_keyword_research_signals`. Its functional behavior is equivalent to `submit_keyword_research_signals(data_scopes=[data_scope])`. The terminal result contains only the selected data family and its derived evidence/signals. Other intentionally unrequested families can be null or empty and are not limitations.
@@ -81,6 +83,7 @@ Plain-language scope mapping:
 - related, expanded, or long-tail queries: `related_keywords`
 - rankings, organic results, SERP features, or target-domain presence: `serp`
 - interest over time, geography, top queries, or rising queries: `google_trends`
+- bounded recent X evidence for the seed keyword: `x_recent_search`
 - competitor domains, organic competitors, site keywords, or domain-rank context:
   `submit_competitor_analysis`
 - AI Mode/AI Overview, LLM mentions, or AI-search visibility:

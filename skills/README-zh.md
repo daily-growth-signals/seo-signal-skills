@@ -8,7 +8,7 @@ SEO Signal Skills 是一套结构化的技能集，旨在通过 MCP（模型上�
 
 ### 技能集概述
 
-SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含三个相互独立、各自绑定一个 MCP 服务的技能：
+SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含三个相互独立的技能。每个技能从客户端可见工具中发现所需的 SignalDig MCP 操作，不依赖配置的服务别名：
 
 - **研究 SEO 信号**（`research-seo-signals`）：检索有据可依的 SEO 需求信号——关键词概览与搜索意图、相关关键词、SERP 观察、Google Trends、排名关键词清单、GEO、竞品和外链分析，支持多市场多语言，以最小必要范围提交、幂等复用请求。
 - **检索社交信号**（`research-social-signals`）：从 X、Reddit、小红书、知乎、LinkedIn、微信公众号检索公开、可追溯、平台原生的社交数据，保留原始字段、时间戳与原生指标，只做检索不做决策。
@@ -40,7 +40,7 @@ SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含�
 
 #### 1. 研究 SEO 信号 (`research-seo-signals`)
 
-**MCP 服务**：`daily-growth-signals`
+**所需 MCP 产品**：SignalDig SEO Data MCP（服务别名可改）
 
 **用途**：从多个权威来源收集有据可依的 SEO 需求信号。
 
@@ -49,6 +49,7 @@ SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含�
 - 关键词概览与意图分析（搜索量、CPC、竞争指标）
 - 相关关键词发现（语义扩展、长尾机会）
 - Google/Bing SERP 数据（自然排名、SERP 特征、竞争格局）
+- 种子关键词的有界 X 近期搜索证据
 - GEO 可见性、竞品上下文、域名/页面排名关键词清单、网站外链与引用域名
 
 **价值主张**：
@@ -79,7 +80,7 @@ SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含�
 
 #### 2. 检索社交信号 (`research-social-signals`)
 
-**MCP 服务**：`social-growth-signals`
+**所需 MCP 产品**：SignalDig Social Data MCP（服务别名可改）
 
 **用途**：解释并校验检索参数，从主流平台收集可追溯的底层社交数据，不提供分析决策。
 
@@ -93,9 +94,10 @@ SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含�
 
 **可用工具**：
 - `search_x_posts` – 有界查询的 X/Twitter 帖子检索
+- `get_x_posts_by_ids` – 按可信 ID 获取公开 X 帖子
 - `search_reddit_posts` – Reddit 社区帖子发现
 - `search_xiaohongshu_notes` – 小红书笔记搜索（支持图片）
-- `get_xiaohongshu_user_notes` – 小红书创作者笔记历史与游标分页
+- `get_xiaohongshu_user_posts` – 小红书创作者笔记历史与游标分页
 - `get_linkedin_user_posts` – LinkedIn 用户内容与可用互动证据
 - `get_wechat_account_articles` – 微信公众号原始文章与结构化指标
 - `search_zhihu_articles` – 知乎内容搜索（原样保留搜索参数）
@@ -111,7 +113,7 @@ SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含�
 
 #### 3. 决策内容机会 (`decide-content-opportunities`)
 
-**MCP 服务**：`keyword_decision_report`
+**所需 MCP 产品**：SignalDig SEO Decision MCP（服务别名可改）
 
 **用途**：基于综合 SEO 证据生成可操作的关键词和内容优先级建议。
 
@@ -169,9 +171,9 @@ SignalDig Skills 是一套基于 MCP 的 SEO 与内容增长技能集，包含�
 ```mermaid
 graph TB
     subgraph "MCP 服务"
-        A[daily-growth-signals<br/>SEO 数据服务]
-        B[social-growth-signals<br/>社交媒体服务]
-        C[keyword_decision_report<br/>决策引擎]
+        A[SignalDig SEO Data MCP]
+        B[SignalDig Social Data MCP]
+        C[SignalDig SEO Decision MCP]
     end
 
     subgraph "Skills 层"
@@ -202,40 +204,42 @@ graph TB
 
 ### 快速参考表
 
-| 技能名称 | MCP 服务 | 主要功能 | 适用场景 |
-|----------|----------|----------|----------|
-| `research-seo-signals` | daily-growth-signals | SEO 数据采集 | 关键词研究、需求分析 |
-| `research-social-signals` | social-growth-signals | 社交媒体监听 | 品牌监控、用户反馈 |
-| `decide-content-opportunities` | keyword_decision_report | 决策建议 | 内容优先级排序、策略制定 |
+| 技能名称 | 所需 MCP 产品 | 主要功能 | 适用场景 |
+|----------|-------------|----------|----------|
+| `research-seo-signals` | SEO Data MCP | SEO 数据采集 | 关键词研究、需求分析 |
+| `research-social-signals` | Social Data MCP | 社交媒体监听 | 品牌监控、用户反馈 |
+| `decide-content-opportunities` | SEO Decision MCP | 决策建议 | 内容优先级排序、策略制定 |
 
 ---
 
 ### MCP 配置示例
 
+以下 key 为官网示例别名，可分别修改；Skill 只依据客户端可见的工具能力运行。
+
 ```json
 {
   "mcpServers": {
-    "daily-growth-signals": {
+    "signaldig-seo": {
       "type": "http",
       "url": "https://mcp.signaldig.com/data/seo/mcp",
       "headers": {
-        "Authorization": "Bearer {your_api_key}"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       },
       "disabled": false
     },
-    "social-growth-signals": {
+    "signaldig-social": {
       "type": "http",
       "url": "https://mcp.signaldig.com/data/social/mcp",
       "headers": {
-        "Authorization": "Bearer {your_api_key}"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       },
       "disabled": false
     },
-    "keyword_decision_report": {
+    "signaldig-seo-decisions": {
       "type": "http",
       "url": "https://mcp.signaldig.com/signals/seo/mcp",
       "headers": {
-        "Authorization": "Bearer {your_api_key}"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       },
       "disabled": false
     }
@@ -247,7 +251,7 @@ graph TB
 
 ### 获取 API Key
 
-访问 <https://signaldig.com/> 注册并登录后，在账号设置中创建并获取 API Key，用于替换上方配置示例中的 `{your_api_key}`。
+访问 <https://signaldig.com/> 注册并登录后，在账号设置中创建并获取 API Key，并保存到环境变量 `SIGNALDIG_API_KEY`。
 
 ---
 

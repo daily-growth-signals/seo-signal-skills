@@ -239,10 +239,10 @@ Reuse one `idempotency_key` only to retry the same logical page. Use a new key f
 
 ## Search Boundaries
 
-- `recent` currently covers only the previous seven days. Select `all` when the requested period is older and Full-archive access is available.
+- `recent` currently covers only the previous seven days. Do not submit a `start_time` earlier than its dynamic UTC boundary; the backend clamps an older value to that boundary, so report the effective boundary if one is returned. Select `all` when the requested period is older and Full-archive access is available.
 - Full-archive availability depends on the configured X access tier. Never silently fall back to `recent` while claiming historical coverage.
 - Use `start_time` and `end_time` only when the research goal needs a defined UTC window.
-- For a current-window search, normally omit `end_time` so X can use its latest searchable boundary and avoid index-delay or clock-skew errors.
+- For a current-window search, normally omit `end_time` so X can use its latest searchable boundary. If an explicit value is too close to the current time, the backend clamps it to X's safe searchable upper boundary; report the effective boundary when returned.
 - Keep explicit time boundaries stable across every page of one search.
 - Use `since_id` and `until_id` only for known Post ID checkpoints. Do not treat them as timestamps or derive them from dates.
 - When deciding whether an existing result can be reused, compare the query, sorting, boundaries, and page context rather than the query text alone.
@@ -258,9 +258,10 @@ Reuse one `idempotency_key` only to retry the same logical page. Use a new key f
 ## Common Failures
 
 - Tool unavailable: report the missing live coverage without guessing at internal causes.
+- A Social service-unavailable condition is internal. Do not expose its code; tell the user: “The SignalDig Social data source is currently unavailable. No results were retrieved. Please try again later.” Do not treat it as a no-match result or an archive-recovery case.
 - Temporary social-data failure: preserve the exact inputs and original `idempotency_key`. Retry or poll the same logical Run up to three times so SignalDig can reparse its private Provider archive under the same `request_id`; do not create another paid request during this recovery window.
 - Archive recovery exhausted: only after three unsuccessful same-request recovery attempts may a new `idempotency_key` be considered for one fresh retrieval. Treat it as a new request and disclose the missing coverage if it also fails.
 - Query validation failure: check length, expression syntax, and `max_results`.
-- Time-boundary validation failure: check UTC values, ensure `end_time` is later than `start_time`, and omit `end_time` for a current-window search when the tool rejects a too-recent boundary.
+- Time-boundary validation failure: check UTC values and ensure `end_time` remains later than the effective `start_time`; omit `end_time` for a current-window search if no explicit upper boundary is required.
 - Retry conflict: preserve the original inputs for a same-page retry, or use a new key for a genuinely different page or search.
 - Retrieval failure: preserve any partial returned evidence and disclose the unavailable coverage.

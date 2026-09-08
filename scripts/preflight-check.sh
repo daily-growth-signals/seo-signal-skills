@@ -144,6 +144,7 @@ REQUIRED=(name description slug displayName version summary license tags)
 seen_slugs=""
 for skill in "${SKILLS[@]}"; do
     f="$SKILLS_DIR/$skill/SKILL.md"
+    v="$(extract_field "$f" version)"
     for field in "${REQUIRED[@]}"; do
         if ! grep -Eq "^${field}:[[:space:]]" "$f"; then
             err "$skill 缺少必需字段: ${field}"
@@ -154,8 +155,23 @@ for skill in "${SKILLS[@]}"; do
         *" $slug "*) err "slug 重复: ${slug}" ;;
         *) seen_slugs="$seen_slugs $slug" ;;
     esac
+    meta="$SKILLS_DIR/$skill/_skillhub_meta.json"
+    if [ -f "$meta" ]; then
+        meta_v="$(sed -nE 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' "$meta" | head -n1)"
+        if [ "$meta_v" != "$v" ]; then
+            err "$skill 的 _skillhub_meta.json version 不匹配: ${meta_v:-<缺失>} != $v"
+        fi
+    fi
 done
-ok "frontmatter 必需字段与 slug 唯一性检查完成"
+ok "frontmatter 必需字段、slug 唯一性与 SkillHub metadata version 检查完成"
+echo ""
+
+echo "=== 3.5. MCP alias-independence ==="
+if python3 "$PROJECT_ROOT/scripts/validate-mcp-bindings.py"; then
+    ok "Skill 运行时不依赖客户端 MCP 别名，安装指南工具清单完整"
+else
+    err "MCP 别名独立性或安装指南工具清单校验失败"
+fi
 echo ""
 
 echo "=== 4. CHANGELOG 双语同步 ==="
@@ -193,6 +209,13 @@ if [ "$LIGHT" != true ]; then
     if [ -n "$TARGET_VER" ]; then
         check_section "$TARGET_VER" "$CHANGELOG_EN" "- To be added."
         check_section "$TARGET_VER" "$CHANGELOG_ZH" "- 待补充。"
+        en_bullet_count="$(section_body "$TARGET_VER" "$CHANGELOG_EN" | grep -Ec '^- .+' || true)"
+        zh_bullet_count="$(section_body "$TARGET_VER" "$CHANGELOG_ZH" | grep -Ec '^- .+' || true)"
+        if [ "$en_bullet_count" != "$zh_bullet_count" ]; then
+            err "CHANGELOG [${TARGET_VER}] 条目数不一致: EN=${en_bullet_count} ZH=${zh_bullet_count}"
+        else
+            ok "CHANGELOG [${TARGET_VER}] 中英文条目数一致 (${en_bullet_count})"
+        fi
         # skills 有变更 → 目标版本条目必须有效（由 check_section 保证）
         if [ "$SKILL_CHANGED" = 1 ]; then
             ok "skills/ 有变更，且已要求 CHANGELOG [${TARGET_VER}] 非空"

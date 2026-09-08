@@ -1,9 +1,9 @@
 ---
 name: research-social-signals
-description: SignalDig social research skill — REQUIRES the social-growth-signals MCP server and a SignalDig API key; installing this Skill does not connect the MCP server, and never fabricate or simulate results when the MCP tools are unavailable. Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts through the SignalDig Social MCP. Use when an AI needs underlying posts, notes, account profiles, account content, trends, source URLs, timestamps, pagination state, or native metrics for downstream analysis or decision support. Select the correct retrieval tool, explain unfamiliar parameters, validate user-supplied values, suggest focused searches, and return data without making marketing, content, SEO, sentiment, account-performance, or business decisions.
+description: Retrieve traceable public posts, profiles, trends, pagination state, and native metrics from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat through the SignalDig Social Data MCP. Use for social-data retrieval and parameter validation, not sentiment, performance, content, marketing, or business decisions. Requires a connected MCP capability and SignalDig API key—installing this Skill does not connect the server, and unavailable tools must never be simulated.
 slug: signaldig-research-social-signals
 displayName: Retrieve Social Signals
-version: 1.6.0
+version: 1.6.5
 summary: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts.
 license: MIT
 homepage: https://signaldig.com/
@@ -17,27 +17,31 @@ Retrieve useful underlying social data through the SignalDig Social MCP. Help th
 ## MCP Availability Gate (Mandatory)
 
 > This Skill is a **workflow spec only**; it has no data of its own. Every live
-> result comes from the `social-growth-signals` MCP server, which requires a
-> valid SignalDig API key. **Installing this Skill does not connect the MCP
-> server** — the two are separate installs.
+> result comes from a connected SignalDig Social Data MCP capability, which
+> requires a valid SignalDig API key. **Installing this Skill does not connect
+> the MCP server** — the two are separate installs.
 
-Before starting any retrieval, verify that the `social-growth-signals` MCP
-server is connected and its tools are visible (e.g. `search_x_posts`, `get_x_posts_by_ids`,
+Before starting retrieval, inspect the current MCP tool inventory for the
+required operations (e.g. `search_x_posts`, `get_x_posts_by_ids`,
 `get_x_trends`, `search_reddit_posts`, `search_xiaohongshu_notes`,
 `get_xiaohongshu_user_posts`, `search_zhihu_articles`,
 `get_linkedin_user_posts`, `get_wechat_account_articles`).
+The server alias and any local tool namespace are client-defined. Use the exact
+visible tool identifier that implements the required operation; never require,
+construct, or infer a server alias or an `mcp__<alias>__<tool>` identifier.
 
-If the MCP server is not configured, its tools are missing, the API key is
-invalid, or an initial connection fails:
+If a required operation is unavailable, its source cannot be identified as the
+SignalDig Social Data MCP, the API key is invalid, or an initial connection fails:
 
 - **Stop immediately.** Do not start the workflow, and do not emit any posts,
   notes, account content, source URLs, metrics, or "results".
 - **Never simulate, guess, or answer from general knowledge.** A
   knowledge-based reply is NOT a valid Skill output and misleads the user into
   thinking the Skill ran.
-- Tell the user plainly: this Skill needs the `social-growth-signals` MCP
-  server at `https://mcp.signaldig.com/data/social/mcp` and a SignalDig API
-  key (get one at <https://signaldig.com/> → API Keys). Point to
+- Tell the user plainly: this Skill needs the SignalDig Social Data MCP
+  endpoint at `https://mcp.signaldig.com/data/social/mcp` and a SignalDig API
+  key (get one at <https://signaldig.com/> → API Keys). Its configured server
+  alias may use any client-valid name. Point to
   [references/setup-guide.md](references/setup-guide.md) for client-specific
   steps, then stop.
 
@@ -47,12 +51,13 @@ returned item must come from a real tool result.
 ## Core Boundary
 
 1. Treat this Skill as a data-retrieval layer for another AI or user.
-2. Return source content, identifiers, URLs, timestamps, native metrics, request parameters, pagination state, and safe SignalDig error codes that help downstream analysis.
+2. Return source content, identifiers, URLs, timestamps, native metrics, request parameters, pagination state, and safe plain-language failure explanations that help downstream analysis.
 3. Do not decide what content to create, which opportunity to prioritize, whether sentiment is positive, or what action the user should take.
 4. Do not force results into a fixed analysis template. Match the caller's requested shape; when none is given, provide a compact retrieval summary plus the data.
 5. Do not manufacture a difficult identifier or silently repair an ambiguous parameter. Explain it, validate what can be validated, and request the missing value when necessary.
 6. Treat missing metrics as unknown, not zero. Keep platform-native metrics distinct.
 7. Never expose technical error details, support links, request traces, cache links, headers, or charge messages. Convert failures into a short parameter correction or a clear temporary-unavailability message.
+8. Never expose machine error codes in a user-facing response. For either a temporary Social outage or an unavailable Social data source, say: “The SignalDig Social data source is currently unavailable. No results were retrieved. Please try again later.”
 
 ## Before Every Call
 
@@ -62,8 +67,9 @@ returned item must come from a real tool result.
 4. If a value is clearly wrong and the intended correction is unambiguous, explain the correction briefly before using it. Examples: a Xiaohongshu share URL placed in `user_id`, an ISO country code placed in `country_name`, or a LinkedIn company URL placed in `profile_url`.
 5. If the intended value cannot be derived safely, explain where the user can obtain it and ask for it. Do not guess identifiers, cursors, page tokens, dates, or filters.
 6. When the caller supplies only a broad topic, propose a small focused query set based on exact names, common variants, user wording, language, problem, or use case. Avoid blind expansion and unrelated synonyms.
-7. Read [references/parameter-guide.md](references/parameter-guide.md) for parameter meaning, accepted formats, acquisition methods, and validation reminders. Read [references/mcp-contract.md](references/mcp-contract.md) for the live tool contract, result fields, pagination, and failure boundaries.
-8. Follow the live MCP schema when it differs from these references.
+7. For `search_x_posts` with `search_mode=recent`, do not submit a `start_time` earlier than the dynamic previous-seven-day boundary. Select `all` only when the caller needs older coverage and Full-archive access is available; otherwise explain the current-window limit.
+8. Read [references/parameter-guide.md](references/parameter-guide.md) for parameter meaning, accepted formats, acquisition methods, and validation reminders. Read [references/mcp-contract.md](references/mcp-contract.md) for the live tool contract, result fields, pagination, and failure boundaries.
+9. Follow the live MCP schema when it differs from these references.
 
 ## Tool Selection
 
@@ -124,7 +130,7 @@ Preserve, when returned and relevant:
 - stable post, note, content, user, or account identifiers;
 - source URLs, author/account identity, publication time, text, title, and media URLs;
 - native public counts without combining unlike metrics;
-- capture time, result count, page/cursor/token state, end-of-list state, and safe SignalDig errors;
+- capture time, result count, page/cursor/token state, end-of-list state, and safe plain-language SignalDig failure explanations;
 - raw source objects only when the caller asks for raw data or no normalized field represents the needed value.
 
 For a Xiaohongshu account request, keep these direct observations available when returned:
@@ -150,7 +156,7 @@ Do not add generic advice, opportunity rankings, content ideas, sentiment labels
 7. Preserve partial results when a later page fails; do not restart or conceal the missing coverage.
 8. Retry a temporary failure only for the same logical page with unchanged inputs and the original `idempotency_key`; prefer the same `request_id` status/recovery path over a new paid call.
 9. Limit archive-first recovery to three attempts. Before that limit, never create a new idempotency key or substitute another live request. After the limit, a fresh request is a deliberate fallback, not a retry of the old Run.
-10. If a tool reports `signaldig_social_no_matching_data`, say that this query returned no matching public posts; do not retry as an outage. If a tool reports `signaldig_social_data_temporarily_unavailable`, tell the caller that the same request is being recovered or remains temporarily unavailable. Do not reveal or reconstruct technical error details, OSS keys, cache URLs, or billing text.
+10. If a tool reports `signaldig_social_no_matching_data`, say that this query returned no matching public posts; do not retry as an outage. If an internal condition reports temporary unavailability or an unavailable Social data source, use the English explanation in Core Boundary rule 8; do not expose its code. Do not fabricate a result or retry a source-unavailable condition as an archive-recovery case. Do not reveal or reconstruct technical error details, OSS keys, cache URLs, or billing text.
 
 ## Examples
 

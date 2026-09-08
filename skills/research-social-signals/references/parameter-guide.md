@@ -237,7 +237,7 @@ Do not label either option “best”. Use the one matching the caller's retriev
 
 ### `start_time` and `end_time`
 
-Timezone-aware ISO 8601 timestamps. `start_time` is inclusive; `end_time` is exclusive and must be later. In `recent` mode the start must remain inside X's recent window; select `all` for older boundaries. For a current search, normally omit `end_time`. Do not place web-search syntax such as `since:2026-08-01` in the query when these fields are available.
+Timezone-aware ISO 8601 timestamps. `start_time` is inclusive; `end_time` is exclusive and must be later. In `recent` mode the start must remain inside X's recent window; select `all` for older boundaries. For a current search, normally omit `end_time`. When an explicit end is too close to the current time, the backend clamps it to X's safe searchable upper boundary; preserve any returned effective boundary. Do not place web-search syntax such as `since:2026-08-01` in the query when these fields are available.
 
 ### `since_id` and `until_id`
 
@@ -322,5 +322,6 @@ Technical diagnostics are not user data. Never repeat response JSON, documentati
 
 - For an invalid public input, name only the invalid field, explain the expected public format, and show how the user can obtain or correct it.
 - For a temporary upstream failure, return only the stable SignalDig error meaning: social data is temporarily unavailable; retry the same logical request later.
+- When the Social data source itself is unavailable, do not expose an internal error code. Tell the user: “The SignalDig Social data source is currently unavailable. No results were retrieved. Please try again later.”
 - A response can have an outer success code while its nested `data` contains an error. Treat that as failure, not as empty or successful data.
 - For WeChat article/account retrieval failures, never expose nested `error`, `message`, `debug_id`, or `debug_info`. Ask the user to verify the public account original ID or article URL only when that is the actionable public input.

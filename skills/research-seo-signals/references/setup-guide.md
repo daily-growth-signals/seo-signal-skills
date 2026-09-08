@@ -5,7 +5,7 @@ can produce any evidence-backed result you must complete **two separate
 installs**:
 
 1. Get a **SignalDig API key** (account access).
-2. Connect the **`daily-growth-signals` MCP server** to your AI client.
+2. Connect the **SignalDig SEO Data MCP endpoint** to your AI client.
 
 Installing this Skill does **NOT** connect the MCP server. The Skill tells the
 agent what to do; the MCP server is what actually retrieves the data.
@@ -25,17 +25,17 @@ agent what to do; the MCP server is what actually retrieves the data.
 
 ---
 
-## 2. Connect the `daily-growth-signals` MCP server
+## 2. Connect the SignalDig SEO Data MCP endpoint
 
 | Field | Value |
 |-------|-------|
-| Server name (reference) | `daily-growth-signals` |
+| Example server alias (configurable) | `signaldig-seo` |
 | Transport | HTTP (Streamable MCP) |
 | URL | `https://mcp.signaldig.com/data/seo/mcp` |
 | Auth header | `Authorization: Bearer {your_api_key}` |
 
-The server name is a **reference name** — you may rename it in your client
-(for example `signaldig-seo`) without changing the endpoint.
+The server alias is client-defined. `signaldig-seo` is SignalDig's example;
+you may use any client-valid alias without changing the endpoint or the Skill.
 
 ### Claude Code
 
@@ -44,11 +44,11 @@ Add to `.mcp.json` in your project:
 ```json
 {
   "mcpServers": {
-    "daily-growth-signals": {
+    "signaldig-seo": {
       "type": "http",
       "url": "https://mcp.signaldig.com/data/seo/mcp",
       "headers": {
-        "Authorization": "Bearer YOUR_API_KEY"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       }
     }
   }
@@ -64,6 +64,7 @@ Codex does not read `mcpServers` JSON. Add the server to your **user-level**
 config):
 
 ```toml
+# `signaldig_seo` is an example alias; choose any TOML-valid key.
 [mcp_servers.signaldig_seo]
 url = "https://mcp.signaldig.com/data/seo/mcp"
 bearer_token_env_var = "SIGNALDIG_API_KEY"
@@ -94,7 +95,7 @@ start a new task, and confirm the tools from section 3 are listed.
 ### Other clients (Cursor, Windsurf, etc.)
 
 Every client stores MCP servers in its own settings file, but the entry has
-the same shape: server name + `type: "http"` + URL + `headers`. Open your
+the same shape: configurable server alias + `type: "http"` + URL + `headers`. Open your
 client's MCP settings, add the server above with your real API key, and
 restart the client. Where the client supports an environment-variable auth
 option (like Codex's `bearer_token_env_var`), prefer it over hardcoding the

@@ -8,6 +8,18 @@
 
 - 待补充。
 
+## [1.7.0] - 2026-09-08
+
+### 更新内容
+
+- Skill 现从客户端可见工具中发现所需的 SignalDig MCP 操作，不再要求特定配置服务别名；安装示例中的服务别名已明确为可修改。
+- 修正 Social MCP 工具文档：使用 `get_xiaohongshu_user_posts`，并补充 `get_x_posts_by_ids`。
+- 新增发布前检查：禁止运行指令绑定服务别名，并验证每份安装指南覆盖其 MCP contract 的全部操作。
+- 对齐 SEO 与 Social Skill 和公开后端能力：补充 `x_recent_search`、要求证据型 SEO 提交传入 `include_skills=false`，并说明 X recent 时间窗口钳制与 Social 数据源不可用错误。
+- 所有 SignalDig Skill 现将服务不可用错误码保留为内部状态，并向用户返回英文服务说明。
+- 收紧终态失败处理，补充 X 有效结束时间钳制说明，并补齐 Skill UI 图标元数据。
+- 精简 Skill 发现描述，同时保留 MCP 依赖与防误触发边界。
+
 ## [1.6.1] - 2026-09-04
 
 ### 更新内容

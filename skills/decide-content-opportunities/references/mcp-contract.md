@@ -41,9 +41,11 @@ Query the account-scoped job by `request_id`.
   families succeeded; do not resubmit because one family was empty. Prefer
   `result.decision_report` when present, otherwise decide from remaining
   evidence with lower confidence.
-- `failed` — terminal service or execution failure; report the stable error
-  and do not fabricate a recommendation. Empty-result codes belong on
-  `partial`, not here.
+- `failed` — terminal service or execution failure; do not expose a machine
+  error code or fabricate a recommendation. For a service-unavailable
+  condition, tell the user: “The SignalDig SEO decision service is currently
+  unavailable. No decision report was generated. Please try again later.”
+  Empty-result codes belong on `partial`, not here.
 
 The expected report contains a stance, qualitative confidence, summary,
 supporting and counter-evidence references, assumptions, conditions, risks,

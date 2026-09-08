@@ -7,7 +7,7 @@
 <a id="english"></a>
 ## English
 
-Pre-built [Agent Skills](https://openagentskills.dev/docs/specification) that give AI agents focused workflows for collecting traceable SEO and social-media signals through the SignalDig MCP products, and for turning Decision-MCP-returned SEO evidence into content-opportunity decisions. Each skill is independent and bound to its own MCP service.
+Pre-built [Agent Skills](https://openagentskills.dev/docs/specification) that give AI agents focused workflows for collecting traceable SEO and social-media signals through the SignalDig MCP products, and for turning Decision-MCP-returned SEO evidence into content-opportunity decisions. Each skill is independent and discovers its required MCP operations from the client's visible tool inventory; it never depends on a configured server alias.
 
 ### Skills
 
@@ -49,32 +49,32 @@ Using WorkBuddy? Install `Research SEO Signals`, `Retrieve Social Signals`, and 
 
 ## Connect the MCP servers
 
-Register the SignalDig endpoints in your client. Example config:
+Register the SignalDig endpoints in your client. The keys below are SignalDig's example aliases only: each may be renamed independently without affecting any Skill.
 
 ```json
 {
   "mcpServers": {
-    "daily-growth-signals": {
+    "signaldig-seo": {
       "type": "http",
       "url": "https://mcp.signaldig.com/data/seo/mcp",
       "headers": {
-        "Authorization": "Bearer {your_api_key}"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       },
       "disabled": false
     },
-    "social-growth-signals": {
+    "signaldig-social": {
       "type": "http",
       "url": "https://mcp.signaldig.com/data/social/mcp",
       "headers": {
-        "Authorization": "Bearer {your_api_key}"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       },
       "disabled": false
     },
-    "keyword_decision_report": {
+    "signaldig-seo-decisions": {
       "type": "http",
       "url": "https://mcp.signaldig.com/signals/seo/mcp",
       "headers": {
-        "Authorization": "Bearer {your_api_key}"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       },
       "disabled": false
     }
@@ -82,17 +82,18 @@ Register the SignalDig endpoints in your client. Example config:
 }
 ```
 
-Replace `{your_api_key}` with a key from your SignalDig workspace and **store it in an environment variable** (`SIGNALDIG_API_KEY`) — never hard-code or commit the key.
+Set `SIGNALDIG_API_KEY` to a key from your SignalDig workspace and **store it in an environment variable** — never hard-code or commit the key.
 
-| MCP Server | Skill | Purpose |
-|------------|-------|---------|
-| `daily-growth-signals` | `research-seo-signals` | SEO data collection |
-| `social-growth-signals` | `research-social-signals` | Social media listening |
-| `keyword_decision_report` | `decide-content-opportunities` | Decision recommendations |
+| Required MCP product | Example alias (configurable) | Skill | Purpose |
+|----------------------|------------------------------|-------|---------|
+| SEO Data MCP | `signaldig-seo` | `research-seo-signals` | SEO data collection |
+| Social Data MCP | `signaldig-social` | `research-social-signals` | Social media listening |
+| SEO Decision MCP | `signaldig-seo-decisions` | `decide-content-opportunities` | Decision recommendations |
 
 **Codex** uses user-level `~/.codex/config.toml` (it does not read `mcpServers` JSON) and sends `Authorization: Bearer $SIGNALDIG_API_KEY` automatically:
 
 ```toml
+# `signaldig_seo` is an example alias; choose any TOML-valid key.
 [mcp_servers.signaldig_seo]
 url = "https://mcp.signaldig.com/data/seo/mcp"
 bearer_token_env_var = "SIGNALDIG_API_KEY"
@@ -136,7 +137,7 @@ The SEO skill follows the async submit/get contract; the Social skill uses the s
 <a id="中文"></a>
 ## 中文
 
-预构建的 [Agent Skills](https://openagentskills.dev/docs/specification)：为 AI Agent 提供聚焦的工作流程，通过 SignalDig MCP 产品收集可追溯的 SEO 与社交媒体信号，并将 Decision MCP 返回的 SEO 证据转化为内容机会决策。每个技能相互独立，各自绑定一个 MCP 服务。
+预构建的 [Agent Skills](https://openagentskills.dev/docs/specification)：为 AI Agent 提供聚焦的工作流程，通过 SignalDig MCP 产品收集可追溯的 SEO 与社交媒体信号，并将 Decision MCP 返回的 SEO 证据转化为内容机会决策。每个技能相互独立，从客户端可见工具中发现所需 MCP 操作，不依赖配置的服务别名。
 
 ### 技能
 
@@ -178,32 +179,32 @@ Windows 用户可在 Git Bash 或 WSL 中运行，或手动复制到 `%USERPROFI
 
 ## 连接 MCP 服务器
 
-在客户端中注册 SignalDig 端点，示例配置（Claude Code 的 `.mcp.json` 使用相同格式）：
+在客户端中注册 SignalDig 端点。下列 key 是 SignalDig 的示例别名，可分别修改，不影响任何 Skill（Claude Code 的 `.mcp.json` 使用相同格式）：
 
 ```json
 {
   "mcpServers": {
-    "daily-growth-signals": {
+    "signaldig-seo": {
       "type": "http",
       "url": "https://mcp.signaldig.com/data/seo/mcp",
       "headers": {
-        "Authorization": "Bearer {your_api_key}"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       },
       "disabled": false
     },
-    "social-growth-signals": {
+    "signaldig-social": {
       "type": "http",
       "url": "https://mcp.signaldig.com/data/social/mcp",
       "headers": {
-        "Authorization": "Bearer {your_api_key}"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       },
       "disabled": false
     },
-    "keyword_decision_report": {
+    "signaldig-seo-decisions": {
       "type": "http",
       "url": "https://mcp.signaldig.com/signals/seo/mcp",
       "headers": {
-        "Authorization": "Bearer {your_api_key}"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       },
       "disabled": false
     }
@@ -211,17 +212,18 @@ Windows 用户可在 Git Bash 或 WSL 中运行，或手动复制到 `%USERPROFI
 }
 ```
 
-将 `{your_api_key}` 替换为 SignalDig 工作空间中的密钥，并**放入环境变量**（`SIGNALDIG_API_KEY`）——不要把 Key 写死或提交进仓库。
+将 SignalDig 工作空间中的密钥放入环境变量 `SIGNALDIG_API_KEY`——不要把 Key 写死或提交进仓库。
 
-| MCP 服务 | 技能 | 用途 |
-|----------|------|------|
-| `daily-growth-signals` | `research-seo-signals` | SEO 数据采集 |
-| `social-growth-signals` | `research-social-signals` | 社交媒体监听 |
-| `keyword_decision_report` | `decide-content-opportunities` | 决策建议 |
+| 所需 MCP 产品 | 示例别名（可改） | 技能 | 用途 |
+|----------|------|------|------|
+| SEO Data MCP | `signaldig-seo` | `research-seo-signals` | SEO 数据采集 |
+| Social Data MCP | `signaldig-social` | `research-social-signals` | 社交媒体监听 |
+| SEO Decision MCP | `signaldig-seo-decisions` | `decide-content-opportunities` | 决策建议 |
 
 **Codex** 使用用户级 `~/.codex/config.toml`（不读取 `mcpServers` JSON），会自动发送 `Authorization: Bearer $SIGNALDIG_API_KEY`：
 
 ```toml
+# `signaldig_seo` 只是示例别名；请选择任意合法 TOML key。
 [mcp_servers.signaldig_seo]
 url = "https://mcp.signaldig.com/data/seo/mcp"
 bearer_token_env_var = "SIGNALDIG_API_KEY"

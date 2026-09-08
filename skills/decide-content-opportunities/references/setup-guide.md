@@ -5,7 +5,7 @@ can produce any evidence-constrained decision you must complete **two separate
 installs**:
 
 1. Get a **SignalDig API key** (account access).
-2. Connect the **`keyword_decision_report` MCP server** to your AI client.
+2. Connect the **SignalDig SEO Decision MCP endpoint** to your AI client.
 
 Installing this Skill does **NOT** connect the MCP server. The Skill tells the
 agent what to do; the MCP server is what actually synthesizes the decision.
@@ -25,17 +25,18 @@ agent what to do; the MCP server is what actually synthesizes the decision.
 
 ---
 
-## 2. Connect the `keyword_decision_report` MCP server
+## 2. Connect the SignalDig SEO Decision MCP endpoint
 
 | Field | Value |
 |-------|-------|
-| Server name (reference) | `keyword_decision_report` |
+| Example server alias (configurable) | `signaldig-seo-decisions` |
 | Transport | HTTP (Streamable MCP) |
 | URL | `https://mcp.signaldig.com/signals/seo/mcp` |
 | Auth header | `Authorization: Bearer {your_api_key}` |
 
-The server name is a **reference name** — you may rename it in your client
-(for example `signaldig-decision`) without changing the endpoint.
+The server alias is client-defined. `signaldig-seo-decisions` is SignalDig's
+example; you may use any client-valid alias without changing the endpoint or
+the Skill.
 
 ### Claude Code
 
@@ -44,11 +45,11 @@ Add to `.mcp.json` in your project:
 ```json
 {
   "mcpServers": {
-    "keyword_decision_report": {
+    "signaldig-seo-decisions": {
       "type": "http",
       "url": "https://mcp.signaldig.com/signals/seo/mcp",
       "headers": {
-        "Authorization": "Bearer YOUR_API_KEY"
+        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
       }
     }
   }
@@ -59,11 +60,12 @@ Then restart Claude Code (or run `/mcp`) and approve the server.
 
 ### Codex
 
-Codex does not read `mcpServers` JSON. Add the server to your **user-level**
+Codex does not read `mcpServers` JSON. Add the endpoint to your **user-level**
 `~/.codex/config.toml` (not the project `.codex/config.toml` — account-level
 config):
 
 ```toml
+# `signaldig_decision` is an example alias; choose any TOML-valid key.
 [mcp_servers.signaldig_decision]
 url = "https://mcp.signaldig.com/signals/seo/mcp"
 bearer_token_env_var = "SIGNALDIG_API_KEY"
@@ -94,7 +96,7 @@ start a new task, and confirm the tools from section 3 are listed.
 ### Other clients (Cursor, Windsurf, etc.)
 
 Every client stores MCP servers in its own settings file, but the entry has
-the same shape: server name + `type: "http"` + URL + `headers`. Open your
+the same shape: configurable server alias + `type: "http"` + URL + `headers`. Open your
 client's MCP settings, add the server above with your real API key, and
 restart the client. Where the client supports an environment-variable auth
 option (like Codex's `bearer_token_env_var`), prefer it over hardcoding the
