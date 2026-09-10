@@ -3,7 +3,7 @@ name: research-seo-signals
 description: Retrieve traceable keyword, SERP, trend, ranked-keyword, traffic, competitor, GEO, and backlink evidence through the SignalDig SEO Data MCP. Use for evidence-only SEO research, scoped market comparisons, and reuse of existing research jobs; do not use for final prioritization decisions. Requires a connected MCP capability and SignalDig API key—installing this Skill does not connect the server, and unavailable tools must never be simulated.
 slug: signaldig-research-seo-signals
 displayName: Research SEO Signals
-version: 1.8.3
+version: 1.8.4
 summary: Collect traceable SEO demand signals for keywords, domains, ranked-keyword inventories, markets, and languages through the SignalDig MCP server.
 license: MIT
 homepage: https://signaldig.com/
@@ -39,12 +39,11 @@ SignalDig SEO Data MCP, the API key is invalid, or an initial connection fails:
 - **Never simulate, guess, or answer from general knowledge.** A
   knowledge-based reply is NOT a valid Skill output and misleads the user into
   thinking the Skill ran.
-- Tell the user plainly: this Skill needs the SignalDig SEO Data MCP endpoint
-  at `https://mcp.signaldig.com/data/seo/mcp` and a SignalDig API key (get one
-  at <https://signaldig.com/> → API Keys). Its configured server alias may use
-  any client-valid name. Point to
-  [references/setup-guide.md](references/setup-guide.md) for client-specific
-  steps, then stop.
+- Tell the user plainly: SignalDig is not connected yet. Ask them to complete
+  the unified setup at [Connect SignalDig](https://signaldig.com/agent-setup).
+  Do not list endpoints, config files, or client-specific steps in this
+  response; the setup page guides the required API key, MCP, and Skill setup.
+  Then stop.
 
 Only when the tools are available may the workflow proceed, and every
 substantive claim must cite a real tool result.
@@ -85,6 +84,7 @@ substantive claim must cite a real tool result.
 14. **Confirm ambiguous scope before calling.** A generic request such as “查一下这个关键词”“研究这个词” or “看看关键词数据” does not authorize all data families. Briefly ask which data the user needs, using plain-language choices. Do not submit while the required scope remains ambiguous.
 15. Do not ask a scope question when the user's goal already identifies the needed family or families. Map the goal directly and retrieve only those scopes.
 16. Omit `data_scopes` only when the user explicitly asks for comprehensive/all-family research or when every family is demonstrably necessary to answer an already specific request. Never equate a unified MCP endpoint with permission for full retrieval.
+17. **Xiaohongshu material boundary (mandatory when a result includes Xiaohongshu materials):** display the platform-returned material address and metadata only. For images, preserve and show the returned `url`, `width`, `height`, `is_cover`, and whichever source identifier is present (`file_id`/filename or `trace_id`). For video, preserve and show the returned `url`, `width`, `height`, `duration_ms`, `format`, and `codec`. Do not open, download, render, OCR, caption, classify, describe, compare, or otherwise interpret the image/video itself. Never infer visual meaning, subject matter, or material identity from a URL, filename, file ID, dimensions, cover marker, format, or codec. Do not derive a filename from the URL path; if a requested metadata field is absent, report it as unavailable.
 
 ## Logical Research Identity
 
@@ -261,6 +261,7 @@ Before writing the answer:
 - Distinguish search intent from content format.
 - Distinguish current observations from durable trends.
 - Use returned URLs only as traceability links; do not claim to have read their page bodies.
+- For Xiaohongshu image/video URLs, the address itself may be shown as returned material metadata, but it is not evidence of the material's visual content. Do not inspect or interpret the linked asset.
 - Mention usage metadata only when it is relevant to the user's requested methodology or freshness explanation.
 - Preserve values and units exactly for any figure you report. Do not round, merge, deduplicate, or translate keyword strings, URLs, timestamps, IDs, counts, ranks, or metric values unless the user explicitly requests a transformed view.
 - Prefer tables for arrays, but keep concise depth unless full export was requested.
@@ -304,6 +305,8 @@ Provide every section relevant to the selected request:
 13. `Next steps`
 
 For a comparison request, use one row per keyword or market and keep definitions consistent across rows. Reuse prior jobs per row when available. Do not compare requests with different markets or languages without labeling that difference.
+
+When Xiaohongshu material metadata is present, add a `素材元数据` section (or the user's requested equivalent) containing one row per returned image/video. Include the exact material URL and only platform-returned metadata; keep missing fields as unavailable. Do not include a visual-content summary or any claim derived from inspecting the asset.
 
 ## Failure Recovery
 

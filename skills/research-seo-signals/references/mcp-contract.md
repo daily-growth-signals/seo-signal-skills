@@ -165,6 +165,23 @@ A result can include:
 Optional evidence nodes may be absent. A `partial` result remains usable only for the nodes that succeeded.
 Default agent answers should be concise. A summary or top-N view is the default; full-array export is only required when the user explicitly asks for complete data.
 
+## Xiaohongshu Material Metadata Boundary
+
+If a result contains Xiaohongshu image or video materials, the material URL is
+an allowed output field. Show it together with only metadata returned by the
+platform:
+
+- images: `url`, `width`, `height`, `is_cover`, and any returned source
+  identifier such as `file_id`/filename or `trace_id`;
+- video: `url`, `width`, `height`, `duration_ms`, `format`, and `codec`.
+
+Do not open, download, render, OCR, caption, classify, describe, compare, or
+interpret the linked image/video. Do not infer visual meaning or material
+identity from a URL, filename, file ID, dimensions, cover marker, format, or
+codec. Never derive a filename from the URL path. If a field is absent, report
+it as unavailable. Keep one row per returned material when presenting a
+metadata table; do not summarize the asset's visual content.
+
 Read `result.field_semantics` before interpreting raw or normalized fields.
 
 ## Polling Algorithm

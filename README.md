@@ -104,7 +104,7 @@ Set the variable on macOS/Linux with `export SIGNALDIG_API_KEY="your_api_key"` i
 
 **Claude Code** uses `.mcp.json` in the project root with the same format and supports `${SIGNALDIG_API_KEY}` expansion.
 
-Full per-client setup (Cursor, Windsurf, VS Code, and more) is documented on the official site: <https://signaldig.com/mcp#ai-client-setup>
+Full per-client setup (Cursor, Windsurf, VS Code, and more) is documented on the official site: <https://signaldig.com/agent-setup>
 
 After configuring, restart your client. You should see tools like `submit_keyword_research_signals`, `get_keyword_research_signals`, and `submit_specific_seo_data`. On a `401`, check the `Authorization` header and API key first.
 
@@ -127,8 +127,8 @@ The SEO skill follows the async submit/get contract; the Social skill uses the s
 ## Links
 
 - Official site: <https://signaldig.com/>
-- Skills installation: <https://signaldig.com/skills#install>
-- MCP setup guide: <https://signaldig.com/mcp#ai-client-setup>
+- Skills installation: <https://signaldig.com/agent-setup>
+- MCP setup guide: <https://signaldig.com/agent-setup>
 - Repository: <https://github.com/daily-growth-signals/seo-signal-skills>
 - License: [MIT](LICENSE)
 
@@ -234,7 +234,7 @@ macOS/Linux 在 `~/.zshrc` 或 `~/.bashrc` 中执行 `export SIGNALDIG_API_KEY="
 
 **Claude Code** 使用项目根目录的 `.mcp.json`（格式同上），支持 `${SIGNALDIG_API_KEY}` 展开。
 
-其他客户端的完整配置（Cursor、Windsurf、VS Code 等）见官网：<https://signaldig.com/mcp#ai-client-setup>
+其他客户端的完整配置（Cursor、Windsurf、VS Code 等）见官网：<https://signaldig.com/agent-setup>
 
 配置完成后重启客户端，应能看到 `submit_keyword_research_signals`、`get_keyword_research_signals`、`submit_specific_seo_data` 等工具。若报 401，优先检查 `Authorization` header 与 API Key。
 
@@ -257,7 +257,7 @@ SEO 技能遵循异步提交/获取协议；社交技能使用同步 `search_x_p
 ## 链接
 
 - 官方网站：<https://signaldig.com/>
-- 技能安装：<https://signaldig.com/skills#install>
-- MCP 配置指南：<https://signaldig.com/mcp#ai-client-setup>
+- 技能安装：<https://signaldig.com/agent-setup>
+- MCP 配置指南：<https://signaldig.com/agent-setup>
 - 仓库：<https://github.com/daily-growth-signals/seo-signal-skills>
 - 许可证：[MIT](LICENSE)

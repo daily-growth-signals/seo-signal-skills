@@ -8,6 +8,14 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.8.0] - 2026-09-10
+
+### Changes
+
+- Skills now direct unavailable SignalDig connections to the unified Agent Setup page, and repository documentation and site calls to action use that same destination.
+- SEO signal retrieval preserves Xiaohongshu image and video material metadata without opening or interpreting the assets.
+- X post retrieval now validates X API boolean syntax before calling the provider, replacing unquoted `AND` conjunctions with X's implicit whitespace conjunction while preserving quoted literal terms.
+
 ## [1.7.0] - 2026-09-08
 
 ### Changes

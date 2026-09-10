@@ -213,7 +213,7 @@ Tool: `search_x_posts`
 
 ### `query`
 
-A raw X query expression from 1 to 512 characters. X search is primarily literal. Build focused expressions from exact names, spelling variants, languages, problem statements, or use cases. Use uppercase `OR`, quotes for exact phrases, and supported operators such as `-is:retweet` or `lang:en` only when they help the stated request.
+A raw X query expression from 1 to 512 characters. X search is primarily literal. Build focused expressions from exact names, spelling variants, languages, problem statements, or use cases. Use uppercase `OR`, quotes for exact phrases, and supported operators such as `-is:retweet` or `lang:en` only when they help the stated request. Use whitespace—not an unquoted standalone `AND` or `and`—to require multiple clauses. If `AND` is meant as searchable text, use `"AND"`.
 
 Filters such as `lang:`, `is:`, and `has:` cannot stand alone; include a keyword, phrase, hashtag, mention, `from:`, or `to:` expression. Chinese language codes are `zh-CN` or `zh-TW`, not `zh`.
 

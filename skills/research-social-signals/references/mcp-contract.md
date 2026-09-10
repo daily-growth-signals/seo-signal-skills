@@ -182,6 +182,7 @@ Expected result content includes normalized posts, authors, timestamps, language
 ## Query Semantics
 
 - Pass `query` exactly as X should evaluate it.
+- Before submitting, replace an unquoted standalone `AND` or `and` that joins clauses with whitespace, which is X's implicit conjunction. State the correction and preserve the resulting expression as the effective query. Do not alter `"AND"` or `"and"`, which are literal search phrases.
 - X search is literal and ranking-dependent, not exhaustive semantic retrieval.
 - Use focused phrase, spelling, language, problem, and use-case variants when they materially improve recall.
 - Native operators such as `OR`, `-is:retweet`, and `lang:` may be used when supported by the tool.
@@ -193,7 +194,7 @@ Expected result content includes normalized posts, authors, timestamps, language
 
 | Goal | API expression | Example | Notes |
 | --- | --- | --- | --- |
-| Require all words | space (AND) | `English learning methods` | Each token must match; there is no explicit `AND` keyword. |
+| Require all words | space (implicit AND) | `English learning methods` | Each token must match. Do not write unquoted `AND` or `and`; quote it (for example, `"and"`) only when searching for that literal word. |
 | Match an exact phrase | `"exact phrase"` | `"English learning methods"` | Matches the phrase in the Post body. |
 | Match either expression | `OR` | `English OR learning` | `OR` must be uppercase. Use parentheses when combining groups. |
 | Group expressions | `()` | `(English OR learning) methods` | Makes mixed AND/OR precedence explicit. Do not negate a parenthesized group; negate each expression separately. |
@@ -218,6 +219,8 @@ Do not copy X web-search date text into `query`. For this API:
 - Keep `end_time` later than `start_time`. For a current-window search, normally omit `end_time`.
 
 Conjunction-required filters such as `lang:`, `is:`, and `has:` cannot form a valid query by themselves. Pair them with a standalone keyword, phrase, hashtag, mention, `from:`, or `to:` expression. The X API may gate some operators by access level; treat a tool rejection as an availability boundary instead of rewriting the user's intent silently.
+
+For example, correct `(codex AND "phone number" AND (verify OR verifying)) -is:retweet` to `(codex "phone number" (verify OR verifying)) -is:retweet` before the call. This is an unambiguous syntax correction, not an expansion of the user's search.
 
 ## Observed X Filter Availability
 

@@ -39,12 +39,11 @@ SignalDig SEO Decision MCP, the API key is invalid, or an initial connection fai
 - **Never simulate, guess, or answer from general knowledge.** A
   knowledge-based reply is NOT a valid Skill output and misleads the user into
   thinking the Skill ran.
-- Tell the user plainly: this Skill needs the SignalDig SEO Decision MCP
-  endpoint at `https://mcp.signaldig.com/signals/seo/mcp` and a SignalDig API
-  key (get one at <https://signaldig.com/> → API Keys). Its configured server
-  alias may use any client-valid name. Point to
-  [references/setup-guide.md](references/setup-guide.md) for client-specific
-  steps, then stop.
+- Tell the user plainly: SignalDig is not connected yet. Ask them to complete
+  the unified setup at [Connect SignalDig](https://signaldig.com/agent-setup).
+  Do not list endpoints, config files, or client-specific steps in this
+  response; the setup page guides the required API key, MCP, and Skill setup.
+  Then stop.
 
 Only when the tools are available may the workflow proceed, and every
 decision claim must cite a real tool result.

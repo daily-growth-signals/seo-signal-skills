@@ -38,12 +38,11 @@ SignalDig Social Data MCP, the API key is invalid, or an initial connection fail
 - **Never simulate, guess, or answer from general knowledge.** A
   knowledge-based reply is NOT a valid Skill output and misleads the user into
   thinking the Skill ran.
-- Tell the user plainly: this Skill needs the SignalDig Social Data MCP
-  endpoint at `https://mcp.signaldig.com/data/social/mcp` and a SignalDig API
-  key (get one at <https://signaldig.com/> → API Keys). Its configured server
-  alias may use any client-valid name. Point to
-  [references/setup-guide.md](references/setup-guide.md) for client-specific
-  steps, then stop.
+- Tell the user plainly: SignalDig is not connected yet. Ask them to complete
+  the unified setup at [Connect SignalDig](https://signaldig.com/agent-setup).
+  Do not list endpoints, config files, or client-specific steps in this
+  response; the setup page guides the required API key, MCP, and Skill setup.
+  Then stop.
 
 Only when the tools are available may the workflow proceed, and every
 returned item must come from a real tool result.
@@ -67,9 +66,10 @@ returned item must come from a real tool result.
 4. If a value is clearly wrong and the intended correction is unambiguous, explain the correction briefly before using it. Examples: a Xiaohongshu share URL placed in `user_id`, an ISO country code placed in `country_name`, or a LinkedIn company URL placed in `profile_url`.
 5. If the intended value cannot be derived safely, explain where the user can obtain it and ask for it. Do not guess identifiers, cursors, page tokens, dates, or filters.
 6. When the caller supplies only a broad topic, propose a small focused query set based on exact names, common variants, user wording, language, problem, or use case. Avoid blind expansion and unrelated synonyms.
-7. For `search_x_posts` with `search_mode=recent`, do not submit a `start_time` earlier than the dynamic previous-seven-day boundary. Select `all` only when the caller needs older coverage and Full-archive access is available; otherwise explain the current-window limit.
-8. Read [references/parameter-guide.md](references/parameter-guide.md) for parameter meaning, accepted formats, acquisition methods, and validation reminders. Read [references/mcp-contract.md](references/mcp-contract.md) for the live tool contract, result fields, pagination, and failure boundaries.
-9. Follow the live MCP schema when it differs from these references.
+7. Before `search_x_posts`, validate the raw X API v2 expression. Never use an unquoted standalone `AND` or `and` to join clauses: whitespace is X's conjunction. When this error has an unambiguous correction, remove only the conjunction token, explain the correction briefly, and report the effective query; preserve quoted `"AND"` or `"and"` when the caller is searching for that word.
+8. For `search_x_posts` with `search_mode=recent`, do not submit a `start_time` earlier than the dynamic previous-seven-day boundary. Select `all` only when the caller needs older coverage and Full-archive access is available; otherwise explain the current-window limit.
+9. Read [references/parameter-guide.md](references/parameter-guide.md) for parameter meaning, accepted formats, acquisition methods, and validation reminders. Read [references/mcp-contract.md](references/mcp-contract.md) for the live tool contract, result fields, pagination, and failure boundaries.
+10. Follow the live MCP schema when it differs from these references.
 
 ## Tool Selection
 
