@@ -1,9 +1,9 @@
 ---
 name: research-social-signals
 description: Retrieve traceable public posts, profiles, trends, pagination state, and native metrics from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat through the SignalDig Social Data MCP. Use for social-data retrieval and parameter validation, not sentiment, performance, content, marketing, or business decisions. Requires a connected MCP capability and SignalDig API key—installing this Skill does not connect the server, and unavailable tools must never be simulated.
-slug: signaldig-research-social-signals
+slug: research-social-signals
 displayName: Retrieve Social Signals
-version: 1.6.5
+version: 1.6.6
 summary: Retrieve traceable, public, platform-native social data from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat Official Accounts.
 license: MIT
 homepage: https://signaldig.com/

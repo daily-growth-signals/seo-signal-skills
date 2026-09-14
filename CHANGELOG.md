@@ -8,6 +8,12 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [1.8.1] - 2026-09-14
+
+### Changes
+
+- Unified skill directory names, `name`, and `slug` values to prevent ambiguous installation and invocation.
+
 ## [1.8.0] - 2026-09-10
 
 ### Changes

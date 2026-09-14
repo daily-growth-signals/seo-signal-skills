@@ -1,9 +1,9 @@
 ---
 name: research-seo-signals
 description: Retrieve traceable keyword, SERP, trend, ranked-keyword, traffic, competitor, GEO, and backlink evidence through the SignalDig SEO Data MCP. Use for evidence-only SEO research, scoped market comparisons, and reuse of existing research jobs; do not use for final prioritization decisions. Requires a connected MCP capability and SignalDig API key—installing this Skill does not connect the server, and unavailable tools must never be simulated.
-slug: signaldig-research-seo-signals
+slug: research-seo-signals
 displayName: Research SEO Signals
-version: 1.8.4
+version: 1.8.5
 summary: Collect traceable SEO demand signals for keywords, domains, ranked-keyword inventories, markets, and languages through the SignalDig MCP server.
 license: MIT
 homepage: https://signaldig.com/

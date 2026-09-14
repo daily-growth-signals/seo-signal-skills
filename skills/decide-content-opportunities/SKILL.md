@@ -1,9 +1,9 @@
 ---
 name: decide-content-opportunities
 description: Generate evidence-constrained keyword and content-opportunity decisions through the SignalDig SEO Decision MCP, including stance, qualitative confidence, counter-evidence, conditions, risks, and a next test. Use for deciding whether or how to prioritize a keyword; do not use for evidence collection alone, finished copy, publishing, or automatic business decisions. Requires a connected MCP capability and SignalDig API key—installing this Skill does not connect the server, and unavailable tools must never be simulated.
-slug: signaldig-decide-content-opportunities
+slug: decide-content-opportunities
 displayName: Decide Content Opportunities
-version: 1.5.2
+version: 1.5.3
 summary: Generate evidence-constrained keyword and content-opportunity decisions with confidence, counter-evidence, and a next validation test.
 license: MIT
 homepage: https://signaldig.com/

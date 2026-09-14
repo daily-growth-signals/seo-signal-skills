@@ -5,7 +5,7 @@
 # 校验内容：
 #   1. 对比远程最新 tag 与本地代码的 diff（列出 skills/ 变更，防止"改了但没记录"）
 #   2. 版本规范：各 skill version 符合 semver，且不相对已发布版本倒退（各 skill 独立管理，不强制统一）
-#   3. SKILL.md frontmatter 必需字段 + slug 唯一性
+#   3. SKILL.md frontmatter 必需字段 + skill 目录/name 一致性 + slug 唯一性
 #   4. CHANGELOG 中英文双语同步、目标版本条目非空
 #   5. (可选 --dry-run) 调用 hub CLI 做预发布 dry-run
 #
@@ -144,6 +144,12 @@ REQUIRED=(name description slug displayName version summary license tags)
 seen_slugs=""
 for skill in "${SKILLS[@]}"; do
     f="$SKILLS_DIR/$skill/SKILL.md"
+    declared_name="$(extract_field "$f" name)"
+    if [ "$declared_name" != "$skill" ]; then
+        err "$skill 的目录名与 SKILL.md name 不匹配: ${skill} != ${declared_name:-<缺失>}"
+    else
+        ok "$skill 目录名与 SKILL.md name 一致"
+    fi
     v="$(extract_field "$f" version)"
     for field in "${REQUIRED[@]}"; do
         if ! grep -Eq "^${field}:[[:space:]]" "$f"; then
