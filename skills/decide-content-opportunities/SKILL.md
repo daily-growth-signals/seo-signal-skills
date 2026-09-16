@@ -1,209 +1,26 @@
 ---
 name: decide-content-opportunities
-description: Generate evidence-constrained keyword and content-opportunity decisions through the SignalDig SEO Decision MCP, including stance, qualitative confidence, counter-evidence, conditions, risks, and a next test. Use for deciding whether or how to prioritize a keyword; do not use for evidence collection alone, finished copy, publishing, or automatic business decisions. Requires a connected MCP capability and SignalDig API key—installing this Skill does not connect the server, and unavailable tools must never be simulated.
-slug: decide-content-opportunities
-displayName: Decide Content Opportunities
-version: 1.5.3
-summary: Generate evidence-constrained keyword and content-opportunity decisions with confidence, counter-evidence, and a next validation test.
+description: Compatibility entry for existing SignalDig content-opportunity users. Route evidence collection to research-growth-signals and use its unified SEO research contract; do not call the retired Decision MCP or maintain separate request parameters.
 license: MIT
-homepage: https://signaldig.com/
-tags: [content, keyword, decision, mcp, growth]
+metadata:
+  version: "1.5.4"
+  homepage: "https://signaldig.com/"
 ---
 
-# Decide Content Opportunities
+# Decide Content Opportunities — Compatibility Entry
 
-Use the SignalDig Decision MCP to produce a
-conditional keyword recommendation. Make a decision when the evidence supports one; do not
-hide behind an unranked summary. Preserve the boundary between observation,
-inference, recommendation, and expected outcome.
+This Skill name remains available for existing users during the migration period. Its former Decision MCP contract is frozen and must not receive new capabilities, parameters, or decision-service logic.
 
-## MCP Availability Gate (Mandatory)
+The server alias and any local tool namespace are client-defined. Never expose machine error codes in a user-facing response.
 
-> This Skill is a **workflow spec only**; it has no data of its own. Every
-> decision input comes from a connected SignalDig SEO Decision MCP capability,
-> which requires a valid SignalDig API key. **Installing this Skill does not
-> connect the MCP server** — the two are separate installs.
+## Required Delegation
 
-Before producing a decision, inspect the current MCP tool inventory for the
-required operations: `submit_keyword_decision_report` and
-`get_keyword_decision_report`. The server alias and any local tool namespace
-are client-defined. Use the exact visible tool identifier that implements the
-required operation; never require, construct, or infer a server alias or an
-`mcp__<alias>__<tool>` identifier.
+1. Load and follow `$research-growth-signals` as the only maintained SignalDig retrieval contract.
+2. Translate the user's decision question into the smallest sufficient unified SEO evidence request through `research_seo_signals`.
+3. Keep observations, inference, and any conditional recommendation distinct. Never imply that the retired Decision MCP produced a report.
+4. Never call the former Decision MCP tools, construct its request schema, or reuse its polling parameters.
+5. Do not read this directory's historical decision references for live execution; they are retained only for release history and rollback review.
 
-If a required operation is unavailable, its source cannot be identified as the
-SignalDig SEO Decision MCP, the API key is invalid, or an initial connection fails:
+If `$research-growth-signals` or the unified SignalDig MCP is unavailable, stop and tell the user to install or update the unified SignalDig Skill and connection. Do not fall back to the legacy contract and do not simulate evidence or decisions.
 
-- **Stop immediately.** Do not start the workflow, and do not emit any stance,
-  confidence, evidence IDs, risks, or "recommendations".
-- **Never simulate, guess, or answer from general knowledge.** A
-  knowledge-based reply is NOT a valid Skill output and misleads the user into
-  thinking the Skill ran.
-- Tell the user plainly: SignalDig is not connected yet. Ask them to complete
-  the unified setup at [Connect SignalDig](https://signaldig.com/agent-setup).
-  Do not list endpoints, config files, or client-specific steps in this
-  response; the setup page guides the required API key, MCP, and Skill setup.
-  Then stop.
-
-Only when the tools are available may the workflow proceed, and every
-decision claim must cite a real tool result.
-
-## Decision Contract
-
-- Use `submit_keyword_decision_report` and `get_keyword_decision_report` from
-  the Decision MCP. Never manufacture a recommendation from raw data or
-  general knowledge; the recommendation must come from the live Decision MCP
-  result.
-- Start from the keyword, target domain, market, language, business goal,
-  audience, channel constraints, and time horizon.
-- Reuse a prior Decision MCP `request_id` for the same logical decision before
-  submitting. Keep one stable `idempotency_key` across retries.
-- Select the smallest sufficient SEO `data_scopes`; omit it only when the
-  decision genuinely needs every SEO evidence family.
-- The public Decision MCP submit schema does **not** expose `search_engine`.
-  A decision job that includes `serp` therefore uses its service default
-  (Google). Do not claim that a decision report contains Bing evidence. If the
-  caller supplies Bing data from another source, treat it as supplemental
-  context, not as input consumed by the Decision MCP.
-- Treat live `field_semantics`, evidence IDs, request IDs, limitations, and
-  timestamps as authoritative.
-- Recommend an action only within the evidence coverage. State conditions that
-  would change the recommendation.
-- Use `high`, `medium`, or `low` as qualitative confidence labels. Never
-  present them as calibrated probabilities.
-
-## Hard Rules
-
-1. Never invent demand, audience needs, commercial value, expected performance,
-   evidence, or source coverage.
-2. Never convert search volume, ranking, trend interest, post count, or
-   engagement directly into revenue or purchase intent.
-3. Never cite an SEO claim without its available `request_id` and
-   `evidence_id`.
-4. Never describe absent or unrequested evidence as negative evidence.
-5. Never hide counter-evidence, stale data, `partial` results, sparse samples,
-   ranking effects, or market-language mismatch.
-6. Never combine evidence from different markets, languages, audiences, or time
-   windows without labeling the mismatch.
-7. Never rank options by an unexplained score. Show the decision criteria and
-   decisive tradeoffs.
-8. Never use numeric confidence unless the user provides a calibrated model and
-   its methodology.
-9. Never produce finished copy, fabricate product experience, publish content,
-   or execute the recommendation.
-10. Never submit a second decision job merely because the first is `pending` or
-    `running`; poll the same `request_id`.
-11. Never treat `signaldig_no_matching_data` or an empty SEO family as a
-    service outage. Analyze whatever evidence remains, disclose the gap, and
-    only refuse a recommendation when every selected family is empty or the
-    job is `failed`.
-12. Never present a `failed` job, or a terminal result with no remaining
-    evidence, as a completed recommendation. If `decision_report` is present,
-    use it within its stated coverage; if it is absent but usable evidence
-    remains, give a bounded recommendation from that evidence and do not
-    resubmit merely because one family was empty.
-13. Keep one primary recommendation. Include alternatives only when they
-    represent meaningfully different choices.
-14. Never expose machine error codes in a user-facing response. When the
-    Decision service is unavailable, say: “The SignalDig SEO decision service
-    is currently unavailable. No decision report was generated. Please try
-    again later.”
-
-## Workflow
-
-1. Define the decision and normalize the keyword, hostname-only domain, ISO
-   alpha-2 market, research/report language, horizon, audience, eligible
-   channels, and material constraints.
-2. Select the smallest sufficient `data_scopes`: `keyword_overview`,
-   `related_keywords`, `serp`, and/or `google_trends`.
-   When `serp` is selected, treat Google as the only engine available through
-   this Decision MCP contract; do not add an unsupported `search_engine`
-   argument.
-3. Build a stable key:
-   `keyword-decision:` + keyword + `|` + domain + `|` + market + `|` +
-   language + `|` + sorted scopes.
-4. Reuse gate: if the conversation already contains a matching `request_id`,
-   call only `get_keyword_decision_report`.
-5. Otherwise call `submit_keyword_decision_report` once with the normalized
-   inputs and stable key. Preserve its `request_id`, `poll_after_seconds`, and
-   `execution_deadline_at`.
-6. Poll `get_keyword_decision_report` with the same `request_id` until
-   `is_terminal=true`; never resubmit while pending or running.
-7. On `failed`, stop without producing a recommendation. Give a safe
-   plain-English explanation without exposing a machine error code; use Hard
-   Rule 14 when the service is unavailable. Retry only when the user asks,
-   using the same logical inputs and `idempotency_key`.
-8. On `complete` or `partial`, verify that `result.query` matches the requested
-   identity, inventory evidence and limitations, and treat
-   `signaldig_no_matching_data` as a data gap. Prefer a non-null
-   `result.decision_report` when present; if it is missing, continue from the
-   remaining evidence instead of calling the job a failure.
-9. Evaluate the report using
-   [references/evidence-evaluation.md](references/evidence-evaluation.md) and
-   [references/confidence-rubric.md](references/confidence-rubric.md). Do not
-   silently strengthen the MCP report.
-10. Return the stance, decision basis, confidence, counter-evidence, conditions,
-   risks, recommended actions, stop conditions, missing inputs, and source
-   `request_id`. Use
-   [references/content-decision-template.md](references/content-decision-template.md)
-   when saving a durable artifact.
-
-## Evidence Sufficiency
-
-Proceed with a recommendation when the available evidence directly addresses
-the decision and its limitations can be bounded. A `partial` result with some
-empty families is still usable; decide from the remaining coverage.
-
-Proceed with `low` confidence when action is reversible and a small test is
-more useful than additional research. Make the exploratory nature explicit.
-
-Preserve a `run_validation_test` or `defer` stance when:
-
-- the business goal or target audience is unknown and different answers would
-  reverse the recommendation;
-- evidence cannot be traced to the terminal result;
-- compared options use incompatible markets, languages, or time windows;
-- the proposed action is costly or difficult to reverse and decisive evidence
-  is missing;
-- every selected SEO family is empty or the terminal status is `failed`.
-
-Do not require social evidence for a keyword decision. This Skill consumes
-only the evidence the Decision MCP returns. Social or other cross-channel
-data, when supplied by the caller, is supplemental context at most; do not
-imply that the Decision MCP consumed it.
-
-## Response Format
-
-Default to:
-
-1. `Recommendation`: the report stance and one primary action.
-2. `Decision basis`: decisive observations and inferences with evidence IDs.
-3. `Confidence`: qualitative label plus strengthening and weakening factors.
-4. `Counter-evidence and conditions`: facts or assumptions that could reverse
-   the recommendation.
-5. `Risks and missing inputs`: material uncertainty and unavailable evidence.
-6. `Next test`: recommended action, expected observable signal, and explicit
-   stop condition.
-7. `Source job`: reused `request_id`, selected SEO scopes, freshness, and
-   limitations.
-
-Do not disguise an evidence-gap report as a confident recommendation.
-
-## Examples
-
-```text
-Use $decide-content-opportunities to decide whether "AI SEO tools" should be prioritized for example.com in the US English market.
-```
-
-```text
-Use $decide-content-opportunities to generate a conditional keyword decision with confidence, counter-evidence, conditions, and a next validation test.
-```
-
-```text
-Use $decide-content-opportunities to query the existing Decision MCP request_id again and summarize its stop conditions.
-```
-
-## Reference
-
-Read [references/mcp-contract.md](references/mcp-contract.md) before the first
-live Decision MCP call or when diagnosing request-state errors.
+This compatibility entry may be removed only after the unified Skill has completed at least one stable release cycle and usage data confirms that this legacy Skill is no longer invoked.

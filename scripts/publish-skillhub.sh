@@ -19,6 +19,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 SKILLS_DIR="${PROJECT_ROOT}/skills"
 
 SKILLS=(
+    research-growth-signals
     research-seo-signals
     research-social-signals
     decide-content-opportunities

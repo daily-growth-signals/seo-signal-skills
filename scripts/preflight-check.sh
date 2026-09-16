@@ -54,8 +54,8 @@ done
 extract_field() {
     local file="$1" field="$2"
     awk -v key="${field}:" '
-        $0 ~ ("^" key "[[:space:]]") {
-            sub(/^[^:]+:[[:space:]]*/, "")
+        $0 ~ ("^[[:space:]]*" key "[[:space:]]") {
+            sub(/^[[:space:]]*[^:]+:[[:space:]]*/, "")
             gsub(/^["'"'"']|["'"'"']$/, "")
             print
             exit
@@ -140,8 +140,7 @@ fi
 echo ""
 
 echo "=== 3. SKILL.md frontmatter ==="
-REQUIRED=(name description slug displayName version summary license tags)
-seen_slugs=""
+REQUIRED=(name description license metadata)
 for skill in "${SKILLS[@]}"; do
     f="$SKILLS_DIR/$skill/SKILL.md"
     declared_name="$(extract_field "$f" name)"
@@ -152,15 +151,10 @@ for skill in "${SKILLS[@]}"; do
     fi
     v="$(extract_field "$f" version)"
     for field in "${REQUIRED[@]}"; do
-        if ! grep -Eq "^${field}:[[:space:]]" "$f"; then
+        if ! grep -Eq "^${field}:([[:space:]]|$)" "$f"; then
             err "$skill 缺少必需字段: ${field}"
         fi
     done
-    slug="$(extract_field "$f" slug)"
-    case " $seen_slugs " in
-        *" $slug "*) err "slug 重复: ${slug}" ;;
-        *) seen_slugs="$seen_slugs $slug" ;;
-    esac
     meta="$SKILLS_DIR/$skill/_skillhub_meta.json"
     if [ -f "$meta" ]; then
         meta_v="$(sed -nE 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' "$meta" | head -n1)"
@@ -169,7 +163,7 @@ for skill in "${SKILLS[@]}"; do
         fi
     fi
 done
-ok "frontmatter 必需字段、slug 唯一性与 SkillHub metadata version 检查完成"
+ok "frontmatter 必需字段与 SkillHub metadata version 检查完成"
 echo ""
 
 echo "=== 3.5. MCP alias-independence ==="

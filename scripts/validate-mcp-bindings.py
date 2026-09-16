@@ -19,7 +19,7 @@ ALIAS_BINDINGS = re.compile(
 )
 LOCAL_TOOL_IDENTIFIER = re.compile(r"mcp__[a-zA-Z0-9_-]+__")
 TOOL_HEADING = re.compile(r"^## Tool: `([a-z][a-z0-9_]*)`$", re.MULTILINE)
-TOOL_MENTION = re.compile(r"`((?:submit|get|search)_[a-z0-9_]+)`")
+TOOL_MENTION = re.compile(r"`((?:submit|get|search|research)_[a-z0-9_]+)`")
 USER_FACING_ERROR_CODE = re.compile(r"\b(?:report|return|show)\s+`?error\.code`?", re.IGNORECASE)
 USER_FACING_CODE_RULE = "never expose machine error codes in a user-facing response"
 

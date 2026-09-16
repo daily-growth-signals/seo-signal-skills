@@ -1,263 +1,38 @@
-# SignalDig Skills / SEO 信号技能集
+# SignalDig Growth Research Skill
 
 [English](#english) | [中文](#中文)
 
----
-
-<a id="english"></a>
 ## English
 
-Pre-built [Agent Skills](https://openagentskills.dev/docs/specification) that give AI agents focused workflows for collecting traceable SEO and social-media signals through the SignalDig MCP products, and for turning Decision-MCP-returned SEO evidence into content-opportunity decisions. Each skill is independent and discovers its required MCP operations from the client's visible tool inventory; it never depends on a configured server alias.
+SignalDig exposes one MCP connection and one Agent Skill. The MCP surface contains only two business tools:
 
-### Skills
+- `research_social_signals` for bounded public social research.
+- `research_seo_signals` for bounded SEO evidence research.
 
-- **`research-seo-signals`** — submit and poll asynchronous SEO research (keywords, domains, markets) and read metrics, evidence, and limitations without making the final decision.
-- **`research-social-signals`** — retrieve focused, deduplicated social data (X, Reddit, Xiaohongshu, Zhihu, LinkedIn, WeChat) with source URLs and coverage limits.
-- **`decide-content-opportunities`** — turn Decision-MCP-returned SEO evidence into conditional content-opportunity decisions with traceable rationale, confidence, counter-evidence, and a next test.
+The Skill translates a natural-language goal into the smallest sufficient business scope, submits once, and polls the same opaque `analysis_id`. Provider names, workflows, bindings, native pagination parameters, storage, and internal data are never part of the public contract.
 
-Each skill ships with a `SKILL.md` that documents its full workflow.
-
----
-
-## Install
-
-Clone the repository:
-
-```bash
-git clone https://github.com/daily-growth-signals/seo-signal-skills.git
-```
-
-Copy the skill folders into any client that supports the Agent Skills specification:
-
-```bash
-for client in ~/.codex/skills ~/.claude/skills ~/.agents/skills; do
-  mkdir -p "$client"
-  for skill in research-seo-signals research-social-signals decide-content-opportunities; do
-    rm -rf "$client/$skill"
-    cp -r "$(pwd)/seo-signal-skills/skills/$skill" "$client/"
-  done
-done
-```
-
-Re-run the commands after `git pull` to update your installed skills (each `rm -rf` removes the old copy first, so no directory nesting).
-
-On Windows, run from Git Bash or WSL, or copy the folders manually into `%USERPROFILE%\.codex\skills\`, `%USERPROFILE%\.claude\skills\`, and `%USERPROFILE%\.agents\skills\`.
-
-Using WorkBuddy? Install `Research SEO Signals`, `Retrieve Social Signals`, and `Decide Content Opportunities` from the ClawHub marketplace instead — no manual copying. Note that this still does **not** connect the MCP servers.
-
----
-
-## Connect the MCP servers
-
-Register the SignalDig endpoints in your client. The keys below are SignalDig's example aliases only: each may be renamed independently without affecting any Skill.
+New users install only `skills/research-growth-signals`, then register one Streamable HTTP connection. The historical `research-social-signals`, `research-seo-signals`, and `decide-content-opportunities` Skills remain published for one compatibility cycle; they contain no independent parameter logic and delegate to the unified Skill.
 
 ```json
 {
-  "mcpServers": {
-    "signaldig-seo": {
-      "type": "http",
-      "url": "https://mcp.signaldig.com/data/seo/mcp",
-      "headers": {
-        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
-      },
-      "disabled": false
-    },
-    "signaldig-social": {
-      "type": "http",
-      "url": "https://mcp.signaldig.com/data/social/mcp",
-      "headers": {
-        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
-      },
-      "disabled": false
-    },
-    "signaldig-seo-decisions": {
-      "type": "http",
-      "url": "https://mcp.signaldig.com/signals/seo/mcp",
-      "headers": {
-        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
-      },
-      "disabled": false
-    }
+  "signaldig": {
+    "type": "http",
+    "url": "https://mcp.signaldig.com/mcp",
+    "headers": {"Authorization": "Bearer {SIGNALDIG_API_KEY}"},
+    "disabled": false
   }
 }
 ```
 
-Set `SIGNALDIG_API_KEY` to a key from your SignalDig workspace and **store it in an environment variable** — never hard-code or commit the key.
+Store the API key securely and never commit it. Client-specific instructions are at [Connect SignalDig](https://signaldig.com/agent-setup).
 
-| Required MCP product | Example alias (configurable) | Skill | Purpose |
-|----------------------|------------------------------|-------|---------|
-| SEO Data MCP | `signaldig-seo` | `research-seo-signals` | SEO data collection |
-| Social Data MCP | `signaldig-social` | `research-social-signals` | Social media listening |
-| SEO Decision MCP | `signaldig-seo-decisions` | `decide-content-opportunities` | Decision recommendations |
-
-**Codex** uses user-level `~/.codex/config.toml` (it does not read `mcpServers` JSON) and sends `Authorization: Bearer $SIGNALDIG_API_KEY` automatically:
-
-```toml
-# `signaldig_seo` is an example alias; choose any TOML-valid key.
-[mcp_servers.signaldig_seo]
-url = "https://mcp.signaldig.com/data/seo/mcp"
-bearer_token_env_var = "SIGNALDIG_API_KEY"
-enabled = true
-```
-
-Set the variable on macOS/Linux with `export SIGNALDIG_API_KEY="your_api_key"` in `~/.zshrc` or `~/.bashrc`, or on Windows with `setx SIGNALDIG_API_KEY "your_api_key"` (then open a new terminal).
-
-**Claude Code** uses `.mcp.json` in the project root with the same format and supports `${SIGNALDIG_API_KEY}` expansion.
-
-Full per-client setup (Cursor, Windsurf, VS Code, and more) is documented on the official site: <https://signaldig.com/agent-setup>
-
-After configuring, restart your client. You should see tools like `submit_keyword_research_signals`, `get_keyword_research_signals`, and `submit_specific_seo_data`. On a `401`, check the `Authorization` header and API key first.
-
----
-
-## Use
-
-```text
-Use $research-seo-signals to research "AI SEO tools" for example.com in the US English market.
-
-Use $research-social-signals to find recent X conversations about PDF translation tools that preserve layout, with source links and coverage limitations.
-
-Use $decide-content-opportunities to turn the Decision-MCP-returned SEO evidence for a keyword into a conditional go/validate/defer recommendation with rationale, confidence, and a next test.
-```
-
-The SEO skill follows the async submit/get contract; the Social skill uses the synchronous `search_x_posts` contract; the decision skill uses the async `submit_keyword_decision_report` / `get_keyword_decision_report` contract.
-
----
-
-## Links
-
-- Official site: <https://signaldig.com/>
-- Skills installation: <https://signaldig.com/agent-setup>
-- MCP setup guide: <https://signaldig.com/agent-setup>
-- Repository: <https://github.com/daily-growth-signals/seo-signal-skills>
-- License: [MIT](LICENSE)
-
----
-
-<a id="中文"></a>
 ## 中文
 
-预构建的 [Agent Skills](https://openagentskills.dev/docs/specification)：为 AI Agent 提供聚焦的工作流程，通过 SignalDig MCP 产品收集可追溯的 SEO 与社交媒体信号，并将 Decision MCP 返回的 SEO 证据转化为内容机会决策。每个技能相互独立，从客户端可见工具中发现所需 MCP 操作，不依赖配置的服务别名。
+SignalDig 对外只提供一个 MCP 连接和一个 Agent Skill。MCP 内只有两个业务工具：
 
-### 技能
+- `research_social_signals`：有边界的公开社媒研究。
+- `research_seo_signals`：有边界的 SEO 证据研究。
 
-- **`research-seo-signals`** —— 提交并轮询异步 SEO 研究任务（关键词、域名、市场），读取指标、证据与限制，不替用户做最终决策。
-- **`research-social-signals`** —— 检索聚焦、去重的社交数据（X、Reddit、小红书、知乎、LinkedIn、微信），保留源链接与覆盖限制。
-- **`decide-content-opportunities`** —— 将 Decision MCP 返回的 SEO 证据转化为条件化的内容机会决策，附可追溯理由、置信度、反证与下一步测试。
+Skill 将自然语言需求映射为最小必要业务范围，只提交一次，并始终使用同一个不透明 `analysis_id` 轮询。供应商、Workflow、Binding、原生分页参数、存储与内部数据均不进入公开契约。
 
-每个技能自带 `SKILL.md`，记录完整工作流程。
-
----
-
-## 安装
-
-克隆仓库：
-
-```bash
-git clone https://github.com/daily-growth-signals/seo-signal-skills.git
-```
-
-将技能文件夹复制到任何支持 Agent Skills 规范的客户端：
-
-```bash
-for client in ~/.codex/skills ~/.claude/skills ~/.agents/skills; do
-  mkdir -p "$client"
-  for skill in research-seo-signals research-social-signals decide-content-opportunities; do
-    rm -rf "$client/$skill"
-    cp -r "$(pwd)/seo-signal-skills/skills/$skill" "$client/"
-  done
-done
-```
-
-`git pull` 后重新执行即可更新已安装技能（每条 `rm -rf` 会先删除旧副本，不会产生目录嵌套）。
-
-Windows 用户可在 Git Bash 或 WSL 中运行，或手动复制到 `%USERPROFILE%\.codex\skills\`、`%USERPROFILE%\.claude\skills\`、`%USERPROFILE%\.agents\skills\`。
-
-使用 WorkBuddy？直接在 ClawHub 市场安装 `Research SEO Signals`、`Retrieve Social Signals`、`Decide Content Opportunities` 即可，无需手动复制。注意：安装技能仍**不会**自动连接 MCP 服务器。
-
----
-
-## 连接 MCP 服务器
-
-在客户端中注册 SignalDig 端点。下列 key 是 SignalDig 的示例别名，可分别修改，不影响任何 Skill（Claude Code 的 `.mcp.json` 使用相同格式）：
-
-```json
-{
-  "mcpServers": {
-    "signaldig-seo": {
-      "type": "http",
-      "url": "https://mcp.signaldig.com/data/seo/mcp",
-      "headers": {
-        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
-      },
-      "disabled": false
-    },
-    "signaldig-social": {
-      "type": "http",
-      "url": "https://mcp.signaldig.com/data/social/mcp",
-      "headers": {
-        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
-      },
-      "disabled": false
-    },
-    "signaldig-seo-decisions": {
-      "type": "http",
-      "url": "https://mcp.signaldig.com/signals/seo/mcp",
-      "headers": {
-        "Authorization": "Bearer {SIGNALDIG_API_KEY}"
-      },
-      "disabled": false
-    }
-  }
-}
-```
-
-将 SignalDig 工作空间中的密钥放入环境变量 `SIGNALDIG_API_KEY`——不要把 Key 写死或提交进仓库。
-
-| 所需 MCP 产品 | 示例别名（可改） | 技能 | 用途 |
-|----------|------|------|------|
-| SEO Data MCP | `signaldig-seo` | `research-seo-signals` | SEO 数据采集 |
-| Social Data MCP | `signaldig-social` | `research-social-signals` | 社交媒体监听 |
-| SEO Decision MCP | `signaldig-seo-decisions` | `decide-content-opportunities` | 决策建议 |
-
-**Codex** 使用用户级 `~/.codex/config.toml`（不读取 `mcpServers` JSON），会自动发送 `Authorization: Bearer $SIGNALDIG_API_KEY`：
-
-```toml
-# `signaldig_seo` 只是示例别名；请选择任意合法 TOML key。
-[mcp_servers.signaldig_seo]
-url = "https://mcp.signaldig.com/data/seo/mcp"
-bearer_token_env_var = "SIGNALDIG_API_KEY"
-enabled = true
-```
-
-macOS/Linux 在 `~/.zshrc` 或 `~/.bashrc` 中执行 `export SIGNALDIG_API_KEY="your_api_key"`，Windows 执行 `setx SIGNALDIG_API_KEY "your_api_key"`（然后新开终端）。
-
-**Claude Code** 使用项目根目录的 `.mcp.json`（格式同上），支持 `${SIGNALDIG_API_KEY}` 展开。
-
-其他客户端的完整配置（Cursor、Windsurf、VS Code 等）见官网：<https://signaldig.com/agent-setup>
-
-配置完成后重启客户端，应能看到 `submit_keyword_research_signals`、`get_keyword_research_signals`、`submit_specific_seo_data` 等工具。若报 401，优先检查 `Authorization` header 与 API Key。
-
----
-
-## 使用示例
-
-```text
-使用 $research-seo-signals 研究 example.com 在美国英语市场的 "AI SEO tools"。
-
-使用 $research-social-signals 查找关于保持版式的 PDF 翻译工具的最新 X 对话，包含源链接和覆盖限制。
-
-使用 $decide-content-opportunities 将某个关键词的 Decision MCP 返回的 SEO 证据转化为条件化的 go/validate/defer 推荐，附理由、置信度与下一步测试。
-```
-
-SEO 技能遵循异步提交/获取协议；社交技能使用同步 `search_x_posts` 协议；决策技能使用异步 `submit_keyword_decision_report` / `get_keyword_decision_report` 协议。
-
----
-
-## 链接
-
-- 官方网站：<https://signaldig.com/>
-- 技能安装：<https://signaldig.com/agent-setup>
-- MCP 配置指南：<https://signaldig.com/agent-setup>
-- 仓库：<https://github.com/daily-growth-signals/seo-signal-skills>
-- 许可证：[MIT](LICENSE)
+新用户只安装 `skills/research-growth-signals`，MCP 只配置上面的单一连接。历史 `research-social-signals`、`research-seo-signals` 和 `decide-content-opportunities` 会保留一个兼容发布周期，但不再维护独立参数逻辑，统一转向主 Skill。完整说明见 [SignalDig 一键接入](https://signaldig.com/agent-setup)。

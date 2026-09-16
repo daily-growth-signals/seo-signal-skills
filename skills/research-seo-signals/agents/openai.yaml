@@ -1,6 +1,6 @@
 interface:
   display_name: "SEO Signal Research"
-  short_description: "Research traceable SEO demand signals"
+  short_description: "Compatibility entry for unified SEO research"
   icon_small: "./assets/small-logo.svg"
   brand_color: "#3B82F6"
-  default_prompt: "Use $research-seo-signals to retrieve only the SEO data I need for this keyword and domain. If my requested data family is ambiguous, confirm it before calling; reuse prior results and avoid full retrieval by default."
+  default_prompt: "Use $research-seo-signals as a compatibility entry and delegate this SEO research request to $research-growth-signals and the unified research_seo_signals tool."

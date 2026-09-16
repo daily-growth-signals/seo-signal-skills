@@ -1,6 +1,6 @@
 interface:
   display_name: "Content Opportunity Decisions"
-  short_description: "Turn traceable signals into content decisions"
+  short_description: "Compatibility entry using unified SEO evidence"
   icon_small: "./assets/small-logo.svg"
   brand_color: "#10B981"
-  default_prompt: "Use $decide-content-opportunities and the Decision MCP to generate an evidence-constrained keyword decision with confidence, counter-evidence, conditions, risks, and a recommended next test."
+  default_prompt: "Use $decide-content-opportunities as a compatibility entry, collect the smallest sufficient SEO evidence through $research-growth-signals, and clearly separate observations from any conditional recommendation."

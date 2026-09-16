@@ -6,7 +6,9 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 ### Changes
 
-- To be added.
+- Added `research-growth-signals` as the single maintained Skill for the unified SignalDig MCP and its Social/SEO business tools.
+- Kept `research-social-signals`, `research-seo-signals`, and `decide-content-opportunities` as frozen compatibility entries for one release cycle. They delegate to the unified Skill and no longer maintain separate tool or parameter logic.
+- Release packages and marketplace publishers continue shipping the three compatibility entries so existing installations can migrate without disappearing directories.
 
 ## [1.8.1] - 2026-09-14
 

@@ -2,7 +2,7 @@
   "name": "seo-signal-skills",
   "version": "1.0.0",
   "private": true,
-  "description": "SignalDig SEO / social / content-decision signal research skills",
+  "description": "SignalDig unified Social and SEO growth research skill",
   "scripts": {
     "prepare": "husky"
   },

@@ -109,6 +109,7 @@ mkdir -p "${OUTPUT_DIR}"
 # Create zip with only skill subdirectories (excluding README.md)
 cd "${SKILLS_DIR}"
 zip -r "${OUTPUT_FILE}" \
+    research-growth-signals/ \
     research-seo-signals/ \
     research-social-signals/ \
     decide-content-opportunities/ \
@@ -148,9 +149,10 @@ if [ "$AUTO_TAG" = true ]; then
     git tag -a "${VERSION}" -m "Release ${VERSION}
     
 Skills Package:
-- research-seo-signals
-- research-social-signals  
-- decide-content-opportunities
+- research-growth-signals
+- research-seo-signals (compatibility)
+- research-social-signals (compatibility)
+- decide-content-opportunities (compatibility)
 "
     echo "Created tag: ${VERSION}"
     

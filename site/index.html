@@ -10,7 +10,7 @@
     <meta name="msvalidate.01" content="57978BD4DC4094F09B85BF0885C202D5" />
     <meta
       name="description"
-      content="SignalDig Agent Skills — collect traceable SEO and social signals, then turn the evidence into content-opportunity decisions. Three focused skills: research-seo-signals, research-social-signals, decide-content-opportunities."
+      content="SignalDig Growth Research — one Agent Skill and one MCP connection for bounded Social and SEO evidence."
     />
     <meta name="author" content="SignalDig" />
     <link rel="canonical" href="https://daily-growth-signals.github.io/seo-signal-skills/" />
@@ -99,7 +99,7 @@
       <section class="hero">
         <div class="hero-copy">
           <h1 data-i18n="hero.title">Turn traceable signals<br />into content decisions</h1>
-          <p data-i18n="hero.subtitle">Three focused skills.<br />From research evidence to a testable recommendation.</p>
+          <p data-i18n="hero.subtitle">One Skill and one connection.<br />Ask for Social or SEO evidence.</p>
           <div class="actions">
             <a class="button button-dark" href="#install" data-i18n="hero.btnInstall">Install Skills</a>
             <a class="button button-light" href="https://signaldig.com/agent-setup" data-i18n="hero.btnDownload">Download Release</a>
@@ -115,26 +115,14 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
 
       <section id="features" class="section features">
         <h2 data-i18n="features.title">What SignalDig does</h2>
-        <p class="section-lede" data-i18n="features.subtitle">Three focused skills turn traceable SEO and social evidence into a clear, testable content decision.</p>
+        <p class="section-lede" data-i18n="features.subtitle">One Skill routes each question to bounded Social or SEO research.</p>
 
         <div class="feature-cards">
           <article class="feature-card">
             <span class="feature-num">01</span>
-            <h3 data-i18n="features.s1.title">Research SEO demand signals</h3>
-            <code>research-seo-signals</code>
-            <p data-i18n="features.s1.desc">Find evidence-backed SEO demand for keywords, domains, markets, and languages — Google Trends, keyword volume, and SERP data.</p>
-          </article>
-          <article class="feature-card">
-            <span class="feature-num">02</span>
-            <h3 data-i18n="features.s2.title">Retrieve social signals</h3>
-            <code>research-social-signals</code>
-            <p data-i18n="features.s2.desc">Validate platform inputs and pull traceable public conversations, creator histories, account content, and native metrics from X, Reddit, Xiaohongshu, Zhihu, LinkedIn, and WeChat.</p>
-          </article>
-          <article class="feature-card">
-            <span class="feature-num">03</span>
-            <h3 data-i18n="features.s3.title">Decide content opportunities</h3>
-            <code>decide-content-opportunities</code>
-            <p data-i18n="features.s3.desc">Turn completed SEO and social evidence into a recommended content direction — with confidence, counter-evidence, alternatives, and a next test.</p>
+            <h3 data-i18n="features.s1.title">Research growth signals</h3>
+            <code>research-growth-signals</code>
+            <p data-i18n="features.s1.desc">Turn a natural-language question into the smallest sufficient Social or SEO request, then retrieve traceable evidence through one connection.</p>
           </article>
         </div>
 
@@ -243,55 +231,24 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
 
         <!-- Step 3: MCP config -->
         <div class="install-step">
-          <h3 data-i18n="install.step3">Step 3: Connect MCP servers (optional naming)</h3>
+          <h3 data-i18n="install.step3">Step 3: Connect SignalDig MCP</h3>
           <div class="mcp-note" data-i18n="install.mcp.note">
-            <strong>Note:</strong> The server names below (e.g., <code>daily-growth-signals</code>) are <em>reference names</em>. 
-            You can customize them when configuring your AI client. The actual service endpoints remain the same.
+            <strong>Note:</strong> The alias <code>signaldig</code> is configurable. Every client connects to the same endpoint.
           </div>
           
           <div class="mcp-services-grid">
             <div class="mcp-service-card">
-              <h4 data-i18n="install.mcp.seo.title">SEO Data Service</h4>
-              <p class="mcp-service-desc" data-i18n="install.mcp.seo.desc">Google Trends, Keywords, SERP data</p>
+              <h4>SignalDig Growth Research</h4>
+              <p class="mcp-service-desc">Social and SEO research through two business tools</p>
               <div class="code-row code-row-small">
                 <pre><code>{
   "type": "http",
-  "url": "https://mcp.signaldig.com/data/seo/mcp",
+  "url": "https://mcp.signaldig.com/mcp",
   "headers": {
     "Authorization": "Bearer {your_api_key}"
   }
 }</code></pre>
-                <button type="button" data-copy='{"type":"http","url":"https://mcp.signaldig.com/data/seo/mcp"}'>Copy URL</button>
-              </div>
-            </div>
-
-            <div class="mcp-service-card">
-              <h4 data-i18n="install.mcp.social.title">Social Media Service</h4>
-              <p class="mcp-service-desc" data-i18n="install.mcp.social.desc">X, Reddit, Xiaohongshu, Zhihu</p>
-              <div class="code-row code-row-small">
-                <pre><code>{
-  "type": "http",
-  "url": "https://mcp.signaldig.com/data/social/mcp",
-  "headers": {
-    "Authorization": "Bearer {your_api_key}"
-  }
-}</code></pre>
-                <button type="button" data-copy='{"type":"http","url":"https://mcp.signaldig.com/data/social/mcp"}'>Copy URL</button>
-              </div>
-            </div>
-
-            <div class="mcp-service-card">
-              <h4 data-i18n="install.mcp.decision.title">Decision Engine</h4>
-              <p class="mcp-service-desc" data-i18n="install.mcp.decision.desc">Content opportunity recommendations</p>
-              <div class="code-row code-row-small">
-                <pre><code>{
-  "type": "http",
-  "url": "https://mcp.signaldig.com/signals/seo/mcp",
-  "headers": {
-    "Authorization": "Bearer {your_api_key}"
-  }
-}</code></pre>
-                <button type="button" data-copy='{"type":"http","url":"https://mcp.signaldig.com/signals/seo/mcp"}'>Copy URL</button>
+                <button type="button" data-copy='{"type":"http","url":"https://mcp.signaldig.com/mcp"}'>Copy URL</button>
               </div>
             </div>
           </div>
@@ -307,9 +264,9 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
               <div class="code-row code-row-small">
                 <pre><code>{
   "mcpServers": {
-    "signaldig-seo": {
+    "signaldig": {
       "type": "http",
-      "url": "https://mcp.signaldig.com/data/seo/mcp",
+      "url": "https://mcp.signaldig.com/mcp",
       "headers": {
         "Authorization": "Bearer ${SIGNALDIG_API_KEY}"
       }
@@ -323,8 +280,8 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
               <h4>Codex</h4>
               <p class="mcp-service-desc"><code>~/.codex/config.toml</code></p>
               <div class="code-row code-row-small">
-                <pre><code>[mcp_servers.signaldig_seo]
-url = "https://mcp.signaldig.com/data/seo/mcp"
+                <pre><code>[mcp_servers.signaldig]
+url = "https://mcp.signaldig.com/mcp"
 bearer_token_env_var = "SIGNALDIG_API_KEY"
 enabled = true
 default_tools_approval_mode = "prompt"
@@ -336,7 +293,7 @@ tool_timeout_sec = 120</code></pre>
               <h4>Cursor</h4>
               <p class="mcp-service-desc">Settings &rarr; Tools &amp; MCP &rarr; Streamable HTTP</p>
               <div class="code-row code-row-small">
-                <pre><code>url:    https://mcp.signaldig.com/data/seo/mcp
+                <pre><code>url:    https://mcp.signaldig.com/mcp
 header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
               </div>
             </div>
@@ -347,8 +304,8 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
               <div class="code-row code-row-small">
                 <pre><code>{
   "mcpServers": {
-    "signaldig-seo": {
-      "serverUrl": "https://mcp.signaldig.com/data/seo/mcp",
+    "signaldig": {
+      "serverUrl": "https://mcp.signaldig.com/mcp",
       "headers": {
         "Authorization": "Bearer ${env:SIGNALDIG_API_KEY}"
       }
@@ -372,9 +329,9 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
     }
   ],
   "servers": {
-    "signaldig-seo": {
+    "signaldig": {
       "type": "http",
-      "url": "https://mcp.signaldig.com/data/seo/mcp",
+      "url": "https://mcp.signaldig.com/mcp",
       "headers": {
         "Authorization": "Bearer ${input:signaldig-api-key}"
       }
@@ -408,7 +365,7 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
               <span data-i18n="install.nondev.downloadBtn">Download seo-signal-skills.zip</span>
               <span class="download-arrow">↓</span>
             </a>
-            <p class="download-hint" data-i18n="install.nondev.downloadHint">Contains all three skill folders, ready to use</p>
+            <p class="download-hint" data-i18n="install.nondev.downloadHint">Contains one primary Skill plus three legacy compatibility entries</p>
           </div>
           <div class="extract-steps">
             <div class="extract-step-item">
@@ -444,7 +401,7 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
             </div>
             <div class="extract-step-item">
               <span class="extract-num">4</span>
-              <p data-i18n="install.nondev.extract4">Inside you will see exactly three skill folders: <code>research-seo-signals</code>, <code>research-social-signals</code> and <code>decide-content-opportunities</code>.</p>
+              <p data-i18n="install.nondev.extract4">Inside you will see the primary <code>research-growth-signals</code> folder and three legacy compatibility folders. New users install only the primary folder.</p>
             </div>
           </div>
         </div>
@@ -454,7 +411,7 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
           <h3 data-i18n="install.nondev.step3">Step 3: Put the skills into your AI agent</h3>
           <p class="step-hint" data-i18n="install.nondev.step3.hint">
             Every AI client (Claude Code, Codex, Cursor, Windsurf…) has its own <strong>skills folder</strong>.
-            Anything inside it becomes a skill your AI can use. Copy all three skill folders there.
+            Copy the <code>research-growth-signals</code> folder there.
           </p>
 
           <details class="folder-help">
@@ -501,12 +458,12 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
           <div class="visual-guide">
             <div class="guide-step">
               <span class="guide-icon">📁</span>
-              <p data-i18n="install.nondev.guide1">Open the folder you unzipped (the one holding the three skill folders)</p>
+              <p data-i18n="install.nondev.guide1">Open the folder you unzipped</p>
             </div>
             <span class="guide-arrow">→</span>
             <div class="guide-step">
               <span class="guide-icon">✂️</span>
-              <p data-i18n="install.nondev.guide2">Select all three skill folders — click the first, hold <code>Shift</code>, click the last</p>
+              <p data-i18n="install.nondev.guide2">Select the <code>research-growth-signals</code> folder</p>
             </div>
             <span class="guide-arrow">→</span>
             <div class="guide-step">
@@ -521,7 +478,7 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
           </div>
 
           <p class="step-done" data-i18n="install.nondev.step3.done">
-            <strong>Done!</strong> Your skills folder should now contain the three folders. Fully quit and reopen your AI app so it notices the new skills.
+            <strong>Done!</strong> Your skills folder should now contain <code>research-growth-signals</code>. Fully quit and reopen your AI app.
           </p>
         </div>
 
@@ -537,7 +494,7 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
             <div class="extract-steps">
               <div class="extract-step-item">
                 <span class="extract-num">1</span>
-                <p data-i18n="install.nondev.mcp1">Open any skill folder you unzipped (e.g. <code>research-seo-signals</code>) and open its <code>SKILL.md</code> file with a text editor (Notepad / TextEdit).</p>
+                <p data-i18n="install.nondev.mcp1">Open <code>research-growth-signals/SKILL.md</code> with a text editor.</p>
               </div>
               <div class="extract-step-item">
                 <span class="extract-num">2</span>

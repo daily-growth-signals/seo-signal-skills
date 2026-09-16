@@ -23,6 +23,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 SKILLS_DIR="${PROJECT_ROOT}/skills"
 
 SKILLS=(
+    research-growth-signals
     research-seo-signals
     research-social-signals
     decide-content-opportunities
@@ -93,7 +94,7 @@ fi
 
 # Extract the version field from a SKILL.md frontmatter
 extract_version() {
-    awk -F': ' '/^version:/ { gsub(/["'"'"']/, "", $2); print $2; exit }' "$1/SKILL.md"
+    awk -F': ' '/^[[:space:]]*version:/ { gsub(/["'"'"']/, "", $2); print $2; exit }' "$1/SKILL.md"
 }
 
 echo "=== SignalDig Skills -> ClawHub Publisher ==="
