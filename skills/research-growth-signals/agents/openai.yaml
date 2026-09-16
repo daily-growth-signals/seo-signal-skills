@@ -1,0 +1,14 @@
+interface:
+  display_name: "SignalDig Growth Research"
+  short_description: "Research bounded Social and SEO signals"
+  brand_color: "#6366F1"
+  default_prompt: "Use $research-growth-signals to research my question through the smallest sufficient Social or SEO scope, then poll the same analysis until it is complete."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "signaldig"
+      description: "SignalDig unified Social and SEO research service"
+      transport: "streamable_http"
+      url: "https://mcp.signaldig.com/mcp"
+policy:
+  allow_implicit_invocation: true
