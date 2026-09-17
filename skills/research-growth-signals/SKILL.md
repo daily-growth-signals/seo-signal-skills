@@ -3,7 +3,7 @@ name: research-growth-signals
 description: Research traceable public social and SEO signals through SignalDig's single MCP connection and two business tools. Use when a user asks for social discussions, keyword demand, SERP, trends, competitors, GEO, backlinks, rankings, or traffic evidence. The Skill selects the direction, submits the smallest sufficient scope, and polls the same analysis_id; it never exposes or asks users to choose providers, workflows, bindings, or native pagination parameters.
 license: MIT
 metadata:
-  version: "2.0.3"
+  version: "2.1.0"
   homepage: "https://signaldig.com/"
 ---
 
@@ -101,7 +101,9 @@ Zhihu supports bounded public topic retrieval through the same Social Tool and `
 Translate the user's request into the live `research_seo_signals` schema:
 
 - `request`: the natural-language research goal.
-- `scope.keyword`, `scope.domain`, `scope.market`, and `scope.language`: normalized business inputs required by the live schema.
+- `scope.keyword`, `scope.market`, and `scope.language`: normalized business inputs required by the live schema.
+- Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, and GEO visibility.
+- Use `scope.target` for backlink analysis, ranked-keyword inventory, or traffic estimation when the target is a domain, subdomain, or webpage URL. Do not send both `domain` and `target`.
 - `scope.data_scopes`: only the required evidence families when the live schema exposes them.
 - `scope.search_engine`: set only from the user's explicit engine choice; otherwise use the service default.
 - `research_depth`: default `standard`.
@@ -109,15 +111,31 @@ Translate the user's request into the live `research_seo_signals` schema:
 
 Keep research language separate from response language. Do not expose or construct provider tasks, locations, endpoints, devices, or internal capability names.
 
+Supported SEO scope families are `keyword_overview`, `domain_rank_overview`, `related_keywords`, `serp`,
+`google_trends`, `x_recent_search`, `competitor_analysis`, `geo_analysis`, `backlink_analysis`,
+`ranked_keywords`, and `bulk_traffic_estimation`. Do not submit `bulk_pages_summary` through the
+unified Tool; it is not part of the current public Research result contract.
+
 ## Status and Result Reading
 
 - Use `view="status"` to check one `analysis_id` or an ordered `analysis_ids` collection without returning result bodies.
 - Use `view="results"` only for terminal or partially terminal work. Select one Dataset per call and use the same ordered analysis collection for every page.
-- Social post records use `dataset="social_posts"`. SEO keyword and organic-result records use `dataset="related_keywords"` or `dataset="serp_results"`.
+- Social post records use `dataset="social_posts"`. For SEO, use the Dataset matching the requested evidence family:
+  `keyword_overview`, `domain_rank_overview`, `related_keywords`, `serp_results`, `google_trends`,
+  `x_recent_search`, `ranked_keywords`, `backlinks`, `competitor_domains`, `geo_mentions`, or
+  `traffic_estimation`.
+- Aggregate SEO Datasets (`keyword_overview`, `domain_rank_overview`, `google_trends`, and
+  `traffic_estimation`) return one public record and do not provide a next cursor. Do not retry or
+  invent pagination for them.
+- Detail SEO Datasets (`related_keywords`, `serp_results`, `x_recent_search`, `ranked_keywords`,
+  `backlinks`, `competitor_domains`, and `geo_mentions`) may return multiple records and can expose
+  `page.next_cursor`; continue only when `page.has_more=true`.
 - Set `page_size` to the number of records useful for the current reasoning step. Treat it as an upper bound because response-size safety may return fewer records.
 - Continue only with the returned `page.next_cursor`, passed back as `result_cursor` with the same tool, analysis IDs in the same order, and the same Dataset.
 - Read another page only when `page.has_more=true` and the user's question still needs more evidence. Never traverse all pages by default.
-- Do not combine different Datasets in one call and do not invent a cursor. If a Dataset is rejected, choose another public Dataset supported by the live schema or explain the limitation.
+- Do not combine different Datasets in one call and do not invent a cursor. If the requested Dataset
+  is rejected, explain the limitation or ask for a supported evidence family; never silently substitute
+  a different SEO family.
 - Historical calls without `view` remain compatible, but prefer the explicit status/results protocol for new work.
 
 ## Failure Handling

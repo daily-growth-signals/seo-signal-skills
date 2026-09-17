@@ -97,7 +97,11 @@ account result.
 
 ## Tool: `research_seo_signals`
 
-Submit:
+Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, and GEO
+visibility. Use `scope.target` for backlink, ranked-keyword, or traffic research when the target is a
+domain, subdomain, or webpage URL. `domain` and `target` are mutually exclusive.
+
+Submit a traditional or domain-based analysis:
 
 ```json
 {
@@ -115,7 +119,62 @@ Submit:
 }
 ```
 
+For a page-level ranked-keyword, backlink, or traffic request, replace `domain` with `target`:
+
+```json
+{
+  "action": "submit",
+  "request": "Research the keywords this page ranks for",
+  "scope": {
+    "keyword": "AI SEO tools",
+    "target": "https://example.com/docs/ai-seo",
+    "market": "US",
+    "language": "en",
+    "data_scopes": ["ranked_keywords"]
+  },
+  "research_depth": "standard",
+  "refresh": false
+}
+```
+
 Status uses the same explicit `view="status"` shape as Social. Results use `view="results"` with one SEO Dataset such as `related_keywords` or `serp_results`.
+
+Supported `data_scopes` are:
+
+- `keyword_overview`
+- `domain_rank_overview`
+- `related_keywords`
+- `serp`
+- `google_trends`
+- `x_recent_search`
+- `competitor_analysis`
+- `geo_analysis`
+- `backlink_analysis`
+- `ranked_keywords`
+- `bulk_traffic_estimation`
+
+Do not submit `bulk_pages_summary` to the unified Tool. It is not a public Dataset in this contract.
+
+The public result Dataset mapping is:
+
+| Evidence family | Dataset | Pagination |
+| --- | --- | --- |
+| Keyword metrics and intent | `keyword_overview` | No; one aggregate record |
+| Domain rank overview | `domain_rank_overview` | No; one aggregate record |
+| Related keywords | `related_keywords` | Yes |
+| Organic SERP results | `serp_results` | Yes |
+| Google Trends snapshot | `google_trends` | No; one aggregate record |
+| Bounded X recent-search posts | `x_recent_search` | Yes |
+| Competitor domain/site evidence | `competitor_domains` | Yes |
+| GEO/AI-search evidence | `geo_mentions` | Yes |
+| Ranked keywords | `ranked_keywords` | Yes |
+| Backlinks and referring domains | `backlinks` | Yes |
+| Traffic estimation | `traffic_estimation` | No; one aggregate record |
+
+For a paginated Dataset, request the first page without `result_cursor`, then pass only the returned
+`page.next_cursor` with the same ordered `analysis_ids` and Dataset. For a non-paginated Dataset,
+`page.has_more` is false and `page.next_cursor` is null; do not attempt to split nested arrays inside
+the aggregate record.
 
 ## Public Response
 
