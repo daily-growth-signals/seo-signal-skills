@@ -3,7 +3,7 @@ name: research-growth-signals
 description: Research traceable public social and SEO signals through SignalDig's single MCP connection and two business tools. Use when a user asks for social discussions, keyword demand, SERP, trends, competitors, GEO, backlinks, rankings, or traffic evidence. The Skill selects the direction, submits the smallest sufficient scope, and polls the same analysis_id; it never exposes or asks users to choose providers, workflows, bindings, or native pagination parameters.
 license: MIT
 metadata:
-  version: "2.0.0"
+  version: "2.0.1"
   homepage: "https://signaldig.com/"
 ---
 
@@ -36,6 +36,7 @@ If the required tool is unavailable, the connection fails, or authentication is 
 
 ## Scope Rules
 
+- The unified Social topic-search sources are X, Reddit, Xiaohongshu, and Zhihu. Treat these as public SignalDig capabilities, not as implementation details. The live schema remains authoritative.
 - A requested result count is an upper bound, not permission to traverse unrelated data. SignalDig may fetch multiple native pages only inside the exact requested platform, query, filters, and count.
 - Social language describes the query wording to use, not a platform-side language filter unless the live schema explicitly provides one. Keep Chinese and English query variants focused and user-relevant; never claim language-complete coverage.
 - Use only the platforms the user names. If none are named and the choice materially affects cost or meaning, ask which platforms to include.
@@ -69,6 +70,8 @@ Translate the user's request into the live `research_social_signals` schema:
 Do not encode provider-native sort values, search IDs, page numbers, native language operators, or continuation tokens. When the user asks for up to 200 matching Xiaohongshu items, submit `result_budget.total=200`; the service owns bounded page traversal and reports the achieved count.
 
 Bind engagement constraints to their named source. Likes, replies, and reposts apply only to X; score and comments apply only to Reddit. Do not translate one platform's metric into another. If the user says only “popular” or “high engagement,” omit a numeric constraint and let the service report actual coverage.
+
+Zhihu supports bounded public topic retrieval through the same Social Tool and `social_posts` Dataset. Do not call or mention a legacy Zhihu-specific Tool. Treat a returned source limit or unsupported language/time constraint as coverage information; do not resubmit with guessed native parameters.
 
 ## SEO Submission
 

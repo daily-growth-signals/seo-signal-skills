@@ -11,7 +11,7 @@ Submit:
   "action": "submit",
   "request": "Research recent GPT-6 discussions, concerns, and expectations",
   "scope": {
-    "platforms": ["xiaohongshu", "x", "reddit"],
+    "platforms": ["xiaohongshu", "x", "reddit", "zhihu"],
     "time_range": {"mode": "relative", "value": "30d"}
   },
   "search": {
@@ -45,6 +45,8 @@ Results:
 ```
 
 The service validates and maps all platform-native parameters. `result_budget.total` is a hard upper bound across the explicitly requested platforms. It does not authorize additional platforms, broader queries, or unbounded traversal. Constraints must be source-scoped; likes/replies/reposts belong to X, while score/comments belong to Reddit.
+
+The public topic-search source list is X, Reddit, Xiaohongshu, and Zhihu. All four use the same `research_social_signals` Tool and `social_posts` Dataset. This list describes SignalDig's user-facing coverage; it does not reveal or select an underlying data provider. Source-specific limits and unsupported constraints are reported through `coverage` and `limitations`.
 
 ## Tool: `research_seo_signals`
 

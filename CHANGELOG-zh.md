@@ -9,6 +9,7 @@
 - 新增 `research-growth-signals`，作为统一 SignalDig MCP 及其 Social/SEO 两个业务 Tool 的唯一主维护 Skill。
 - `research-social-signals`、`research-seo-signals` 与 `decide-content-opportunities` 冻结保留一个发布周期，统一委派到主 Skill，不再维护独立 Tool 或参数逻辑。
 - 发布包与市场发布脚本继续包含三个兼容入口，确保已有安装不会因目录消失而中断迁移。
+- 统一 Social Tool 现将知乎主题检索与 X、Reddit、小红书一起作为公开业务来源说明，同时继续隐藏旧平台 Tool 与原生参数。
 
 ## [1.8.1] - 2026-09-14
 
