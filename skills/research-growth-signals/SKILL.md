@@ -3,7 +3,7 @@ name: research-growth-signals
 description: Research traceable public social and SEO signals through SignalDig's single MCP connection and two business tools. Use when a user asks for social discussions, keyword demand, SERP, trends, competitors, GEO, backlinks, rankings, or traffic evidence. The Skill selects the direction, submits the smallest sufficient scope, and polls the same analysis_id; it never exposes or asks users to choose providers, workflows, bindings, or native pagination parameters.
 license: MIT
 metadata:
-  version: "2.0.2"
+  version: "2.0.3"
   homepage: "https://signaldig.com/"
 ---
 
@@ -78,14 +78,17 @@ with topic-search `scope` or `search` fields:
 - Xiaohongshu public profile plus one page of published notes: set
   `operation="user_account_post"` and pass exactly one `target.user_id` (24-character profile
   token) or `target.share_url`. Do not use a visible account number or nickname as `user_id`.
+- Xiaohongshu user posts without profile data: set `operation="user_posts"` and pass exactly one
+  `target.user_id` or `target.share_url`. This is a separate bounded post retrieval task and
+  returns a new `analysis_id`; it does not continue a `user_account_post` task.
 - Keep `request` as the short natural-language retrieval goal. Do not send `scope`, `search`,
-  `result_budget`, or `max_results` for these two entity operations.
+  `result_budget`, or `max_results` for these three entity operations.
 - Read the returned `analysis_id` with the same tool and explicit status/results protocol. X
-  details use `social_posts`; Xiaohongshu account results can be read from `social_profiles` and
-  `social_posts` using separate result reads with the same analysis ID.
+  details and Xiaohongshu user posts use `social_posts`; Xiaohongshu account results can be read
+  from `social_profiles` and `social_posts` using separate result reads with the same analysis ID.
 - If the user asks only for a profile or only for user posts, do not silently request the
-  combined `user_account_post` operation; explain the currently supported combined scope or ask
-  which public account data they want.
+  combined `user_account_post` operation; use `user_posts` for posts-only retrieval and explain
+  that it is a new bounded task rather than a continuation of a previous result.
 
 Do not encode provider-native sort values, search IDs, page numbers, native language operators, or continuation tokens. When the user asks for up to 200 matching Xiaohongshu items, submit `result_budget.total=200`; the service owns bounded page traversal and reports the achieved count.
 

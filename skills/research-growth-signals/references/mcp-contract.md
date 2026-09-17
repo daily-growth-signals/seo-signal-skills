@@ -50,7 +50,7 @@ The public topic-search source list is X, Reddit, Xiaohongshu, and Zhihu. All fo
 
 ## Social Entity Retrieval
 
-The same Social Tool also accepts two bounded business operations:
+The same Social Tool also accepts three bounded business operations:
 
 ```json
 {
@@ -76,9 +76,24 @@ The same Social Tool also accepts two bounded business operations:
 
 `post_detail` is limited to X Post IDs. `user_account_post` is limited to a Xiaohongshu
 profile token or public profile share URL and returns the public profile plus one bounded page of
-posts. Entity submissions must not include topic `scope`/`search` fields or provider-native
-parameters. The returned `analysis_id` follows the same status/results protocol; use
-`social_posts` for X details and `social_profiles` or `social_posts` for the Xiaohongshu result.
+posts. For posts-only retrieval, use a separate request:
+
+```json
+{
+  "action": "submit",
+  "operation": "user_posts",
+  "request": "查看这个小红书账号的公开发布帖子",
+  "target": {"share_url": "https://www.xiaohongshu.com/user/profile/abc"},
+  "research_depth": "standard",
+  "refresh": false
+}
+```
+
+`user_posts` returns a new bounded task and is not a continuation of `user_account_post`.
+Entity submissions must not include topic `scope`/`search` fields or provider-native parameters.
+The returned `analysis_id` follows the same status/results protocol; use `social_posts` for X
+details or Xiaohongshu user posts, and `social_profiles` or `social_posts` for the Xiaohongshu
+account result.
 
 ## Tool: `research_seo_signals`
 
