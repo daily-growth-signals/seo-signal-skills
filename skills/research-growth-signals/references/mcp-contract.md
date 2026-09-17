@@ -48,6 +48,38 @@ The service validates and maps all platform-native parameters. `result_budget.to
 
 The public topic-search source list is X, Reddit, Xiaohongshu, and Zhihu. All four use the same `research_social_signals` Tool and `social_posts` Dataset. This list describes SignalDig's user-facing coverage; it does not reveal or select an underlying data provider. Source-specific limits and unsupported constraints are reported through `coverage` and `limitations`.
 
+## Social Entity Retrieval
+
+The same Social Tool also accepts two bounded business operations:
+
+```json
+{
+  "action": "submit",
+  "operation": "post_detail",
+  "request": "查看这些 X 帖子的公开详情",
+  "target": {"post_ids": ["123456789"]},
+  "research_depth": "standard",
+  "refresh": false
+}
+```
+
+```json
+{
+  "action": "submit",
+  "operation": "user_account_post",
+  "request": "查看这个小红书账号的公开资料和发布帖子",
+  "target": {"user_id": "5fdc60100000000001002787"},
+  "research_depth": "standard",
+  "refresh": false
+}
+```
+
+`post_detail` is limited to X Post IDs. `user_account_post` is limited to a Xiaohongshu
+profile token or public profile share URL and returns the public profile plus one bounded page of
+posts. Entity submissions must not include topic `scope`/`search` fields or provider-native
+parameters. The returned `analysis_id` follows the same status/results protocol; use
+`social_posts` for X details and `social_profiles` or `social_posts` for the Xiaohongshu result.
+
 ## Tool: `research_seo_signals`
 
 Submit:
