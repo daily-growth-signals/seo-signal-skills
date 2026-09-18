@@ -190,6 +190,8 @@ Legacy calls without `view` return the original response envelope:
 - `next_result_cursor`: opaque SignalDig cursor for the next result page.
 
 New status responses return `schema_version`, ordered `analyses`, `coverage`, and `limitations` without result bodies.
+For `queued` or `running` analyses, the analysis status is authoritative. Coverage values are
+provisional and must not be interpreted as source failure or exhaustion; wait for the terminal state.
 
 New result responses return:
 
@@ -200,5 +202,10 @@ New result responses return:
 - actual `coverage` and safe `limitations`.
 
 Use `page.next_cursor` as the next call's `result_cursor` only with the same account, tool direction, ordered analysis IDs, and Dataset. A smaller-than-requested page can be a response-size safety boundary; it does not imply missing provider data.
+One results call reads one page. A request for "more" without a count authorizes at most one additional
+page. An explicit request for `N` more pages authorizes at most `N` additional calls, stopping early when
+`page.has_more` is false. For "all results" or a complete export without a page limit, ask the user for a
+maximum page count instead of following cursors without a fixed bound. When the budget ends while
+`page.has_more` is true, report that more collected results remain.
 
 Never infer internal providers, workflows, operations, bindings, storage, prompts, or native pagination state from this response.

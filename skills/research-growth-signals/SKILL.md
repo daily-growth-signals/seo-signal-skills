@@ -31,6 +31,8 @@ If the required tool is unavailable, the connection fails, or authentication is 
 3. Submit once with `action="submit"`, the natural-language `request`, and the smallest explicit business `scope` accepted by the live schema.
 4. Store the returned `analysis_id` in conversation state.
 5. While the status is `queued` or `running`, wait for `retry_after_seconds` and call the same tool with `action="get"`, `view="status"`, and that `analysis_id`. Never resubmit merely because work is slow.
+   Treat the top-level task status as authoritative: coverage counts and stop reasons in a non-terminal
+   response are provisional and must never be used to infer source failure or exhaustion.
 6. Stop at `completed`, `partial`, or `failed`. Reuse the terminal analysis for later questions unless the user explicitly asks for a refresh or changes scope.
 7. Treat `coverage` as the actual retrieval boundary. Preserve `limitations`; never describe partial evidence as exhaustive or representative.
 
@@ -132,7 +134,12 @@ unified Tool; it is not part of the current public Research result contract.
   `page.next_cursor`; continue only when `page.has_more=true`.
 - Set `page_size` to the number of records useful for the current reasoning step. Treat it as an upper bound because response-size safety may return fewer records.
 - Continue only with the returned `page.next_cursor`, passed back as `result_cursor` with the same tool, analysis IDs in the same order, and the same Dataset.
-- Read another page only when `page.has_more=true` and the user's question still needs more evidence. Never traverse all pages by default.
+- Each results call reads exactly one page. If the user asks for "more" without a page count, read at
+  most one additional page; do not keep following cursors autonomously.
+- If the user explicitly requests `N` more pages, read at most `N` additional pages and stop early when
+  `page.has_more=false`. A page shorter than `page_size` is not an end condition by itself.
+- If the user asks for all results or a complete export without a page limit, ask for the maximum number
+  of pages before continuing. After the page budget is exhausted, report whether more results remain.
 - Do not combine different Datasets in one call and do not invent a cursor. If the requested Dataset
   is rejected, explain the limitation or ask for a supported evidence family; never silently substitute
   a different SEO family.
