@@ -2,9 +2,9 @@
 name: research-seo-signals
 description: Compatibility entry for existing SignalDig SEO-research users. Route SEO evidence requests to the unified research-growth-signals Skill and its research_seo_signals tool; do not use legacy SEO tools or maintain separate parameter rules.
 slug: research-seo-signals
-displayName: Research SEO Signals
+displayName: SEO Signal Research
 version: 1.8.7
-summary: Compatibility entry for SEO research through the unified Research Growth Signals Skill.
+summary: Compatibility entry for SEO research through the unified SignalDig Growth Research Skill.
 tags: [seo, compatibility, mcp, signaldig]
 license: MIT
 metadata:
@@ -12,7 +12,7 @@ metadata:
   homepage: "https://signaldig.com/"
 ---
 
-# Research SEO Signals — Compatibility Entry
+# SEO Signal Research — Compatibility Entry
 
 This Skill name remains available for existing users during the migration period. Its former execution contract is frozen and must not receive new capabilities, parameters, examples, or data-family logic.
 

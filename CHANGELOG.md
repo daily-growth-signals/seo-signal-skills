@@ -12,6 +12,7 @@ This file records user-facing changes only. Do not include commits, refactoring 
 - ClawHub and SkillHub receive one final compatibility-entry sync for this migration release, then automatically skip those unchanged entries on later releases.
 - Removed the retired MCP contracts, setup guides, parameter guides, and decision references from compatibility entries. The unified Skill is now their only execution contract, and release checks reject reintroduced legacy references.
 - The unified Social Tool now documents bounded Zhihu topic retrieval alongside X, Reddit, and Xiaohongshu, while keeping legacy platform tools and native parameters hidden.
+- Unified Skill display names across `SKILL.md`, SkillHub metadata, and the OpenAI agent manifest, so the unified Skill and its compatibility entries no longer appear under different names.
 
 ## [1.8.1] - 2026-09-14
 

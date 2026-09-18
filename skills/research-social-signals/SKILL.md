@@ -2,9 +2,9 @@
 name: research-social-signals
 description: Compatibility entry for existing SignalDig social-research users. Route social-data requests to the unified research-growth-signals Skill and its research_social_signals tool; do not use legacy platform tools or maintain separate parameter rules.
 slug: research-social-signals
-displayName: Research Social Signals
+displayName: Social Signal Retrieval
 version: 1.6.8
-summary: Compatibility entry for social research through the unified Research Growth Signals Skill.
+summary: Compatibility entry for social research through the unified SignalDig Growth Research Skill.
 tags: [social, compatibility, mcp, signaldig]
 license: MIT
 metadata:
@@ -12,7 +12,7 @@ metadata:
   homepage: "https://signaldig.com/"
 ---
 
-# Retrieve Social Signals — Compatibility Entry
+# Social Signal Retrieval — Compatibility Entry
 
 This Skill name remains available for existing users during the migration period. Its former execution contract is frozen and must not receive new capabilities, parameters, examples, or platform-specific logic.
 

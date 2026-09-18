@@ -6,6 +6,7 @@
 #   1. 对比远程最新 tag 与本地代码的 diff（列出 skills/ 变更，防止"改了但没记录"）
 #   2. 版本规范：各 skill version 符合 semver，且不相对已发布版本倒退（各 skill 独立管理，不强制统一）
 #   3. SKILL.md frontmatter 必需字段 + skill 目录/name 一致性 + slug 唯一性
+#      + 对外展示名（SKILL.md displayName / _skillhub_meta.json name / agents/openai.yaml display_name）三处一致
 #   4. CHANGELOG 中英文双语同步、目标版本条目非空
 #   5. (可选 --dry-run) 调用 hub CLI 做预发布 dry-run
 #
@@ -157,14 +158,32 @@ for skill in "${SKILLS[@]}"; do
         fi
     done
     meta="$SKILLS_DIR/$skill/_skillhub_meta.json"
+    meta_name=""
     if [ -f "$meta" ]; then
         meta_v="$(sed -nE 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' "$meta" | head -n1)"
         if [ "$meta_v" != "$v" ]; then
             err "$skill 的 _skillhub_meta.json version 不匹配: ${meta_v:-<缺失>} != $v"
         fi
+        meta_name="$(sed -nE 's/.*"name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/p' "$meta" | head -n1)"
+    fi
+    # 对外展示名必须三处一致：SKILL.md displayName / _skillhub_meta.json name / agents/openai.yaml display_name
+    display_name="$(extract_field "$f" displayName)"
+    if [ -z "$display_name" ]; then
+        err "$skill 缺少 SKILL.md displayName（对外展示名）"
+    else
+        if [ -n "$meta_name" ] && [ "$meta_name" != "$display_name" ]; then
+            err "$skill 对外展示名不一致: _skillhub_meta.json name='${meta_name}' != SKILL.md displayName='${display_name}'"
+        fi
+        openai_file="$SKILLS_DIR/$skill/agents/openai.yaml"
+        if [ -f "$openai_file" ]; then
+            openai_name="$(extract_field "$openai_file" display_name)"
+            if [ -n "$openai_name" ] && [ "$openai_name" != "$display_name" ]; then
+                err "$skill 对外展示名不一致: agents/openai.yaml display_name='${openai_name}' != SKILL.md displayName='${display_name}'"
+            fi
+        fi
     fi
 done
-ok "frontmatter 必需字段与 SkillHub metadata version 检查完成"
+ok "frontmatter 必需字段、SkillHub metadata version 与对外展示名一致性检查完成"
 echo ""
 
 echo "=== 3.5. MCP alias-independence ==="

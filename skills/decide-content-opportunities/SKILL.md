@@ -2,9 +2,9 @@
 name: decide-content-opportunities
 description: Compatibility entry for existing SignalDig content-opportunity users. Route evidence collection to research-growth-signals and use its unified SEO research contract; do not call the retired Decision MCP or maintain separate request parameters.
 slug: decide-content-opportunities
-displayName: Decide Content Opportunities
+displayName: Content Opportunity Decisions
 version: 1.5.5
-summary: Compatibility entry for content-opportunity research through the unified Research Growth Signals Skill.
+summary: Compatibility entry for content-opportunity research through the unified SignalDig Growth Research Skill.
 tags: [content, compatibility, mcp, signaldig]
 license: MIT
 metadata:
@@ -12,7 +12,7 @@ metadata:
   homepage: "https://signaldig.com/"
 ---
 
-# Decide Content Opportunities — Compatibility Entry
+# Content Opportunity Decisions — Compatibility Entry
 
 This Skill name remains available for existing users during the migration period. Its former Decision MCP contract is frozen and must not receive new capabilities, parameters, or decision-service logic.
 
