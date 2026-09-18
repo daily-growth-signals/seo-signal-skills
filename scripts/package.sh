@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Release package builder for SEO Signal Skills
-# Creates a zip file containing only the skill subdirectories
+# Creates a zip file containing only the maintained unified skill
 # Supports auto tagging and pushing to remote
 
 set -e
@@ -106,13 +106,10 @@ fi
 # Create output directory
 mkdir -p "${OUTPUT_DIR}"
 
-# Create zip with only skill subdirectories (excluding README.md)
+# GitHub Releases no longer distribute the retired compatibility entries.
 cd "${SKILLS_DIR}"
 zip -r "${OUTPUT_FILE}" \
     research-growth-signals/ \
-    research-seo-signals/ \
-    research-social-signals/ \
-    decide-content-opportunities/ \
     -x "*.DS_Store" \
     -x "*__pycache__/*"
 
@@ -150,9 +147,6 @@ if [ "$AUTO_TAG" = true ]; then
     
 Skills Package:
 - research-growth-signals
-- research-seo-signals (compatibility)
-- research-social-signals (compatibility)
-- decide-content-opportunities (compatibility)
 "
     echo "Created tag: ${VERSION}"
     

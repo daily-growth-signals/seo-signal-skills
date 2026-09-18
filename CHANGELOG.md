@@ -8,7 +8,9 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - Added `research-growth-signals` as the single maintained Skill for the unified SignalDig MCP and its Social/SEO business tools.
 - Kept `research-social-signals`, `research-seo-signals`, and `decide-content-opportunities` as frozen compatibility entries for one release cycle. They delegate to the unified Skill and no longer maintain separate tool or parameter logic.
-- Release packages and marketplace publishers continue shipping the three compatibility entries so existing installations can migrate without disappearing directories.
+- GitHub Releases and downloadable packages now contain only `research-growth-signals`; they no longer offer the three compatibility entries as installable packages.
+- ClawHub and SkillHub receive one final compatibility-entry sync for this migration release, then automatically skip those unchanged entries on later releases.
+- Removed the retired MCP contracts, setup guides, parameter guides, and decision references from compatibility entries. The unified Skill is now their only execution contract, and release checks reject reintroduced legacy references.
 - The unified Social Tool now documents bounded Zhihu topic retrieval alongside X, Reddit, and Xiaohongshu, while keeping legacy platform tools and native parameters hidden.
 
 ## [1.8.1] - 2026-09-14

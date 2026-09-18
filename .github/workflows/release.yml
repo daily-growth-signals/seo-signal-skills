@@ -25,9 +25,7 @@ jobs:
         run: |
           cd skills
           zip -r "../seo-signal-skills-${{ steps.version.outputs.VERSION }}.zip" \
-              research-seo-signals/ \
-              research-social-signals/ \
-              decide-content-opportunities/ \
+              research-growth-signals/ \
               -x "*.DS_Store"
 
       - name: Extract reviewed release notes

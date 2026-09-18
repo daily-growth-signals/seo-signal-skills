@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Publish all SignalDig skills to ClawHub via the official ClawHub CLI.
+# Publish changed SignalDig skills to ClawHub via the official ClawHub CLI.
 # Reference: https://openclaw-docs.dx3n.cn/tutorials/tools/clawhub-publishing
 #
 # Requirements:
@@ -32,7 +32,7 @@ SKILLS=(
 DRY_RUN=true
 OWNER="${CLAWHUB_OWNER:-}"
 CHANGELOG=""
-SKIP_UNCHANGED_SKILLS="${SKIP_UNCHANGED_SKILLS:-false}"
+SKIP_UNCHANGED_SKILLS="${SKIP_UNCHANGED_SKILLS:-true}"
 
 usage() {
     echo "Usage: $0 [OPTIONS]"
@@ -49,7 +49,7 @@ usage() {
     echo ""
     echo "Examples:"
     echo "  $0                                    # Dry run"
-    echo "  $0 --publish --changelog \"Fix x\"    # Publish all skills"
+    echo "  $0 --publish --changelog \"Fix x\"    # Publish changed skills"
     echo "  $0 --owner daily-growth-signals --publish --changelog \"Fix x\""
 }
 
@@ -108,8 +108,9 @@ else
 fi
 echo ""
 
-# When enabled in CI, only publish skills changed since the previous tag.
-# This avoids expected ClawHub rejections for unchanged versions.
+# Publish only skills changed since the previous tag. The three compatibility
+# entries receive one final sync in the release that removes their legacy
+# references; later releases skip them unless they are intentionally changed.
 BASE_TAG=""
 if [ "$SKIP_UNCHANGED_SKILLS" = "true" ] && git rev-parse --git-dir >/dev/null 2>&1; then
     BASE_TAG="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)"
@@ -187,7 +188,7 @@ elif [ "$PUBLISH_FAILED" -ne 0 ]; then
     echo "Publish completed with errors, see above." >&2
     exit 1
 else
-    echo "All skills published to ClawHub: https://clawhub.ai/"
+    echo "Selected changed skills published to ClawHub: https://clawhub.ai/"
 fi
 
 echo ""

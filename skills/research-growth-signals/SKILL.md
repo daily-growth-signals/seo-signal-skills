@@ -1,6 +1,11 @@
 ---
 name: research-growth-signals
 description: Research traceable public social and SEO signals through SignalDig's single MCP connection and two business tools. Use when a user asks for social discussions, keyword demand, SERP, trends, competitors, GEO, backlinks, rankings, or traffic evidence. The Skill selects the direction, submits the smallest sufficient scope, and polls the same analysis_id; it never exposes or asks users to choose providers, workflows, bindings, or native pagination parameters.
+slug: research-growth-signals
+displayName: Research Growth Signals
+version: 2.1.0
+summary: Retrieve traceable public social and SEO signals through SignalDig's unified research tools.
+tags: [seo, social, mcp, signaldig, research]
 license: MIT
 metadata:
   version: "2.1.0"

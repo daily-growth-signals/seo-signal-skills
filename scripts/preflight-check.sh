@@ -119,9 +119,10 @@ if [ "$LIGHT" != true ] && [ -n "$LATEST_TAG" ]; then
     for skill in "${SKILLS[@]}"; do
         v="$(extract_field "$SKILLS_DIR/$skill/SKILL.md" version)"
         [ -z "$v" ] && continue
-        prev="$(git show "${LATEST_TAG}:skills/${skill}/SKILL.md" 2>/dev/null | awk -v key="version:" '
+        previous_skill="$(git show "${LATEST_TAG}:skills/${skill}/SKILL.md" 2>/dev/null || true)"
+        prev="$(awk -v key="version:" '
             $0 ~ ("^" key "[[:space:]]") { sub(/^[^:]+:[[:space:]]*/, ""); gsub(/^["'"'"']|["'"'"']$/, ""); print; exit }
-        ')"
+        ' <<< "$previous_skill")"
         if [ -z "$prev" ]; then
             if git cat-file -e "${LATEST_TAG}:skills/${skill}/SKILL.md" 2>/dev/null; then
                 ok "$skill 在 ${LATEST_TAG} 中无 version 字段（version 为本次新增），当前=${v}"
@@ -140,7 +141,7 @@ fi
 echo ""
 
 echo "=== 3. SKILL.md frontmatter ==="
-REQUIRED=(name description license metadata)
+REQUIRED=(name description slug license metadata)
 for skill in "${SKILLS[@]}"; do
     f="$SKILLS_DIR/$skill/SKILL.md"
     declared_name="$(extract_field "$f" name)"

@@ -8,7 +8,9 @@
 
 - 新增 `research-growth-signals`，作为统一 SignalDig MCP 及其 Social/SEO 两个业务 Tool 的唯一主维护 Skill。
 - `research-social-signals`、`research-seo-signals` 与 `decide-content-opportunities` 冻结保留一个发布周期，统一委派到主 Skill，不再维护独立 Tool 或参数逻辑。
-- 发布包与市场发布脚本继续包含三个兼容入口，确保已有安装不会因目录消失而中断迁移。
+- GitHub Releases 与下载包从本次起只包含 `research-growth-signals`，不再提供三个兼容入口的安装包。
+- ClawHub 与 SkillHub 在本次迁移发布中最后同步一次兼容入口；后续发布会自动跳过未变化的兼容入口。
+- 删除兼容入口中的旧 MCP 契约、安装指南、参数指南与决策参考；统一 Skill 现为唯一执行契约，发布检查会拒绝旧引用重新进入兼容目录。
 - 统一 Social Tool 现将知乎主题检索与 X、Reddit、小红书一起作为公开业务来源说明，同时继续隐藏旧平台 Tool 与原生参数。
 
 ## [1.8.1] - 2026-09-14

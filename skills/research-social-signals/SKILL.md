@@ -1,9 +1,14 @@
 ---
 name: research-social-signals
 description: Compatibility entry for existing SignalDig social-research users. Route social-data requests to the unified research-growth-signals Skill and its research_social_signals tool; do not use legacy platform tools or maintain separate parameter rules.
+slug: research-social-signals
+displayName: Research Social Signals
+version: 1.6.8
+summary: Compatibility entry for social research through the unified Research Growth Signals Skill.
+tags: [social, compatibility, mcp, signaldig]
 license: MIT
 metadata:
-  version: "1.6.7"
+  version: "1.6.8"
   homepage: "https://signaldig.com/"
 ---
 
@@ -19,7 +24,7 @@ The server alias and any local tool namespace are client-defined. Never expose m
 2. Preserve the user's social-research intent and select the unified `research_social_signals` business tool through that Skill.
 3. Use only the unified Skill's current request, status, Dataset, budget, and result-cursor rules.
 4. Never call the former platform-specific Social MCP tools, construct native platform operators, or reuse legacy pagination parameters.
-5. Do not read this directory's historical parameter or MCP references for live execution; they are retained only for release history and rollback review.
+5. This compatibility entry ships no independent MCP contract, setup guide, parameter guide, or execution examples. Use only the unified Skill as the current source of truth.
 
 If `$research-growth-signals` or the unified SignalDig MCP is unavailable, stop and tell the user to install or update the unified SignalDig Skill and connection. Do not fall back to the legacy contract and do not simulate results.
 

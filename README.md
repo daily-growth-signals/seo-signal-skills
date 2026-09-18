@@ -11,7 +11,7 @@ SignalDig exposes one MCP connection and one Agent Skill. The MCP surface contai
 
 The Skill translates a natural-language goal into the smallest sufficient business scope, submits once, and polls the same opaque `analysis_id`. Provider names, workflows, bindings, native pagination parameters, storage, and internal data are never part of the public contract.
 
-New users install only `skills/research-growth-signals`, then register one Streamable HTTP connection. The historical `research-social-signals`, `research-seo-signals`, and `decide-content-opportunities` Skills remain published for one compatibility cycle; they contain no independent parameter logic and delegate to the unified Skill.
+New users install only `skills/research-growth-signals`, then register one Streamable HTTP connection. GitHub Releases no longer package the historical Skills. ClawHub and SkillHub receive one final compatibility sync for existing installations, after which only the unified Skill continues to be published.
 
 ```json
 {
@@ -35,4 +35,4 @@ SignalDig 对外只提供一个 MCP 连接和一个 Agent Skill。MCP 内只有�
 
 Skill 将自然语言需求映射为最小必要业务范围，只提交一次，并始终使用同一个不透明 `analysis_id` 轮询。供应商、Workflow、Binding、原生分页参数、存储与内部数据均不进入公开契约。
 
-新用户只安装 `skills/research-growth-signals`，MCP 只配置上面的单一连接。历史 `research-social-signals`、`research-seo-signals` 和 `decide-content-opportunities` 会保留一个兼容发布周期，但不再维护独立参数逻辑，统一转向主 Skill。完整说明见 [SignalDig 一键接入](https://signaldig.com/agent-setup)。
+新用户只安装 `skills/research-growth-signals`，MCP 只配置上面的单一连接。GitHub Releases 不再打包历史 Skill；ClawHub 与 SkillHub 为已有安装最后同步一次兼容入口，之后只继续发布统一 Skill。完整说明见 [SignalDig 一键接入](https://signaldig.com/agent-setup)。

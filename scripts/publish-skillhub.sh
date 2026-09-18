@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Publish all SignalDig skills to SkillHub via the official SkillHub CLI.
+# Publish changed SignalDig skills to SkillHub via the official SkillHub CLI.
 # Reference: https://skillhub.cn/tutorials#publish-via-cli
 #
 # Requirements:
@@ -28,6 +28,7 @@ SKILLS=(
 HOST="${SKILLHUB_API_HOST:-https://api.skillhub.cn}"
 DRY_RUN=true
 CHANGELOG=""
+SKIP_UNCHANGED_SKILLS="${SKIP_UNCHANGED_SKILLS:-true}"
 
 usage() {
     echo "Usage: $0 [OPTIONS]"
@@ -44,7 +45,7 @@ usage() {
     echo ""
     echo "Examples:"
     echo "  $0                                  # Dry run against the default API host"
-    echo "  $0 --publish --changelog \"Fix x\"  # Publish all skills"
+    echo "  $0 --publish --changelog \"Fix x\"  # Publish changed skills"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -97,6 +98,17 @@ else
 fi
 echo ""
 
+# The compatibility entries receive one final sync in the release that removes
+# their legacy references. Later releases skip them unless deliberately changed.
+BASE_TAG=""
+if [ "$SKIP_UNCHANGED_SKILLS" = "true" ] && git rev-parse --git-dir >/dev/null 2>&1; then
+    BASE_TAG="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)"
+    if [ -n "$BASE_TAG" ]; then
+        echo "Skipping unchanged skills since ${BASE_TAG}."
+        echo ""
+    fi
+fi
+
 # Login if a key is available and not already logged in
 if [ -n "${SKILLHUB_API_KEY:-}" ]; then
     echo "=== Logging in with SKILLHUB_API_KEY ==="
@@ -111,6 +123,12 @@ for SKILL in "${SKILLS[@]}"; do
     SKILL_DIR="${SKILLS_DIR}/${SKILL}"
     if [ ! -f "${SKILL_DIR}/SKILL.md" ]; then
         echo "Warning: ${SKILL_DIR}/SKILL.md not found, skipping" >&2
+        continue
+    fi
+
+    if [ -n "$BASE_TAG" ] && git diff --quiet "$BASE_TAG" HEAD -- "$SKILL_DIR"; then
+        echo "Skipped: ${SKILL} is unchanged since ${BASE_TAG}"
+        echo ""
         continue
     fi
 
@@ -149,7 +167,7 @@ elif [ "$PUBLISH_FAILED" -ne 0 ]; then
     echo "Publish completed with errors, see above." >&2
     exit 1
 else
-    echo "All skills published to SkillHub: https://skillhub.cn/"
+    echo "Selected changed skills published to SkillHub: https://skillhub.cn/"
 fi
 
 echo ""

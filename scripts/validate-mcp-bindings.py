@@ -22,6 +22,19 @@ TOOL_HEADING = re.compile(r"^## Tool: `([a-z][a-z0-9_]*)`$", re.MULTILINE)
 TOOL_MENTION = re.compile(r"`((?:submit|get|search|research)_[a-z0-9_]+)`")
 USER_FACING_ERROR_CODE = re.compile(r"\b(?:report|return|show)\s+`?error\.code`?", re.IGNORECASE)
 USER_FACING_CODE_RULE = "never expose machine error codes in a user-facing response"
+COMPATIBILITY_SKILLS = {
+    "research-social-signals": "research_social_signals",
+    "research-seo-signals": "research_seo_signals",
+    "decide-content-opportunities": "research_seo_signals",
+}
+LEGACY_RUNTIME_REFERENCE = re.compile(
+    r"(?:/data/social/mcp|/data/seo/mcp|/signals/seo/mcp|"
+    r"submit_keyword_research_signals|submit_specific_seo_data|"
+    r"submit_keyword_decision_report|get_keyword_decision_report|"
+    r"search_x_posts|search_reddit_posts|search_xiaohongshu_notes|"
+    r"search_zhihu_articles|get_xiaohongshu_user_posts)",
+    re.IGNORECASE,
+)
 
 
 def fail(message: str) -> None:
@@ -49,6 +62,25 @@ for skill_path in sorted(SKILLS.glob("*/SKILL.md")):
         fail(f"{name}/SKILL.md lacks the client-defined alias invariant")
     if USER_FACING_CODE_RULE not in normalized_skill:
         fail(f"{name}/SKILL.md lacks the user-facing error-code boundary")
+
+    if name in COMPATIBILITY_SKILLS:
+        expected_tool = COMPATIBILITY_SKILLS[name]
+        if "$research-growth-signals" not in skill or expected_tool not in skill:
+            fail(f"{name}/SKILL.md does not delegate to the unified {expected_tool} contract")
+        reference_files = sorted((skill_dir / "references").glob("*.md"))
+        if reference_files:
+            relative_files = ", ".join(
+                str(path.relative_to(ROOT)) for path in reference_files
+            )
+            fail(f"{name} ships independent compatibility references: {relative_files}")
+        for runtime_path in sorted(skill_dir.rglob("*")):
+            if runtime_path.is_file() and runtime_path.suffix in {".md", ".yaml", ".json"}:
+                if LEGACY_RUNTIME_REFERENCE.search(runtime_path.read_text()):
+                    fail(
+                        f"{runtime_path.relative_to(ROOT)} contains a retired MCP endpoint "
+                        "or tool name"
+                    )
+        continue
 
     if not setup_path.exists() or not contract_path.exists():
         fail(f"{name} is missing an MCP setup guide or contract")

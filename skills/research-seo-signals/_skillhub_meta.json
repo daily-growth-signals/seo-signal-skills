@@ -2,7 +2,7 @@
   "name": "SEO Signal Research",
   "installedAt": 1754841600000,
   "source": "local",
-  "version": "1.8.6",
+  "version": "1.8.7",
   "skillId": "skill_seo_signal_research",
   "description_zh": "历史 SEO 研究兼容入口，统一委派到 research-growth-signals。",
   "description_en": "Legacy SEO-research compatibility entry that delegates to research-growth-signals.",
