@@ -6,6 +6,12 @@
 
 ### 更新内容
 
+- 待补充。
+
+## [2.0.0] - 2026-09-18
+
+### 更新内容
+
 - 新增 `research-growth-signals`，作为统一 SignalDig MCP 及其 Social/SEO 两个业务 Tool 的唯一主维护 Skill。
 - `research-social-signals`、`research-seo-signals` 与 `decide-content-opportunities` 冻结保留一个发布周期，统一委派到主 Skill，不再维护独立 Tool 或参数逻辑。
 - GitHub Releases 与下载包从本次起只包含 `research-growth-signals`，不再提供三个兼容入口的安装包。
