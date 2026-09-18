@@ -20,9 +20,6 @@ SKILLS_DIR="${PROJECT_ROOT}/skills"
 
 SKILLS=(
     research-growth-signals
-    research-seo-signals
-    research-social-signals
-    decide-content-opportunities
 )
 
 HOST="${SKILLHUB_API_HOST:-https://api.skillhub.cn}"
@@ -98,8 +95,9 @@ else
 fi
 echo ""
 
-# The compatibility entries receive one final sync in the release that removes
-# their legacy references. Later releases skip them unless deliberately changed.
+# Only the unified Skill is published to SkillHub. The historical compatibility
+# entries (research-seo-signals / research-social-signals /
+# decide-content-opportunities) are no longer pushed.
 BASE_TAG=""
 if [ "$SKIP_UNCHANGED_SKILLS" = "true" ] && git rev-parse --git-dir >/dev/null 2>&1; then
     BASE_TAG="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)"

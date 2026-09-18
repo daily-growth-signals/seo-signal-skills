@@ -24,9 +24,6 @@ SKILLS_DIR="${PROJECT_ROOT}/skills"
 
 SKILLS=(
     research-growth-signals
-    research-seo-signals
-    research-social-signals
-    decide-content-opportunities
 )
 
 DRY_RUN=true
@@ -108,9 +105,10 @@ else
 fi
 echo ""
 
-# Publish only skills changed since the previous tag. The three compatibility
-# entries receive one final sync in the release that removes their legacy
-# references; later releases skip them unless they are intentionally changed.
+# Publish only skills changed since the previous tag. Only the unified Skill is
+# published to ClawHub; the historical compatibility entries
+# (research-seo-signals / research-social-signals /
+# decide-content-opportunities) are no longer pushed.
 BASE_TAG=""
 if [ "$SKIP_UNCHANGED_SKILLS" = "true" ] && git rev-parse --git-dir >/dev/null 2>&1; then
     BASE_TAG="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)"
