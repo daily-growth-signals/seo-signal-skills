@@ -99,7 +99,9 @@ account result.
 
 Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, and GEO
 visibility. Use `scope.target` for backlink, ranked-keyword, or traffic research when the target is a
-domain, subdomain, or webpage URL. `domain` and `target` are mutually exclusive.
+domain, subdomain, or webpage URL. `domain` and `target` are mutually exclusive. Every submit must
+include a non-empty, unique `scope.data_scopes` list. Select only evidence families directly required
+by the user's stated goal; omission is invalid and never means “all.”
 
 Submit a traditional or domain-based analysis:
 
@@ -154,6 +156,12 @@ Supported `data_scopes` are:
 - `bulk_traffic_estimation`
 
 Do not submit `bulk_pages_summary` to the unified Tool. It is not a public Dataset in this contract.
+
+`backlink_analysis`, `ranked_keywords`, and `bulk_traffic_estimation` are opt-in target-only scopes.
+Generic SEO audits, website analysis, competitor analysis, growth-opportunity requests, or merely
+providing a target do not authorize them. Ask for clarification when the target evidence family is
+ambiguous. Multiple target-only scopes are valid only when the user directly requests every included
+evidence type; requesting one must not implicitly add the others.
 
 The public result Dataset mapping is:
 

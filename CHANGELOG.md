@@ -6,7 +6,9 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 ### Changes
 
-- To be added.
+- SEO research now requires explicit, non-empty data scopes and treats backlinks, ranked keywords,
+  and traffic estimation as separately opt-in evidence instead of inferring them from generic site,
+  competitor, audit, or growth-analysis requests.
 
 ## [2.0.0] - 2026-09-18
 

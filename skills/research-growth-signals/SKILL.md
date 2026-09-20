@@ -3,12 +3,12 @@ name: research-growth-signals
 description: Research traceable public social and SEO signals through SignalDig's single MCP connection and two business tools. Use when a user asks for social discussions, keyword demand, SERP, trends, competitors, GEO, backlinks, rankings, or traffic evidence. The Skill selects the direction, submits the smallest sufficient scope, and polls the same analysis_id; it never exposes or asks users to choose providers, workflows, bindings, or native pagination parameters.
 slug: research-growth-signals
 displayName: SignalDig Growth Research
-version: 2.1.0
+version: 2.1.1
 summary: Retrieve traceable public social and SEO signals through SignalDig's unified research tools.
 tags: [seo, social, mcp, signaldig, research]
 license: MIT
 metadata:
-  version: "2.1.0"
+  version: "2.1.1"
   homepage: "https://signaldig.com/"
 ---
 
@@ -47,7 +47,9 @@ If the required tool is unavailable, the connection fails, or authentication is 
 - A requested result count is an upper bound, not permission to traverse unrelated data. SignalDig may fetch multiple native pages only inside the exact requested platform, query, filters, and count.
 - Social language describes the query wording to use, not a platform-side language filter unless the live schema explicitly provides one. Keep Chinese and English query variants focused and user-relevant; never claim language-complete coverage.
 - Use only the platforms the user names. If none are named and the choice materially affects cost or meaning, ask which platforms to include.
-- For SEO, choose only the evidence families necessary for the stated goal. A generic keyword lookup does not authorize every family.
+- For SEO, explicitly choose a non-empty `scope.data_scopes` list containing only the evidence families necessary for the stated goal. Never omit it and rely on service defaults.
+- `backlink_analysis`, `ranked_keywords`, and `bulk_traffic_estimation` are opt-in target evidence. A generic SEO audit, website analysis, competitor analysis, growth-opportunity request, or target URL alone does not authorize any of them. Ask one short clarification when the user has not identified which target evidence is needed.
+- Multiple target-only families are allowed only when the user's request directly calls for each corresponding evidence type. Do not add the other two merely because one target-only family is requested.
 - `refresh=false` is the default. Use `refresh=true` only when the user explicitly requests fresh collection.
 - Never invent or forward native cursors, search IDs, provider parameters, internal IDs, or low-level request payloads. The service maps and validates them.
 
@@ -111,7 +113,7 @@ Translate the user's request into the live `research_seo_signals` schema:
 - `scope.keyword`, `scope.market`, and `scope.language`: normalized business inputs required by the live schema.
 - Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, and GEO visibility.
 - Use `scope.target` for backlink analysis, ranked-keyword inventory, or traffic estimation when the target is a domain, subdomain, or webpage URL. Do not send both `domain` and `target`.
-- `scope.data_scopes`: only the required evidence families when the live schema exposes them.
+- `scope.data_scopes`: required, explicit, non-empty, unique, and limited to the smallest evidence families directly supported by the user's request.
 - `scope.search_engine`: set only from the user's explicit engine choice; otherwise use the service default.
 - `research_depth`: default `standard`.
 - `refresh`: normally `false`.
@@ -122,6 +124,18 @@ Supported SEO scope families are `keyword_overview`, `domain_rank_overview`, `re
 `google_trends`, `x_recent_search`, `competitor_analysis`, `geo_analysis`, `backlink_analysis`,
 `ranked_keywords`, and `bulk_traffic_estimation`. Do not submit `bulk_pages_summary` through the
 unified Tool; it is not part of the current public Research result contract.
+
+Use these intent boundaries for target-only scopes:
+
+| User's direct evidence need | Allowed scope |
+| --- | --- |
+| Incoming links, referring domains, or link profile | `backlink_analysis` |
+| Queries or keywords for which the target currently ranks | `ranked_keywords` |
+| Estimated organic or paid traffic for the target | `bulk_traffic_estimation` |
+
+Do not infer all three from “analyze this site,” “SEO audit,” “competitor research,” or “find growth
+opportunities.” If the user explicitly asks for a combined link, ranking, and traffic audit, submit the
+three target-only scopes together with one `scope.target`.
 
 ## Status and Result Reading
 
