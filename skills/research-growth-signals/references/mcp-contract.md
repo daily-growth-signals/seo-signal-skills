@@ -100,8 +100,9 @@ account result.
 Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, and GEO
 visibility. Use `scope.target` for backlink, ranked-keyword, or traffic research when the target is a
 domain, subdomain, or webpage URL. `domain` and `target` are mutually exclusive. Every submit must
-include a non-empty, unique `scope.data_scopes` list. Select only evidence families directly required
-by the user's stated goal; omission is invalid and never means “all.”
+include a non-empty, unique `scope.data_scopes` list. Select the smallest useful evidence set for the
+user's goal; omission is invalid and never means “all.” Interpret intent semantically rather than
+requiring users to name a Dataset or use one of the examples below verbatim.
 
 Submit a traditional or domain-based analysis:
 
@@ -157,11 +158,13 @@ Supported `data_scopes` are:
 
 Do not submit `bulk_pages_summary` to the unified Tool. It is not a public Dataset in this contract.
 
-`backlink_analysis`, `ranked_keywords`, and `bulk_traffic_estimation` are opt-in target-only scopes.
-Generic SEO audits, website analysis, competitor analysis, growth-opportunity requests, or merely
-providing a target do not authorize them. Ask for clarification when the target evidence family is
-ambiguous. Multiple target-only scopes are valid only when the user directly requests every included
-evidence type; requesting one must not implicitly add the others.
+`backlink_analysis`, `ranked_keywords`, and `bulk_traffic_estimation` are target-level scopes with
+distinct meaning and cost. Include any combination reasonably needed for the requested outcome, but
+do not infer unrelated families merely because a target is present. The examples are semantic guidance,
+not keyword triggers. Ask for clarification only when alternatives materially change cost, target
+interpretation, or the answer. If one goal needs both domain-based and target-level evidence, submit the
+minimum separate analyses required by the mutually exclusive inputs and keep their `analysis_id` values
+separate.
 
 The public result Dataset mapping is:
 
@@ -200,6 +203,8 @@ Legacy calls without `view` return the original response envelope:
 New status responses return `schema_version`, ordered `analyses`, `coverage`, and `limitations` without result bodies.
 For `queued` or `running` analyses, the analysis status is authoritative. Coverage values are
 provisional and must not be interpreted as source failure or exhaustion; wait for the terminal state.
+At a terminal state, an evidence family with no records remains part of reported coverage. Treat it as
+a limitation; do not resubmit, broaden scope, or discard successful families solely because it is empty.
 
 New result responses return:
 

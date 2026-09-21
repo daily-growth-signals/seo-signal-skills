@@ -6,9 +6,18 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 ### Changes
 
-- SEO research now requires explicit, non-empty data scopes and treats backlinks, ranked keywords,
-  and traffic estimation as separately opt-in evidence instead of inferring them from generic site,
-  competitor, audit, or growth-analysis requests.
+- To be added.
+
+## [2.1.2] - 2026-09-21
+
+### Changes
+
+- SEO research now requires explicit, non-empty data scopes while selecting them semantically from the
+  user's goal. Target-level backlink, ranking, and traffic evidence can be combined when useful without
+  turning examples into rigid keyword triggers, and mixed domain/target research is split only when the
+  public contract requires separate analyses.
+- Terminal empty or partial evidence is preserved as coverage and limitations instead of triggering an
+  automatic resubmission or causing successful evidence families to be discarded.
 
 ## [2.0.0] - 2026-09-18
 

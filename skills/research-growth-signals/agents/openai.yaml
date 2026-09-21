@@ -2,7 +2,7 @@ interface:
   display_name: "SignalDig Growth Research"
   short_description: "Research bounded Social and SEO signals"
   brand_color: "#6366F1"
-  default_prompt: "Use $research-growth-signals to research my question through explicit, smallest-sufficient Social or SEO scope. Treat backlinks, ranked keywords, and traffic estimation as separately opt-in evidence, then poll the same analysis until it is complete."
+  default_prompt: "Use $research-growth-signals to research my question with the smallest useful Social or SEO evidence scope, infer the needed evidence from my goal, and poll each analysis to a terminal state."
 dependencies:
   tools:
     - type: "mcp"
