@@ -3,12 +3,12 @@ name: research-growth-signals
 description: Research traceable public social and SEO signals through SignalDig's single MCP connection and two business tools. Use when a user asks for social discussions, keyword demand, SERP, trends, competitors, GEO, backlinks, rankings, or traffic evidence. The Skill selects the direction, submits the smallest sufficient scope, and polls the same analysis_id; it never exposes or asks users to choose providers, workflows, bindings, or native pagination parameters.
 slug: research-growth-signals
 displayName: SignalDig Growth Research
-version: 2.1.2
+version: 2.1.3
 summary: Retrieve traceable public social and SEO signals through SignalDig's unified research tools.
 tags: [seo, social, mcp, signaldig, research]
 license: MIT
 metadata:
-  version: "2.1.2"
+  version: "2.1.3"
   homepage: "https://signaldig.com/"
 ---
 
@@ -50,6 +50,8 @@ If the required tool is unavailable, the connection fails, or authentication is 
 - For SEO, explicitly choose a non-empty `scope.data_scopes` list containing the smallest useful evidence set for the user's goal. Never omit it and rely on service defaults.
 - Infer scope from meaning, not exact phrases. The examples below are guidance, not an exhaustive vocabulary or a requirement that users name a Dataset.
 - `backlink_analysis`, `ranked_keywords`, and `bulk_traffic_estimation` are target-level evidence with distinct cost and meaning. Include any combination that is reasonably necessary for the requested outcome; do not bundle unrelated families merely because a target was supplied.
+- `geo_score` is a domain-only US/en score with benchmark and citation evidence. Use it alone,
+  provide `scope.domain`, omit `scope.keyword`, and never mix it with `geo_analysis` or other scopes.
 - Ask one short clarification only when different scope choices would materially change cost, target interpretation, or the answer. Otherwise make the narrowest reasonable choice and state the resulting coverage.
 - `refresh=false` is the default. Use `refresh=true` only when the user explicitly requests fresh collection.
 - Never invent or forward native cursors, search IDs, provider parameters, internal IDs, or low-level request payloads. The service maps and validates them.
@@ -111,8 +113,10 @@ Zhihu supports bounded public topic retrieval through the same Social Tool and `
 Translate the user's request into the live `research_seo_signals` schema:
 
 - `request`: the natural-language research goal.
-- `scope.keyword`, `scope.market`, and `scope.language`: normalized business inputs required by the live schema.
-- Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, and GEO visibility.
+- `scope.market` and `scope.language`: normalized business inputs required by the live schema.
+- `scope.keyword`: required for every SEO scope except domain-only `geo_score`; omit it for `geo_score`.
+- Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, GEO visibility,
+  and domain-level Geo Score evidence.
 - Use `scope.target` for backlink analysis, ranked-keyword inventory, or traffic estimation when the target is a domain, subdomain, or webpage URL. Do not send both `domain` and `target`.
 - `scope.data_scopes`: required, explicit, non-empty, unique, and limited to the smallest useful evidence set supported by the user's goal.
 - `scope.search_engine`: set only from the user's explicit engine choice; otherwise use the service default.
@@ -122,7 +126,7 @@ Translate the user's request into the live `research_seo_signals` schema:
 Keep research language separate from response language. Do not expose or construct provider tasks, locations, endpoints, devices, or internal capability names.
 
 Supported SEO scope families are `keyword_overview`, `domain_rank_overview`, `related_keywords`, `serp`,
-`google_trends`, `x_recent_search`, `competitor_analysis`, `geo_analysis`, `backlink_analysis`,
+`google_trends`, `x_recent_search`, `competitor_analysis`, `geo_analysis`, `geo_score`, `backlink_analysis`,
 `ranked_keywords`, and `bulk_traffic_estimation`. Do not submit `bulk_pages_summary` through the
 unified Tool; it is not part of the current public Research result contract.
 
@@ -147,9 +151,9 @@ separate analyses required by the mutually exclusive `scope.domain` and `scope.t
 - Use `view="results"` only for terminal or partially terminal work. Select one Dataset per call and use the same ordered analysis collection for every page.
 - Social post records use `dataset="social_posts"`. For SEO, use the Dataset matching the requested evidence family:
   `keyword_overview`, `domain_rank_overview`, `related_keywords`, `serp_results`, `google_trends`,
-  `x_recent_search`, `ranked_keywords`, `backlinks`, `competitor_domains`, `geo_mentions`, or
+  `x_recent_search`, `ranked_keywords`, `backlinks`, `competitor_domains`, `geo_mentions`, `geo_score`, or
   `traffic_estimation`.
-- Aggregate SEO Datasets (`keyword_overview`, `domain_rank_overview`, `google_trends`, and
+- Aggregate SEO Datasets (`keyword_overview`, `domain_rank_overview`, `google_trends`, `geo_score`, and
   `traffic_estimation`) return one public record and do not provide a next cursor. Do not retry or
   invent pagination for them.
 - Detail SEO Datasets (`related_keywords`, `serp_results`, `x_recent_search`, `ranked_keywords`,

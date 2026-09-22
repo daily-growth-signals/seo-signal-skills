@@ -122,6 +122,25 @@ Submit a traditional or domain-based analysis:
 }
 ```
 
+For a domain-level AI-search score with benchmark and citation evidence, use the same SEO Tool with
+the exclusive `geo_score` scope. It currently uses the fixed US/en comparison scope and does not
+accept a keyword:
+
+```json
+{
+  "action": "submit",
+  "request": "Score example.com's AI-search visibility and show the evidence",
+  "scope": {
+    "domain": "example.com",
+    "market": "US",
+    "language": "en",
+    "data_scopes": ["geo_score"]
+  },
+  "research_depth": "standard",
+  "refresh": false
+}
+```
+
 For a page-level ranked-keyword, backlink, or traffic request, replace `domain` with `target`:
 
 ```json
@@ -152,6 +171,7 @@ Supported `data_scopes` are:
 - `x_recent_search`
 - `competitor_analysis`
 - `geo_analysis`
+- `geo_score`
 - `backlink_analysis`
 - `ranked_keywords`
 - `bulk_traffic_estimation`
@@ -178,6 +198,7 @@ The public result Dataset mapping is:
 | Bounded X recent-search posts | `x_recent_search` | Yes |
 | Competitor domain/site evidence | `competitor_domains` | Yes |
 | GEO/AI-search evidence | `geo_mentions` | Yes |
+| Domain Geo Score, benchmark, mentions, and target citations | `geo_score` | No; one aggregate record |
 | Ranked keywords | `ranked_keywords` | Yes |
 | Backlinks and referring domains | `backlinks` | Yes |
 | Traffic estimation | `traffic_estimation` | No; one aggregate record |
