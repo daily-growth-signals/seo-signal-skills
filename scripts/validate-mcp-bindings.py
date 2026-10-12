@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prevent client-defined MCP aliases from becoming Skill runtime contracts."""
+"""Validate the single supported Skill and its single MCP dependency."""
 
 from __future__ import annotations
 
@@ -20,21 +20,12 @@ ALIAS_BINDINGS = re.compile(
 LOCAL_TOOL_IDENTIFIER = re.compile(r"mcp__[a-zA-Z0-9_-]+__")
 TOOL_HEADING = re.compile(r"^## Tool: `([a-z][a-z0-9_]*)`$", re.MULTILINE)
 TOOL_MENTION = re.compile(r"`((?:submit|get|search|research)_[a-z0-9_]+)`")
+RETIRED_DIRECT_TOOL = re.compile(r"`get_(?:reddit|threads)_[a-z0-9_]+`")
 USER_FACING_ERROR_CODE = re.compile(r"\b(?:report|return|show)\s+`?error\.code`?", re.IGNORECASE)
 USER_FACING_CODE_RULE = "never expose machine error codes in a user-facing response"
-COMPATIBILITY_SKILLS = {
-    "research-social-signals": "research_social_signals",
-    "research-seo-signals": "research_seo_signals",
-    "decide-content-opportunities": "research_seo_signals",
-}
-LEGACY_RUNTIME_REFERENCE = re.compile(
-    r"(?:/data/social/mcp|/data/seo/mcp|/signals/seo/mcp|"
-    r"submit_keyword_research_signals|submit_specific_seo_data|"
-    r"submit_keyword_decision_report|get_keyword_decision_report|"
-    r"search_x_posts|search_reddit_posts|search_xiaohongshu_notes|"
-    r"search_zhihu_articles|get_xiaohongshu_user_posts)",
-    re.IGNORECASE,
-)
+SUPPORTED_SKILL = "research-growth-signals"
+EXPECTED_MCP_URL = "https://mcp.signaldig.com/mcp"
+EXPECTED_PUBLIC_TOOLS = {"research_social_signals", "research_seo_signals"}
 
 
 def fail(message: str) -> None:
@@ -44,7 +35,15 @@ def fail(message: str) -> None:
 
 
 failures = 0
-for skill_path in sorted(SKILLS.glob("*/SKILL.md")):
+skill_paths = sorted(SKILLS.glob("*/SKILL.md"))
+skill_names = [path.parent.name for path in skill_paths]
+if skill_names != [SUPPORTED_SKILL]:
+    fail(
+        "skills/ must contain exactly one Skill: "
+        f"{SUPPORTED_SKILL}; found: {', '.join(skill_names) or '<none>'}"
+    )
+
+for skill_path in skill_paths:
     skill_dir = skill_path.parent
     name = skill_dir.name
     skill = skill_path.read_text()
@@ -63,25 +62,6 @@ for skill_path in sorted(SKILLS.glob("*/SKILL.md")):
     if USER_FACING_CODE_RULE not in normalized_skill:
         fail(f"{name}/SKILL.md lacks the user-facing error-code boundary")
 
-    if name in COMPATIBILITY_SKILLS:
-        expected_tool = COMPATIBILITY_SKILLS[name]
-        if "$research-growth-signals" not in skill or expected_tool not in skill:
-            fail(f"{name}/SKILL.md does not delegate to the unified {expected_tool} contract")
-        reference_files = sorted((skill_dir / "references").glob("*.md"))
-        if reference_files:
-            relative_files = ", ".join(
-                str(path.relative_to(ROOT)) for path in reference_files
-            )
-            fail(f"{name} ships independent compatibility references: {relative_files}")
-        for runtime_path in sorted(skill_dir.rglob("*")):
-            if runtime_path.is_file() and runtime_path.suffix in {".md", ".yaml", ".json"}:
-                if LEGACY_RUNTIME_REFERENCE.search(runtime_path.read_text()):
-                    fail(
-                        f"{runtime_path.relative_to(ROOT)} contains a retired MCP endpoint "
-                        "or tool name"
-                    )
-        continue
-
     if not setup_path.exists() or not contract_path.exists():
         fail(f"{name} is missing an MCP setup guide or contract")
         continue
@@ -89,6 +69,11 @@ for skill_path in sorted(SKILLS.glob("*/SKILL.md")):
     setup = setup_path.read_text()
     contract = contract_path.read_text()
     expected = set(TOOL_HEADING.findall(contract))
+    if expected != EXPECTED_PUBLIC_TOOLS:
+        fail(
+            f"{name}/mcp-contract.md must document exactly the two public tools; "
+            f"found: {', '.join(sorted(expected)) or '<none>'}"
+        )
     documented = set(TOOL_MENTION.findall(setup))
     missing = sorted(expected - documented)
     if missing:
@@ -96,13 +81,33 @@ for skill_path in sorted(SKILLS.glob("*/SKILL.md")):
     if "Example server alias (configurable)" not in setup:
         fail(f"{name}/setup-guide.md does not label its server alias as configurable")
 
-    for reference_path in sorted(skill_dir.rglob("*.md")):
-        if reference_path == skill_path:
+    agent_path = skill_dir / "agents" / "openai.yaml"
+    if not agent_path.exists():
+        fail(f"{name}/agents/openai.yaml is missing")
+    else:
+        agent = agent_path.read_text()
+        mcp_count = len(re.findall(r"^\s*-\s+type:\s*[\"']?mcp[\"']?\s*$", agent, re.MULTILINE))
+        if mcp_count != 1:
+            fail(f"{name}/agents/openai.yaml must declare exactly one MCP dependency; found {mcp_count}")
+        url_count = agent.count(EXPECTED_MCP_URL)
+        if url_count != 1:
+            fail(
+                f"{name}/agents/openai.yaml must declare {EXPECTED_MCP_URL} exactly once; "
+                f"found {url_count}"
+            )
+
+    for runtime_path in sorted(skill_dir.rglob("*")):
+        if not runtime_path.is_file() or runtime_path.suffix not in {".md", ".yaml", ".json"}:
             continue
-        if USER_FACING_ERROR_CODE.search(reference_path.read_text()):
-            fail(f"{reference_path.relative_to(ROOT)} exposes error.code to the user")
+        content = runtime_path.read_text()
+        if RETIRED_DIRECT_TOOL.search(content):
+            fail(
+                f"{runtime_path.relative_to(ROOT)} names a retired Reddit or Threads direct tool"
+            )
+        if runtime_path != skill_path and USER_FACING_ERROR_CODE.search(content):
+            fail(f"{runtime_path.relative_to(ROOT)} exposes error.code to the user")
 
 if failures:
     sys.exit(1)
 
-print("[OK] MCP alias-independence and setup-tool checks passed")
+print("[OK] single-Skill, single-MCP, alias-independence, and setup-tool checks passed")

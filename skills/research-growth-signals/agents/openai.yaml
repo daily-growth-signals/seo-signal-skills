@@ -1,6 +1,6 @@
 interface:
   display_name: "SignalDig Growth Research"
-  short_description: "Research bounded Social and SEO signals"
+  short_description: "Research Social, SEO, Zhihu, and Threads signals"
   brand_color: "#6366F1"
   default_prompt: "Use $research-growth-signals to research my question with the smallest useful Social or SEO evidence scope, infer the needed evidence from my goal, and poll each analysis to a terminal state."
 dependencies:

@@ -186,11 +186,11 @@ done
 ok "frontmatter 必需字段、SkillHub metadata version 与对外展示名一致性检查完成"
 echo ""
 
-echo "=== 3.5. MCP alias-independence ==="
+echo "=== 3.5. Single Skill and MCP contract ==="
 if python3 "$PROJECT_ROOT/scripts/validate-mcp-bindings.py"; then
-    ok "Skill 运行时不依赖客户端 MCP 别名，安装指南工具清单完整"
+    ok "仅保留 research-growth-signals，且只声明一个 MCP 服务"
 else
-    err "MCP 别名独立性或安装指南工具清单校验失败"
+    err "单 Skill、单 MCP 或契约校验失败"
 fi
 echo ""
 

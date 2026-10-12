@@ -6,7 +6,15 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 ### Changes
 
-- To be added.
+- `research-growth-signals` now provides both public social and SEO research while preserving the user's requested platforms, market, language, topic, and result limit. Results include source links, actual coverage, and disclosed gaps.
+- Social topic research now includes Threads. The unified Social research capability can also retrieve Zhihu question and answer details, question answer lists, hot lists, hot recommendations, and preset searches, plus Xiaohongshu search suggestions and popular recommendations.
+
+## [2.1.3] - 2026-09-23
+
+### Changes
+
+- SEO research now supports domain-level `geo_score` results with AI-search visibility scores,
+  platform rankings, benchmark domains, real mention examples, target citations, and coverage evidence.
 
 ## [2.1.2] - 2026-09-21
 

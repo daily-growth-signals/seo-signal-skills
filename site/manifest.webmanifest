@@ -1,7 +1,7 @@
 {
-  "name": "SignalDig — Agent Skills",
-  "short_name": "SignalDig",
-  "description": "Collect traceable SEO and social signals, then turn the evidence into content-opportunity decisions.",
+  "name": "SignalDig Growth Research Skill",
+  "short_name": "SignalDig Research",
+  "description": "One Agent Skill for public social and SEO research through SignalDig MCP.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

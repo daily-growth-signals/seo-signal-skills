@@ -105,10 +105,7 @@ else
 fi
 echo ""
 
-# Publish only skills changed since the previous tag. Only the unified Skill is
-# published to ClawHub; the historical compatibility entries
-# (research-seo-signals / research-social-signals /
-# decide-content-opportunities) are no longer pushed.
+# Publish the single supported Skill when it changed since the previous tag.
 BASE_TAG=""
 if [ "$SKIP_UNCHANGED_SKILLS" = "true" ] && git rev-parse --git-dir >/dev/null 2>&1; then
     BASE_TAG="$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || true)"

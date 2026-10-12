@@ -1,35 +1,36 @@
 ---
 name: research-growth-signals
-description: Research traceable public social and SEO signals through SignalDig's single MCP connection and two business tools. Use when a user asks for social discussions, keyword demand, SERP, trends, competitors, GEO, backlinks, rankings, or traffic evidence. The Skill selects the direction, submits the smallest sufficient scope, and polls the same analysis_id; it never exposes or asks users to choose providers, workflows, bindings, or native pagination parameters.
+description: Research traceable public social and SEO signals through SignalDig, including bounded Zhihu and Xiaohongshu resources plus Threads topic signals. Use when a user asks for social discussions, posts, profiles, Zhihu questions or trends, search suggestions, keyword demand, SERP, competitors, GEO, backlinks, rankings, or traffic evidence. Use the unified research tools and never expose providers, workflows, or bindings.
 slug: research-growth-signals
 displayName: SignalDig Growth Research
-version: 2.1.2
+version: 2.2.0
 summary: Retrieve traceable public social and SEO signals through SignalDig's unified research tools.
 tags: [seo, social, mcp, signaldig, research]
 license: MIT
 metadata:
-  version: "2.1.2"
+  version: "2.2.0"
   homepage: "https://signaldig.com/"
 ---
 
 # SignalDig Growth Research
 
-Use one connected SignalDig MCP to turn a user's natural-language question into the smallest sufficient Social or SEO research request. SignalDig owns source selection within the requested direction, parameter conversion, native pagination, background execution, deduplication, and public-data filtering.
+Use connected SignalDig MCP tools to turn a user's question into the smallest sufficient Social or SEO request. Topic and resource retrieval use the same unified asynchronous research tools. SignalDig owns provider selection, Workflow execution, billing controls, and public-data filtering.
 
 ## Availability Gate
 
-This Skill has no data of its own. Before research, inspect the visible MCP tools for both `research_social_signals` and `research_seo_signals`. The server alias and any local tool namespace are client-defined; use the exact visible identifiers and never construct an `mcp__<alias>__<tool>` name.
+This Skill has no data of its own. Before research, inspect the visible MCP tools for `research_social_signals` and `research_seo_signals`. The server alias and any local tool namespace are client-defined; use the exact visible identifiers and never construct an `mcp__<alias>__<tool>` name.
 
 If the required tool is unavailable, the connection fails, or authentication is rejected, stop. Never simulate results from general knowledge. Tell the user that SignalDig is not connected and direct them to [Connect SignalDig](https://signaldig.com/agent-setup). Do not expose endpoints, configuration internals, or machine error codes in that failure response.
 
 ## Direction Selection
 
-- Use `research_social_signals` for public discussions, posts, authors, native engagement, or cross-platform social evidence.
+- Use `research_social_signals` for public discussions, cross-platform topic search, and asynchronous evidence collection across its supported sources.
 - Use `research_seo_signals` for keyword demand, intent, related queries, SERP, trends, competitors, GEO visibility, backlinks, ranked keywords, or traffic evidence.
+- Use a named Social operation for bounded entity or feed retrieval. Threads topic search belongs to the unified Social Tool.
 - When one question genuinely requires both directions, submit one bounded analysis to each tool and keep the two `analysis_id` values separate.
 - Ask one short clarification only when choosing Social versus SEO, the required platform set, or the SEO business scope would otherwise be unsafe. Do not ask the user about providers, workflows, bindings, page tokens, operation names, or storage.
 
-## Common Execution Contract
+## Unified Research Execution Contract
 
 1. Preserve the user's requested topic, platforms, market, language, time intent, result count, and refresh intent. Do not add sources or broaden the topic.
 2. Select only one of the two business tools unless both evidence directions are necessary.
@@ -43,13 +44,16 @@ If the required tool is unavailable, the connection fails, or authentication is 
 
 ## Scope Rules
 
-- The unified Social topic-search sources are X, Reddit, Xiaohongshu, and Zhihu. Treat these as public SignalDig capabilities, not as implementation details. The live schema remains authoritative.
+- The unified Social topic-search sources are X, Reddit, Xiaohongshu, Zhihu, and Threads. Treat these as public SignalDig capabilities, not as implementation details. The live schema remains authoritative.
+- A newly published SignalDig research capability must be delivered through the unified Research MCP and documented in this Skill in the same release. Topic sources belong in `scope.platforms`; entity, feed, or ID-based retrieval requires a matching operation/target shape or public Dataset and must not create another public MCP connection.
 - A requested result count is an upper bound, not permission to traverse unrelated data. SignalDig may fetch multiple native pages only inside the exact requested platform, query, filters, and count.
 - Social language describes the query wording to use, not a platform-side language filter unless the live schema explicitly provides one. Keep Chinese and English query variants focused and user-relevant; never claim language-complete coverage.
 - Use only the platforms the user names. If none are named and the choice materially affects cost or meaning, ask which platforms to include.
 - For SEO, explicitly choose a non-empty `scope.data_scopes` list containing the smallest useful evidence set for the user's goal. Never omit it and rely on service defaults.
 - Infer scope from meaning, not exact phrases. The examples below are guidance, not an exhaustive vocabulary or a requirement that users name a Dataset.
 - `backlink_analysis`, `ranked_keywords`, and `bulk_traffic_estimation` are target-level evidence with distinct cost and meaning. Include any combination that is reasonably necessary for the requested outcome; do not bundle unrelated families merely because a target was supplied.
+- `geo_score` is a domain-only US/en score with benchmark and citation evidence. Use it alone,
+  provide `scope.domain`, omit `scope.keyword`, and never mix it with `geo_analysis` or other scopes.
 - Ask one short clarification only when different scope choices would materially change cost, target interpretation, or the answer. Otherwise make the narrowest reasonable choice and state the resulting coverage.
 - `refresh=false` is the default. Use `refresh=true` only when the user explicitly requests fresh collection.
 - Never invent or forward native cursors, search IDs, provider parameters, internal IDs, or low-level request payloads. The service maps and validates them.
@@ -104,15 +108,42 @@ Do not encode provider-native sort values, search IDs, page numbers, native lang
 
 Bind engagement constraints to their named source. Likes, replies, and reposts apply only to X; score and comments apply only to Reddit. Do not translate one platform's metric into another. If the user says only “popular” or “high engagement,” omit a numeric constraint and let the service report actual coverage.
 
-Zhihu supports bounded public topic retrieval through the same Social Tool and `social_posts` Dataset. Do not call or mention a legacy Zhihu-specific Tool. Treat a returned source limit or unsupported language/time constraint as coverage information; do not resubmit with guessed native parameters.
+Zhihu supports bounded public topic retrieval through the same Social Tool and `social_posts` Dataset. Treat a returned source limit or unsupported language/time constraint as coverage information; do not resubmit with guessed native parameters.
+
+## Unified Social Resource Retrieval
+
+Submit these through `research_social_signals` with the named `operation`, the smallest matching `target`, and no topic `scope`, `search`, or result budget. Poll the returned `analysis_id`, then read `dataset="social_resources"`.
+
+### Zhihu
+
+- `zhihu_question_detail`: target one numeric `question_id`.
+- `zhihu_answer_detail`: target one numeric `answer_id`.
+- `zhihu_question_answers`: target one numeric `question_id`; optional `cursor`, `limit`, `offset`, `order`, and `session_id` describe one bounded page. Reuse returned continuation values unchanged.
+- `zhihu_hot_list`: optional integer `limit` and boolean `desktop` select one current public hot-list response.
+- `zhihu_hot_recommend`: optional integer `offset`, integer `page_number`, and `session_token` select one recommendation page. Reuse returned continuation values unchanged.
+- `zhihu_preset_search`: no target is required.
+
+Use `operation="topic_search"` with `scope.platforms=["zhihu"]` for bounded Zhihu topic research and normalized `social_posts`. Do not claim that a hot list or recommendation feed is topic-search evidence. Resource results contain the submitted public parameters, capture time, and sanitized business `data`; interpret only fields actually present and do not infer missing deep-field semantics.
+
+### Zhihu and Xiaohongshu auxiliary data
+
+- `xiaohongshu_search_suggestions`: set `target.keyword`; an empty keyword requests current popular recommendations. Do not present either as note-search evidence.
+
+These resource results contain submitted public parameters, capture time, and sanitized business `data`. Interpret only fields present in the live response, and never infer deep-field semantics from the operation name.
+
+### Threads
+
+For keyword search, use `research_social_signals` with `scope.platforms=["threads"]`. Treat results as query-bounded observations, not exhaustive platform coverage. The current unified public schema does not expose Threads profile, user-post, or single-post retrieval; do not construct a direct Threads tool name.
 
 ## SEO Submission
 
 Translate the user's request into the live `research_seo_signals` schema:
 
 - `request`: the natural-language research goal.
-- `scope.keyword`, `scope.market`, and `scope.language`: normalized business inputs required by the live schema.
-- Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, and GEO visibility.
+- `scope.market` and `scope.language`: normalized business inputs required by the live schema.
+- `scope.keyword`: required for every SEO scope except domain-only `geo_score`; omit it for `geo_score`.
+- Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, GEO visibility,
+  and domain-level Geo Score evidence.
 - Use `scope.target` for backlink analysis, ranked-keyword inventory, or traffic estimation when the target is a domain, subdomain, or webpage URL. Do not send both `domain` and `target`.
 - `scope.data_scopes`: required, explicit, non-empty, unique, and limited to the smallest useful evidence set supported by the user's goal.
 - `scope.search_engine`: set only from the user's explicit engine choice; otherwise use the service default.
@@ -122,7 +153,7 @@ Translate the user's request into the live `research_seo_signals` schema:
 Keep research language separate from response language. Do not expose or construct provider tasks, locations, endpoints, devices, or internal capability names.
 
 Supported SEO scope families are `keyword_overview`, `domain_rank_overview`, `related_keywords`, `serp`,
-`google_trends`, `x_recent_search`, `competitor_analysis`, `geo_analysis`, `backlink_analysis`,
+`google_trends`, `x_recent_search`, `competitor_analysis`, `geo_analysis`, `geo_score`, `backlink_analysis`,
 `ranked_keywords`, and `bulk_traffic_estimation`. Do not submit `bulk_pages_summary` through the
 unified Tool; it is not part of the current public Research result contract.
 
@@ -147,9 +178,9 @@ separate analyses required by the mutually exclusive `scope.domain` and `scope.t
 - Use `view="results"` only for terminal or partially terminal work. Select one Dataset per call and use the same ordered analysis collection for every page.
 - Social post records use `dataset="social_posts"`. For SEO, use the Dataset matching the requested evidence family:
   `keyword_overview`, `domain_rank_overview`, `related_keywords`, `serp_results`, `google_trends`,
-  `x_recent_search`, `ranked_keywords`, `backlinks`, `competitor_domains`, `geo_mentions`, or
+  `x_recent_search`, `ranked_keywords`, `backlinks`, `competitor_domains`, `geo_mentions`, `geo_score`, or
   `traffic_estimation`.
-- Aggregate SEO Datasets (`keyword_overview`, `domain_rank_overview`, `google_trends`, and
+- Aggregate SEO Datasets (`keyword_overview`, `domain_rank_overview`, `google_trends`, `geo_score`, and
   `traffic_estimation`) return one public record and do not provide a next cursor. Do not retry or
   invent pagination for them.
 - Detail SEO Datasets (`related_keywords`, `serp_results`, `x_recent_search`, `ranked_keywords`,

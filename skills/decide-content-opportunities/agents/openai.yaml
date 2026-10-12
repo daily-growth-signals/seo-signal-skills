@@ -1,6 +1,0 @@
-interface:
-  display_name: "Content Opportunity Decisions"
-  short_description: "Compatibility entry using unified SEO evidence"
-  icon_small: "./assets/small-logo.svg"
-  brand_color: "#10B981"
-  default_prompt: "Use $decide-content-opportunities as a compatibility entry, collect the smallest sufficient SEO evidence through $research-growth-signals, and clearly separate observations from any conditional recommendation."

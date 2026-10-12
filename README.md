@@ -1,38 +1,71 @@
-# SignalDig Growth Research Skill
+# SignalDig Growth Research
 
-[English](#english) | [中文](#中文)
+An open-source Agent Skill for public social research and SEO research through [SignalDig](https://signaldig.com/). It works with Codex, Claude Code, Cursor, Windsurf, and other clients that support Agent Skills and Streamable HTTP MCP.
 
-## English
+[Website](https://daily-growth-signals.github.io/seo-signal-skills/) · [Setup guide](https://signaldig.com/agent-setup) · [Latest release](https://github.com/daily-growth-signals/seo-signal-skills/releases/latest) · [中文说明](#中文说明)
 
-SignalDig exposes one MCP connection and one Agent Skill. The MCP surface contains only two business tools:
+## What it covers
 
-- `research_social_signals` for bounded public social research.
-- `research_seo_signals` for bounded SEO evidence research.
+The repository contains one maintained Skill: [`research-growth-signals`](./skills/research-growth-signals/).
 
-The Skill translates a natural-language goal into the smallest sufficient business scope, submits once, and polls the same opaque `analysis_id`. Provider names, workflows, bindings, native pagination parameters, storage, and internal data are never part of the public contract.
+- Social research: public topic discussions on X, Reddit, Xiaohongshu, Zhihu, and Threads, plus supported public post and profile retrieval.
+- SEO research: keyword demand, related queries, SERPs, trends, competitors, GEO visibility, backlinks, ranked keywords, and traffic evidence.
 
-New users install only `skills/research-growth-signals`, then register one Streamable HTTP connection. GitHub Releases no longer package the historical Skills. ClawHub and SkillHub receive one final compatibility sync for existing installations, after which only the unified Skill continues to be published.
+The Skill uses two public MCP tools:
+
+- `research_social_signals`
+- `research_seo_signals`
+
+Each request stays within the platforms, market, language, topic, and result limit supplied by the user. The response preserves source links, actual coverage, limitations, and the SignalDig `analysis_id`. Missing data is reported as unknown rather than filled with estimates.
+
+## Install
+
+Clone the repository:
+
+```bash
+git clone https://github.com/daily-growth-signals/seo-signal-skills.git
+```
+
+Copy `skills/research-growth-signals` into your client's skills directory:
+
+| Client | Skills directory |
+| --- | --- |
+| Codex | `~/.codex/skills/` |
+| Claude Code | `~/.claude/skills/` |
+| Cursor | `~/.cursor/skills/` |
+| Windsurf | `~/.windsurf/skills/` |
+
+You can also download the packaged Skill from the [latest GitHub release](https://github.com/daily-growth-signals/seo-signal-skills/releases/latest).
+
+## Connect SignalDig MCP
+
+The Skill contains instructions but no research data. Register the SignalDig Streamable HTTP endpoint in your client and provide the API key through a secret or environment variable:
 
 ```json
 {
   "signaldig": {
     "type": "http",
     "url": "https://mcp.signaldig.com/mcp",
-    "headers": {"Authorization": "Bearer {SIGNALDIG_API_KEY}"},
-    "disabled": false
+    "headers": {
+      "Authorization": "Bearer {SIGNALDIG_API_KEY}"
+    }
   }
 }
 ```
 
-Store the API key securely and never commit it. Client-specific instructions are at [Connect SignalDig](https://signaldig.com/agent-setup).
+The `signaldig` alias is configurable. Do not commit the API key. Client-specific configuration is documented at [Connect SignalDig](https://signaldig.com/agent-setup).
 
-## 中文
+## 中文说明
 
-SignalDig 对外只提供一个 MCP 连接和一个 Agent Skill。MCP 内只有两个业务工具：
+SignalDig Growth Research 是一个开源 Agent Skill，通过一个 SignalDig MCP 连接完成公开社媒研究与 SEO 研究。支持 Codex、Claude Code、Cursor、Windsurf，以及其他兼容 Agent Skills 和 Streamable HTTP MCP 的客户端。
 
-- `research_social_signals`：有边界的公开社媒研究。
-- `research_seo_signals`：有边界的 SEO 证据研究。
+仓库只维护 [`research-growth-signals`](./skills/research-growth-signals/) 这一个 Skill：
 
-Skill 将自然语言需求映射为最小必要业务范围，只提交一次，并始终使用同一个不透明 `analysis_id` 轮询。供应商、Workflow、Binding、原生分页参数、存储与内部数据均不进入公开契约。
+- 社媒研究：X、Reddit、小红书、知乎和 Threads 的公开话题讨论，以及受支持的公开帖子和账号资料。
+- SEO 研究：关键词需求、相关搜索、SERP、趋势、竞品、GEO 可见度、外链、排名关键词和流量证据。
 
-新用户只安装 `skills/research-growth-signals`，MCP 只配置上面的单一连接。GitHub Releases 不再打包历史 Skill；ClawHub 与 SkillHub 为已有安装最后同步一次兼容入口，之后只继续发布统一 Skill。完整说明见 [SignalDig 一键接入](https://signaldig.com/agent-setup)。
+安装时把 `skills/research-growth-signals` 复制到客户端的 skills 目录，然后按[接入说明](https://signaldig.com/agent-setup)配置 SignalDig MCP。Skill 本身不包含研究数据；未连接 MCP 时不会用常识补写结果。
+
+## License
+
+[MIT](./LICENSE)

@@ -1,6 +1,6 @@
 # SignalDig Unified Research MCP Contract
 
-The public connection exposes exactly two business tools. The live tool schema is authoritative.
+The public research connection exposes two asynchronous business tools. The live inventory and schema are authoritative; never construct another tool name.
 
 ## Tool: `research_social_signals`
 
@@ -11,7 +11,7 @@ Submit:
   "action": "submit",
   "request": "Research recent GPT-6 discussions, concerns, and expectations",
   "scope": {
-    "platforms": ["xiaohongshu", "x", "reddit", "zhihu"],
+    "platforms": ["xiaohongshu", "x", "reddit", "zhihu", "threads"],
     "time_range": {"mode": "relative", "value": "30d"}
   },
   "search": {
@@ -46,7 +46,9 @@ Results:
 
 The service validates and maps all platform-native parameters. `result_budget.total` is a hard upper bound across the explicitly requested platforms. It does not authorize additional platforms, broader queries, or unbounded traversal. Constraints must be source-scoped; likes/replies/reposts belong to X, while score/comments belong to Reddit.
 
-The public topic-search source list is X, Reddit, Xiaohongshu, and Zhihu. All four use the same `research_social_signals` Tool and `social_posts` Dataset. This list describes SignalDig's user-facing coverage; it does not reveal or select an underlying data provider. Source-specific limits and unsupported constraints are reported through `coverage` and `limitations`.
+The public topic-search source list is X, Reddit, Xiaohongshu, Zhihu, and Threads. All five use the same `research_social_signals` Tool and `social_posts` Dataset. This list describes SignalDig's user-facing coverage; it does not reveal or select an underlying data provider. Source-specific limits and unsupported constraints are reported through `coverage` and `limitations`.
+
+Every newly published research capability must enter the unified Research MCP and this Skill in the same release. Topic-search sources extend `scope.platforms`; entity, feed, or ID-based capabilities extend an appropriate operation/target shape or public Dataset instead of creating another public MCP connection.
 
 ## Social Entity Retrieval
 
@@ -95,6 +97,22 @@ The returned `analysis_id` follows the same status/results protocol; use `social
 details or Xiaohongshu user posts, and `social_profiles` or `social_posts` for the Xiaohongshu
 account result.
 
+## Unified Social Resource Operations
+
+Submit these through `research_social_signals`. They return an `analysis_id`, use normal status polling, and expose terminal records through `dataset="social_resources"`.
+
+| Operation | Public request boundary | Continuation |
+| --- | --- | --- |
+| `zhihu_question_detail` | Numeric `question_id` | None |
+| `zhihu_answer_detail` | Numeric `answer_id` | None |
+| `zhihu_question_answers` | Numeric `question_id`; `limit` 1–100; `order` is `default` or `updated` | Reuse returned `cursor`, `offset`, and `session_id` unchanged |
+| `zhihu_hot_list` | Optional integer `limit`; boolean `desktop` | None |
+| `zhihu_hot_recommend` | Optional integer `offset`, integer `page_number`, and `session_token` | Reuse returned paging values unchanged |
+| `zhihu_preset_search` | No target required | None |
+| `xiaohongshu_search_suggestions` | `target.keyword`; empty string requests popular recommendations | None |
+
+Zhihu and Xiaohongshu resource results expose submitted public parameters, capture time, and sanitized business `data`; provider envelope metadata is not part of the public contract. Threads is currently available only as a topic-search platform through `research_social_signals`; the unified public schema does not expose Threads profile, user-post, or single-post retrieval. The live input schema takes precedence over this summary.
+
 ## Tool: `research_seo_signals`
 
 Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, and GEO
@@ -116,6 +134,25 @@ Submit a traditional or domain-based analysis:
     "market": "US",
     "language": "en",
     "data_scopes": ["keyword_overview", "serp"]
+  },
+  "research_depth": "standard",
+  "refresh": false
+}
+```
+
+For a domain-level AI-search score with benchmark and citation evidence, use the same SEO Tool with
+the exclusive `geo_score` scope. It currently uses the fixed US/en comparison scope and does not
+accept a keyword:
+
+```json
+{
+  "action": "submit",
+  "request": "Score example.com's AI-search visibility and show the evidence",
+  "scope": {
+    "domain": "example.com",
+    "market": "US",
+    "language": "en",
+    "data_scopes": ["geo_score"]
   },
   "research_depth": "standard",
   "refresh": false
@@ -152,6 +189,7 @@ Supported `data_scopes` are:
 - `x_recent_search`
 - `competitor_analysis`
 - `geo_analysis`
+- `geo_score`
 - `backlink_analysis`
 - `ranked_keywords`
 - `bulk_traffic_estimation`
@@ -178,6 +216,7 @@ The public result Dataset mapping is:
 | Bounded X recent-search posts | `x_recent_search` | Yes |
 | Competitor domain/site evidence | `competitor_domains` | Yes |
 | GEO/AI-search evidence | `geo_mentions` | Yes |
+| Domain Geo Score, benchmark, mentions, and target citations | `geo_score` | No; one aggregate record |
 | Ranked keywords | `ranked_keywords` | Yes |
 | Backlinks and referring domains | `backlinks` | Yes |
 | Traffic estimation | `traffic_estimation` | No; one aggregate record |
