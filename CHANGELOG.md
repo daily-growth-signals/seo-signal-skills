@@ -6,6 +6,12 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 ### Changes
 
+- To be added.
+
+## [2.2.0] - 2026-10-12
+
+### Changes
+
 - `research-growth-signals` now provides both public social and SEO research while preserving the user's requested platforms, market, language, topic, and result limit. Results include source links, actual coverage, and disclosed gaps.
 - Social topic research now includes Threads. The unified Social research capability can also retrieve Zhihu question and answer details, question answer lists, hot lists, hot recommendations, and preset searches, plus Xiaohongshu search suggestions and popular recommendations.
 
