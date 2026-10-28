@@ -1,0 +1,23 @@
+<header class="site-header">
+  <a class="brand" href="{{ '/' | url }}" aria-label="SignalDig home">SD_</a>
+  <nav aria-label="Primary navigation">
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" data-lang="en"{% if lang != 'zh' %} class="lang-active"{% endif %}>EN</button>
+      <span>/</span>
+      <button type="button" data-lang="zh"{% if lang == 'zh' %} class="lang-active"{% endif %}>中文</button>
+    </div>
+    <a class="nav-i18n" href="{{ '/blog/' | url }}">
+      <span data-lang-label="en">Blog</span>
+      <span data-lang-label="zh">指南</span>
+    </a>
+    <a class="nav-i18n" href="{{ '/#user-type' | url }}">
+      <span data-lang-label="en">Install Skill</span>
+      <span data-lang-label="zh">安装 Skill</span>
+    </a>
+    <a class="nav-i18n" href="{{ site.officialSite }}" target="_blank" rel="noopener noreferrer">
+      <span data-lang-label="en">Official Site</span>
+      <span data-lang-label="zh">官方网站</span>
+    </a>
+    <a href="{{ site.github }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </nav>
+</header>

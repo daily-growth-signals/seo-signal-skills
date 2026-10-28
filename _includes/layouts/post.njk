@@ -1,0 +1,210 @@
+---
+layout: layouts/base.njk
+ogType: article
+bodyClass: page-blog-post
+eleventyComputed:
+  hreflangEn: |
+    {% set alt = collections.posts | alternatePost(slug, 'en') -%}
+    {%- if alt -%}{{ alt.url | absoluteUrl(site) }}{%- elseif lang == 'en' -%}{{ page.url | absoluteUrl(site) }}{%- endif %}
+  hreflangZh: |
+    {% set alt = collections.posts | alternatePost(slug, 'zh') -%}
+    {%- if alt -%}{{ alt.url | absoluteUrl(site) }}{%- elseif lang == 'zh' -%}{{ page.url | absoluteUrl(site) }}{%- endif %}
+  hreflangDefault: |
+    {% set alt = collections.posts | alternatePost(slug, 'en') -%}
+    {%- if alt -%}{{ alt.url | absoluteUrl(site) }}{%- elseif lang == 'en' -%}{{ page.url | absoluteUrl(site) }}{%- endif %}
+---
+{% set tool = tools | toolById(toolId) %}
+{% set related = collections.posts | relatedPosts({ lang: lang, slug: slug, toolId: toolId }, tools) %}
+{% set toolName = tool.name[lang] if tool and tool.name and tool.name[lang] else toolId %}
+{% set ctaHref = tool.ctaUrl if tool else site.officialSite %}
+{# ZH product pages use /zh/ prefix; tools.json stores the EN canonical CTA. #}
+{% if lang == 'zh' and ctaHref %}
+  {% set ctaHref = ctaHref | replace('https://signaldig.com/zh/', 'https://signaldig.com/') | replace('https://signaldig.com/', 'https://signaldig.com/zh/') %}
+{% endif %}
+{% set ctaText = ctaLabel if ctaLabel else toolName %}
+{% set altEn = collections.posts | alternatePost(slug, 'en') %}
+{% set altZh = collections.posts | alternatePost(slug, 'zh') %}
+{% set pageAbs = page.url | absoluteUrl(site) %}
+{% set altEnPath = altEn.url | url if altEn else '' %}
+{% set altZhPath = altZh.url | url if altZh else '' %}
+
+<script id="blog-page-config" type="application/json">{"kind":"post","lang":{{ lang | dump | safe }},"altEn":{{ altEnPath | dump | safe }},"altZh":{{ altZhPath | dump | safe }}}</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": {{ (pageAbs + "#article") | dump | safe }},
+      "headline": {{ title | dump | safe }},
+      "description": {{ description | dump | safe }},
+      "datePublished": {{ (date | isoDate) | dump | safe }},
+      "dateModified": {{ (date | isoDate) | dump | safe }},
+      "inLanguage": {{ lang | dump | safe }},
+      "mainEntityOfPage": {{ pageAbs | dump | safe }},
+      "image": {{ site.ogImage | dump | safe }},
+      "author": {
+        "@type": "Organization",
+        "name": {{ site.publisher | dump | safe }},
+        "url": {{ site.officialSite | dump | safe }}
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": {{ site.publisher | dump | safe }},
+        "url": {{ site.officialSite | dump | safe }},
+        "logo": {
+          "@type": "ImageObject",
+          "url": {{ (site.baseUrl + "/icon-512.png") | dump | safe }}
+        }
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": {{ (pageAbs + "#breadcrumb") | dump | safe }},
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {{ (site.baseUrl + "/") | dump | safe }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": {{ (site.baseUrl + "/blog/") | dump | safe }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ title | dump | safe }},
+          "item": {{ pageAbs | dump | safe }}
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<main class="blog-main" id="top">
+  <article class="blog-article section">
+    <div class="blog-post-shell">
+      <div class="blog-post-gutter" aria-hidden="true"></div>
+      <div class="blog-inner">
+        <nav class="blog-breadcrumb" aria-label="Breadcrumb">
+          <a href="{{ '/' | url }}" data-i18n="crumb.home">{% if lang == 'zh' %}首页{% else %}Home{% endif %}</a>
+          <span aria-hidden="true">/</span>
+          <a href="{{ '/blog/' | url }}{% if lang == 'zh' %}#guides-zh{% else %}#guides-en{% endif %}" data-i18n="crumb.blog">{% if lang == 'zh' %}指南{% else %}Blog{% endif %}</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{{ title }}</span>
+        </nav>
+
+        <header class="blog-header">
+          {% if tool %}
+          <p class="blog-kicker">
+            <a class="blog-tool-link" href="{{ ctaHref }}" rel="noopener">{{ toolName }}</a>
+          </p>
+          {% endif %}
+          <h1>{{ title }}</h1>
+          <p class="blog-lede">{{ description }}</p>
+          <p class="blog-meta">
+            <time datetime="{{ date | isoDate }}">{{ date | isoDate }}</time>
+            <span class="blog-meta-lang">{% if lang == 'zh' %}中文{% else %}EN{% endif %}</span>
+          </p>
+        </header>
+
+        <div class="blog-prose" id="blog-prose">
+          {{ content | safe }}
+        </div>
+
+        <aside class="blog-cta" aria-label="Primary call to action">
+          <h2>{% if lang == 'zh' %}打开对应工具{% else %}Try this tool next{% endif %}</h2>
+          <p>
+            {% if lang == 'zh' %}
+            这篇指南对应 SignalDig 的具体功能页，可直接带着你的业务问题去试。
+            {% else %}
+            This guide maps to a specific SignalDig product page—open it with your real business question.
+            {% endif %}
+          </p>
+          <div class="actions">
+            <a class="button button-dark" href="{{ ctaHref }}" rel="noopener">{{ ctaText }}</a>
+            <a class="button button-light" href="{{ '/#user-type' | url }}">
+              {% if lang == 'zh' %}安装 Growth Research Skill{% else %}Install the Growth Research Skill{% endif %}
+            </a>
+          </div>
+        </aside>
+
+        {% if related and related.length %}
+        <section class="blog-related" aria-labelledby="related-heading">
+          <h2 id="related-heading">{% if lang == 'zh' %}相关指南{% else %}Related guides{% endif %}</h2>
+          <ul class="blog-card-grid blog-card-grid--compact">
+            {% for post in related %}
+            {% set relTool = tools | toolById(post.data.toolId) %}
+            <li>
+              <a class="blog-card" href="{{ post.url | url }}">
+                {% if relTool %}
+                <span class="blog-card-tag">{{ relTool.name[lang] if relTool.name[lang] else relTool.name.en }}</span>
+                {% endif %}
+                <strong class="blog-card-title">{{ post.data.title }}</strong>
+                <span class="blog-card-desc">{{ post.data.description }}</span>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+      </div>
+
+      <aside class="blog-toc-rail" data-blog-toc hidden>
+        <nav class="blog-toc" aria-labelledby="blog-toc-heading">
+          <p class="blog-toc-heading" id="blog-toc-heading">{% if lang == 'zh' %}目录{% else %}On this page{% endif %}</p>
+          <ol class="blog-toc-list" data-blog-toc-list></ol>
+        </nav>
+      </aside>
+    </div>
+  </article>
+
+  <div class="blog-toc-mobile" data-blog-toc-mobile hidden>
+    <button
+      type="button"
+      class="blog-toc-fab"
+      data-blog-toc-open
+      aria-expanded="false"
+      aria-controls="blog-toc-sheet"
+    >
+      {% if lang == 'zh' %}目录{% else %}Contents{% endif %}
+    </button>
+    <div
+      class="blog-toc-sheet"
+      id="blog-toc-sheet"
+      data-blog-toc-sheet
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="blog-toc-sheet-title"
+      hidden
+    >
+      <div class="blog-toc-sheet-backdrop" data-blog-toc-close tabindex="-1"></div>
+      <div class="blog-toc-sheet-panel">
+        <div class="blog-toc-sheet-bar">
+          <p class="blog-toc-heading" id="blog-toc-sheet-title">{% if lang == 'zh' %}目录{% else %}On this page{% endif %}</p>
+          <button type="button" class="blog-toc-sheet-close" data-blog-toc-close aria-label="{% if lang == 'zh' %}关闭目录{% else %}Close contents{% endif %}">×</button>
+        </div>
+        <nav aria-labelledby="blog-toc-sheet-title">
+          <ol class="blog-toc-list" data-blog-toc-list></ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    class="blog-back-top"
+    data-blog-back-top
+    aria-hidden="true"
+    tabindex="-1"
+    aria-label="{% if lang == 'zh' %}回到顶部{% else %}Back to top{% endif %}"
+  >
+    {% if lang == 'zh' %}顶部{% else %}Top{% endif %}
+  </button>
+</main>

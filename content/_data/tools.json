@@ -1,0 +1,132 @@
+[
+  {
+    "id": "backlink-gap",
+    "category": "seo",
+    "ctaUrl": "https://signaldig.com/backlink-analysis/backlink-gap",
+    "name": {
+      "en": "Backlink Gap Analysis",
+      "zh": "外链差距分析"
+    },
+    "inputHint": {
+      "en": "Your domain and one competitor domain",
+      "zh": "你的域名与一个竞品域名"
+    }
+  },
+  {
+    "id": "keyword-difficulty-checker",
+    "category": "seo",
+    "ctaUrl": "https://signaldig.com/keyword-research/keyword-difficulty-checker",
+    "name": {
+      "en": "Keyword Difficulty Checker",
+      "zh": "关键词难度检查"
+    },
+    "inputHint": {
+      "en": "One keyword, market and language",
+      "zh": "一个关键词、市场与语言"
+    }
+  },
+  {
+    "id": "keyword-opportunity-analysis",
+    "category": "seo",
+    "ctaUrl": "https://signaldig.com/keyword-research/keyword-opportunity-analysis",
+    "name": {
+      "en": "Keyword Opportunity Analysis",
+      "zh": "关键词机会分析"
+    },
+    "inputHint": {
+      "en": "One keyword, website, market and language",
+      "zh": "一个关键词、网站、市场与语言"
+    }
+  },
+  {
+    "id": "ai-visibility-checker",
+    "category": "ai-search",
+    "ctaUrl": "https://signaldig.com/ai-search/ai-visibility-checker",
+    "name": {
+      "en": "AI Visibility Checker",
+      "zh": "AI 可见度检查"
+    },
+    "inputHint": {
+      "en": "One domain, keyword, market, language and AI platform",
+      "zh": "一个域名、关键词、市场、语言与 AI 平台"
+    }
+  },
+  {
+    "id": "geo-score",
+    "category": "ai-search",
+    "ctaUrl": "https://signaldig.com/ai-search/geo-score",
+    "name": {
+      "en": "Geo Score",
+      "zh": "Geo Score"
+    },
+    "inputHint": {
+      "en": "One domain in the stated US English scope",
+      "zh": "一个域名（当前为美英范围）"
+    }
+  },
+  {
+    "id": "rednote-research",
+    "category": "social",
+    "ctaUrl": "https://signaldig.com/tools/rednote-research",
+    "name": {
+      "en": "RedNote Viral Posts & Content Research",
+      "zh": "小红书热门内容研究"
+    },
+    "inputHint": {
+      "en": "An industry keyword, competitor or content direction",
+      "zh": "行业关键词、竞品或内容方向"
+    }
+  },
+  {
+    "id": "xiaohongshu-account-analyzer",
+    "category": "social",
+    "ctaUrl": "https://signaldig.com/tools/xiaohongshu-account-analyzer",
+    "name": {
+      "en": "Xiaohongshu Account Analyzer",
+      "zh": "小红书账号分析"
+    },
+    "inputHint": {
+      "en": "A public Xiaohongshu profile/share link or 24-character account ID",
+      "zh": "公开小红书主页/分享链接或 24 位账号 ID"
+    }
+  },
+  {
+    "id": "threads-account-analyzer",
+    "category": "social",
+    "ctaUrl": "https://signaldig.com/tools/threads-account-analyzer",
+    "name": {
+      "en": "Threads Account Analyzer",
+      "zh": "Threads 账号分析"
+    },
+    "inputHint": {
+      "en": "A public Threads profile URL or username",
+      "zh": "公开 Threads 主页 URL 或用户名"
+    }
+  },
+  {
+    "id": "xiaohongshu-content-creator",
+    "category": "content",
+    "ctaUrl": "https://signaldig.com/tools/xiaohongshu-content-creator",
+    "name": {
+      "en": "Xiaohongshu Content Generator",
+      "zh": "小红书内容生成"
+    },
+    "inputHint": {
+      "en": "Content keywords and writing requirements",
+      "zh": "内容关键词与写作要求"
+    }
+  },
+  {
+    "id": "threads-content-creator",
+    "category": "content",
+    "ctaUrl": "https://signaldig.com/tools/threads-content-creator",
+    "name": {
+      "en": "Threads Content Ideas Finder",
+      "zh": "Threads 内容灵感"
+    },
+    "inputHint": {
+      "en": "A topic or keyword and optional writing requirements",
+      "zh": "主题或关键词，以及可选写作要求"
+    }
+  }
+]

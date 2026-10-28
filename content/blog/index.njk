@@ -1,0 +1,150 @@
+---
+layout: layouts/base.njk
+permalink: /blog/index.html
+lang: en
+title: Tool guides | SignalDig Growth Research
+description: Practical how-to guides for SignalDig SEO, AI-search, and social tools—written for marketers and operators, each linking to a specific product page.
+ogType: website
+bodyClass: page-blog-index
+hreflangEn: https://daily-growth-signals.github.io/seo-signal-skills/blog/
+hreflangZh: https://daily-growth-signals.github.io/seo-signal-skills/blog/
+hreflangDefault: https://daily-growth-signals.github.io/seo-signal-skills/blog/
+---
+{% set posts = collections.posts or [] %}
+{% set postsEn = posts | postsByLang('en') %}
+{% set postsZh = posts | postsByLang('zh') %}
+
+<script id="blog-page-config" type="application/json">{"kind":"index","lang":"en","altEn":"","altZh":""}</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": {{ (site.baseUrl + "/blog/#collection") | dump | safe }},
+      "url": {{ (site.baseUrl + "/blog/") | dump | safe }},
+      "name": {{ title | dump | safe }},
+      "description": {{ description | dump | safe }},
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": {{ site.name | dump | safe }},
+        "url": {{ (site.baseUrl + "/") | dump | safe }}
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {{ (site.baseUrl + "/") | dump | safe }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": {{ (site.baseUrl + "/blog/") | dump | safe }}
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<main class="blog-main" id="top">
+  <section class="blog-hero section">
+    <div class="blog-inner blog-inner--wide">
+      <p class="blog-kicker" data-i18n="index.kicker">Guides</p>
+      <h1 data-i18n="index.title">Practical guides for SEO &amp; social research</h1>
+      <p class="blog-lede" data-i18n="index.lede">
+        Short, problem-first how-tos for marketers and operators using SignalDig tools—keyword checks, visibility, backlinks, and public social research.
+      </p>
+    </div>
+  </section>
+
+  {% if posts.length == 0 %}
+  <section class="section blog-empty" id="guides-en" aria-labelledby="empty-heading">
+    <div class="blog-inner blog-inner--wide">
+      <div class="blog-empty-card">
+        <h2 id="empty-heading" data-i18n="index.empty.title">Guides are on the way</h2>
+        <p class="section-lede" data-i18n="index.empty.body">
+          We are publishing practical how-tos for SignalDig SEO, AI-search, and social tools. Check back soon, or install the Growth Research Skill to start researching today.
+        </p>
+        <div class="actions">
+          <a class="button button-dark" href="{{ '/#user-type' | url }}" data-i18n="index.empty.cta">Install the Skill</a>
+          <a class="button button-light" href="{{ site.officialSite }}">signaldig.com</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div id="guides-zh" class="blog-lang-anchor" hidden aria-hidden="true"></div>
+  {% else %}
+  <section class="section blog-category" id="guides-en" data-blog-lang="en" aria-labelledby="heading-en">
+    <div class="blog-inner blog-inner--wide">
+      <div class="blog-category-head">
+        <h2 id="heading-en" data-i18n="index.enHeading">English guides</h2>
+      </div>
+      {% if postsEn.length == 0 %}
+      <div class="blog-empty-card">
+        <h2 data-i18n="index.enEmptyTitle">No English guides yet</h2>
+        <p class="section-lede" data-i18n="index.enEmpty">No English guides yet—new ones land here first.</p>
+      </div>
+      {% else %}
+      <ul class="blog-card-grid">
+        {% for post in postsEn %}
+        {% set tool = tools | toolById(post.data.toolId) %}
+        <li>
+          <a class="blog-card" href="{{ post.url | url }}">
+            {% if tool %}
+            <span class="blog-card-tag">{{ tool.name.en }}</span>
+            {% endif %}
+            <strong class="blog-card-title">{{ post.data.title }}</strong>
+            <span class="blog-card-desc">{{ post.data.description }}</span>
+            <span class="blog-card-meta">
+              <time datetime="{{ post.data.date | isoDate }}">{{ post.data.date | isoDate }}</time>
+              <span>EN</span>
+            </span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="section blog-category" id="guides-zh" data-blog-lang="zh" aria-labelledby="heading-zh" hidden>
+    <div class="blog-inner blog-inner--wide">
+      <div class="blog-category-head">
+        <h2 id="heading-zh" data-i18n="index.zhHeading">中文指南</h2>
+      </div>
+      {% if postsZh.length == 0 %}
+      <div class="blog-empty-card">
+        <h2 data-i18n="index.zhEmptyTitle">暂无中文指南</h2>
+        <p class="section-lede" data-i18n="index.zhEmpty">暂无中文指南，稍后会在这里更新。</p>
+      </div>
+      {% else %}
+      <ul class="blog-card-grid">
+        {% for post in postsZh %}
+        {% set tool = tools | toolById(post.data.toolId) %}
+        <li>
+          <a class="blog-card" href="{{ post.url | url }}">
+            {% if tool %}
+            <span class="blog-card-tag">{{ tool.name.zh }}</span>
+            {% endif %}
+            <strong class="blog-card-title">{{ post.data.title }}</strong>
+            <span class="blog-card-desc">{{ post.data.description }}</span>
+            <span class="blog-card-meta">
+              <time datetime="{{ post.data.date | isoDate }}">{{ post.data.date | isoDate }}</time>
+              <span>中文</span>
+            </span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+</main>

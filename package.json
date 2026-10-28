@@ -4,9 +4,13 @@
   "private": true,
   "description": "SignalDig unified Social and SEO growth research skill",
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "build": "eleventy",
+    "dev": "eleventy --serve",
+    "clean": "rm -rf _site"
   },
   "devDependencies": {
+    "@11ty/eleventy": "^3.1.2",
     "husky": "^9.1.7"
   }
 }

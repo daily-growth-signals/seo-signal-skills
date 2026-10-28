@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="{{ lang or 'en' }}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#d8f238" />
+    <meta name="color-scheme" content="light" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="google-site-verification" content="8kKaMQqjVAJnBMS4fe0cyu7LbKaOYIaUudXL1inLmGo" />
+    <meta name="msvalidate.01" content="57978BD4DC4094F09B85BF0885C202D5" />
+    <meta name="description" content="{{ description }}" />
+    <meta name="author" content="{{ site.publisher }}" />
+    <link rel="canonical" href="{{ page.url | absoluteUrl(site) }}" />
+
+    {% if hreflangEn %}<link rel="alternate" hreflang="en" href="{{ hreflangEn | trim }}" />{% endif %}
+    {% if hreflangZh %}<link rel="alternate" hreflang="zh" href="{{ hreflangZh | trim }}" />{% endif %}
+    {% if hreflangDefault %}<link rel="alternate" hreflang="x-default" href="{{ hreflangDefault | trim }}" />{% endif %}
+
+    <meta property="og:type" content="{{ ogType or 'website' }}" />
+    <meta property="og:site_name" content="{{ site.publisher }}" />
+    <meta property="og:title" content="{{ title }}" />
+    <meta property="og:description" content="{{ description }}" />
+    <meta property="og:url" content="{{ page.url | absoluteUrl(site) }}" />
+    <meta property="og:image" content="{{ site.ogImage }}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="{{ 'zh_CN' if lang == 'zh' else 'en_US' }}" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ title }}" />
+    <meta name="twitter:description" content="{{ description }}" />
+    <meta name="twitter:image" content="{{ site.ogImage }}" />
+
+    <title>{{ title }}</title>
+
+    <link rel="icon" href="{{ '/favicon.ico' | url }}" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/favicon-32x32.png' | url }}" />
+    <link rel="apple-touch-icon" href="{{ '/apple-touch-icon.png' | url }}" />
+    <link rel="manifest" href="{{ '/manifest.webmanifest' | url }}" />
+    <link rel="stylesheet" href="{{ '/styles.css' | url }}" />
+    <script src="{{ '/lang-pref.js' | url }}" defer></script>
+    <script src="{{ '/blog.js' | url }}" defer></script>
+  </head>
+  <body class="{{ bodyClass or '' }}">
+    {% include "partials/header.njk" %}
+    {{ content | safe }}
+    {% include "partials/footer.njk" %}
+  </body>
+</html>

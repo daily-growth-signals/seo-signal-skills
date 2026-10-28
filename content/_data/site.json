@@ -1,0 +1,10 @@
+{
+  "name": "SignalDig Growth Research Skill",
+  "publisher": "SignalDig",
+  "origin": "https://daily-growth-signals.github.io",
+  "pathPrefix": "/seo-signal-skills",
+  "baseUrl": "https://daily-growth-signals.github.io/seo-signal-skills",
+  "github": "https://github.com/daily-growth-signals/seo-signal-skills",
+  "officialSite": "https://signaldig.com/",
+  "ogImage": "https://daily-growth-signals.github.io/seo-signal-skills/og-image.png"
+}

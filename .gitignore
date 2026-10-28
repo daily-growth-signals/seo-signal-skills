@@ -1,6 +1,8 @@
 .DS_Store
 .playwright-cli/
 dist/
+_site/
 *.zip
 .AGENT_GUIDE.md
 node_modules/
+.specstory

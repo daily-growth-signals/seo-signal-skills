@@ -2,6 +2,7 @@
 const I18N = {
   en: {
     // Navigation
+    "nav.blog": "Blog",
     "nav.install": "Install",
     "nav.workflow": "Workflow",
     "nav.site": "Official Site",
@@ -112,6 +113,7 @@ const I18N = {
   },
   zh: {
     // Navigation
+    "nav.blog": "指南",
     "nav.install": "安装",
     "nav.workflow": "工作流程",
     "nav.site": "官方网站",
@@ -224,22 +226,32 @@ const I18N = {
 
 let currentLang = 'en';
 
+function syncBlogNavLink(lang) {
+  const blogLink = document.querySelector('[data-nav-blog]');
+  if (!blogLink || !window.LangPref) return;
+  blogLink.href = window.LangPref.blogIndexUrl(lang);
+}
+
 function setLanguage(lang) {
-  currentLang = lang;
-  document.documentElement.lang = lang;
-  
-  // Update all elements with data-i18n attribute
+  const next = (window.LangPref && window.LangPref.normalize(lang)) || lang;
+  if (!next || !I18N[next]) return;
+
+  currentLang = next;
+  if (window.LangPref) window.LangPref.setStoredLang(next);
+  document.documentElement.lang = next;
+
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
-    if (I18N[lang] && I18N[lang][key]) {
-      el.innerHTML = I18N[lang][key];
+    if (I18N[next] && I18N[next][key]) {
+      el.innerHTML = I18N[next][key];
     }
   });
-  
-  // Update language switcher buttons
+
   document.querySelectorAll('.lang-switch button').forEach(btn => {
-    btn.classList.toggle('lang-active', btn.dataset.lang === lang);
+    btn.classList.toggle('lang-active', btn.dataset.lang === next);
   });
+
+  syncBlogNavLink(next);
 }
 
 // ── Skill data ──
@@ -362,14 +374,15 @@ function initTabs() {
 
 // ── Language switching ──
 function initLanguageSwitch() {
-  const langBtns = document.querySelectorAll('.lang-switch button');
-  
-  langBtns.forEach(btn => {
+  const initial =
+    (window.LangPref && window.LangPref.getPreferredLang('en')) || 'en';
+  setLanguage(initial);
+
+  document.querySelectorAll('.lang-switch button').forEach(btn => {
     btn.addEventListener('click', () => {
       const lang = btn.dataset.lang;
       if (lang && lang !== currentLang) {
         setLanguage(lang);
-        // Re-render skill cards with new language
         const activeTab = document.querySelector('.platform-tabs button[aria-selected="true"]');
         if (activeTab) {
           renderSkillCards(activeTab.dataset.platform);

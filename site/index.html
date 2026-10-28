@@ -42,6 +42,7 @@
     <link rel="manifest" href="./manifest.webmanifest" />
 
     <link rel="stylesheet" href="./styles.css" />
+    <script src="./lang-pref.js" defer></script>
     <script src="./app.js" defer></script>
 
     <!-- Structured data -->
@@ -85,14 +86,27 @@
       <a class="brand" href="#top" aria-label="SignalDig home">SD_</a>
       <nav aria-label="Primary navigation">
         <div class="lang-switch">
-          <button data-lang="en" class="lang-active">EN</button>
+          <button type="button" data-lang="en" class="lang-active">EN</button>
           <span>/</span>
-          <button data-lang="zh">中文</button>
+          <button type="button" data-lang="zh">中文</button>
         </div>
-        <a href="#user-type" data-i18n="nav.install">Install</a>
-        <a href="#workflow" data-i18n="nav.workflow">Workflow</a>
-        <a href="https://signaldig.com/" data-i18n="nav.site">Official Site</a>
-        <a href="https://github.com/daily-growth-signals/seo-signal-skills">GitHub</a>
+        <a class="nav-i18n" href="./blog/#guides-en" data-nav-blog>
+          <span data-lang-label="en">Blog</span>
+          <span data-lang-label="zh">指南</span>
+        </a>
+        <a class="nav-i18n" href="#user-type">
+          <span data-lang-label="en">Install</span>
+          <span data-lang-label="zh">安装</span>
+        </a>
+        <a class="nav-i18n" href="#workflow">
+          <span data-lang-label="en">Workflow</span>
+          <span data-lang-label="zh">工作流程</span>
+        </a>
+        <a class="nav-i18n" href="https://signaldig.com/" target="_blank" rel="noopener noreferrer">
+          <span data-lang-label="en">Official Site</span>
+          <span data-lang-label="zh">官方网站</span>
+        </a>
+        <a href="https://github.com/daily-growth-signals/seo-signal-skills" target="_blank" rel="noopener noreferrer">GitHub</a>
       </nav>
     </header>
 
@@ -532,7 +546,7 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
     <footer>
       <strong>SignalDig</strong>
       <span data-i18n="footer.tagline">Evidence before opinion.</span>
-      <a class="link" href="https://signaldig.com/" data-i18n="footer.site">Official site: signaldig.com</a>
+      <a class="link" href="https://signaldig.com/" target="_blank" rel="noopener noreferrer" data-i18n="footer.site">Official site: signaldig.com</a>
     </footer>
   </body>
 </html>
