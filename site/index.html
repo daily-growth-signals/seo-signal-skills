@@ -117,8 +117,8 @@
           <p data-i18n="hero.subtitle">Research public conversations, keywords, SERPs, trends, competitors, GEO visibility, backlinks, rankings, and traffic through one SignalDig MCP connection.</p>
           <div class="actions">
             <a class="button button-dark" href="#user-type" data-i18n="hero.btnInstall">Install the Skill</a>
+            <a class="button button-light" href="https://signaldig.com/agent-setup" target="_blank" rel="noopener noreferrer" data-locale-href="agent-setup" data-i18n="hero.btnAiSetup">AI one-click setup</a>
             <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills/releases/latest" data-i18n="hero.btnDownload">Latest release</a>
-            <a class="button button-light" href="https://github.com/daily-growth-signals/seo-signal-skills">View on GitHub</a>
           </div>
         </div>
         <div class="terminal" aria-label="Repository clone command">
@@ -129,55 +129,125 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
       </section>
 
       <section id="features" class="section features">
-        <h2 data-i18n="features.title">What you can research</h2>
-        <p class="section-lede" data-i18n="features.subtitle">The Skill chooses one of two public research tools and keeps the request within the scope you asked for.</p>
+        <h2 data-i18n="features.title">What data you get after connecting</h2>
+        <p class="section-lede" data-i18n="features.subtitle">The Skill routes natural-language research through one SignalDig MCP connection. Below is the data currently available — platforms, returned fields, and research tasks.</p>
 
-        <div class="feature-cards">
-          <article class="feature-card">
+        <div class="data-coverage">
+          <h3 data-i18n="features.coverage.title">Data sources available now</h3>
+          <p class="step-hint" data-i18n="features.coverage.intro">Public and licensed market data currently returned by the service. Coverage depends on the query and source availability.</p>
+          <div class="coverage-grid">
+            <article class="coverage-card">
+              <h4 data-i18n="features.coverage.search.label">Search</h4>
+              <p class="coverage-platforms">Google · Bing</p>
+              <p data-i18n="features.coverage.search.data">Monthly keyword demand and related terms, Google Trends relative interest, and current Google or Bing SERPs.</p>
+            </article>
+            <article class="coverage-card">
+              <h4 data-i18n="features.coverage.ai.label">AI search</h4>
+              <p class="coverage-platforms">Google AI Mode</p>
+              <p data-i18n="features.coverage.ai.data">Google AI Mode results, brand or domain mentions, cited pages, and current visibility metrics.</p>
+            </article>
+            <article class="coverage-card">
+              <h4 data-i18n="features.coverage.social.label">Social and content</h4>
+              <p class="coverage-platforms">X · Reddit · Zhihu · Xiaohongshu · Threads</p>
+              <p data-i18n="features.coverage.social.data">Public posts, articles, profiles, trends, and the engagement metrics returned by each platform.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="capability-grid">
+          <article class="capability-card">
             <span class="feature-num">01</span>
-            <h3 data-i18n="features.s1.title">Public social research</h3>
-            <code>research_social_signals</code>
-            <p data-i18n="features.s1.desc">Find public topic discussions on X, Reddit, Xiaohongshu, Zhihu, and Threads. Retrieve supported public posts and profiles without widening the requested platform or topic.</p>
+            <h3 data-i18n="features.c1.title">Keyword &amp; search research</h3>
+            <p class="capability-get" data-i18n="features.c1.get">You get keyword metrics, trend data, and the current SERP to judge topic demand and competition.</p>
+            <p data-i18n="features.c1.desc">Google Ads monthly volume, related terms, Google Trends relative interest, and live Google or Bing SERP snapshots.</p>
           </article>
-          <article class="feature-card">
+          <article class="capability-card">
             <span class="feature-num">02</span>
-            <h3 data-i18n="features.s2.title">SEO research</h3>
-            <code>research_seo_signals</code>
-            <p data-i18n="features.s2.desc">Check keyword demand, related queries, SERPs, trends, competitors, GEO visibility, backlinks, ranked keywords, and traffic evidence.</p>
+            <h3 data-i18n="features.c2.title">GEO &amp; AI search visibility</h3>
+            <p class="capability-get" data-i18n="features.c2.get">You get mentions, cited pages, and visibility metrics for a specific market, language, and device snapshot.</p>
+            <p data-i18n="features.c2.desc">Google AI Mode results, AI search demand estimates, brand or domain mentions, and frequently cited pages.</p>
+          </article>
+          <article class="capability-card">
+            <span class="feature-num">03</span>
+            <h3 data-i18n="features.c3.title">Search competitor research</h3>
+            <p class="capability-get" data-i18n="features.c3.get">You get search overlap, estimated ranked keywords, and traffic estimates to shortlist sites worth comparing.</p>
+            <p data-i18n="features.c3.desc">Domains co-appearing in SERPs, model-estimated ranked keywords, and estimated organic/paid search traffic.</p>
+          </article>
+          <article class="capability-card">
+            <span class="feature-num">04</span>
+            <h3 data-i18n="features.c4.title">Backlink research</h3>
+            <p class="capability-get" data-i18n="features.c4.get">You get source pages, target pages, anchor text, and live/lost status for links worth verifying next.</p>
+            <p data-i18n="features.c4.desc">Observable backlinks and referring domains with link attributes and timing — not a quality score by itself.</p>
+          </article>
+          <article class="capability-card">
+            <span class="feature-num">05</span>
+            <h3 data-i18n="features.c5.title">Social &amp; content demand</h3>
+            <p class="capability-get" data-i18n="features.c5.get">You get source links, publish times, and platform-native metrics to find repeated questions and content angles.</p>
+            <p data-i18n="features.c5.desc">Public posts and profiles on X, Reddit, Zhihu, Xiaohongshu, and Threads within the platforms and topics you asked for.</p>
           </article>
         </div>
 
-        <div class="use-cases">
-          <h3 data-i18n="features.uc.title">When to use it</h3>
-          <ul class="use-case-list">
-            <li data-i18n="features.uc.1">Compare keyword demand before choosing a page topic.</li>
-            <li data-i18n="features.uc.2">Check whether a social trend has enough public evidence to investigate.</li>
-            <li data-i18n="features.uc.3">Review a domain's competitors, backlinks, rankings, traffic, or GEO visibility.</li>
-            <li data-i18n="features.uc.4">Research a market or language with the requested country, language, and platform boundaries intact.</li>
-          </ul>
+        <div class="feature-tools">
+          <article class="feature-card">
+            <span class="feature-num">MCP</span>
+            <h3 data-i18n="features.s1.title">Public social research</h3>
+            <code>research_social_signals</code>
+            <p data-i18n="features.s1.desc">Find public topic discussions on X, Reddit, Xiaohongshu, Zhihu, and Threads without widening the requested platform or topic.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-num">MCP</span>
+            <h3 data-i18n="features.s2.title">SEO research</h3>
+            <code>research_seo_signals</code>
+            <p data-i18n="features.s2.desc">Check keyword demand, SERPs, trends, competitors, GEO visibility, backlinks, ranked keywords, and traffic evidence.</p>
+          </article>
+        </div>
+
+        <div class="features-cta">
+          <a class="button button-dark" href="https://signaldig.com/features" target="_blank" rel="noopener noreferrer" data-locale-href="features" data-i18n="features.cta">See full data catalog on signaldig.com →</a>
         </div>
       </section>
 
       <section id="user-type" class="section user-type-section">
         <h2 data-i18n="userType.title">Choose Your Installation Method</h2>
-        <p class="section-lede" data-i18n="userType.subtitle">Select your user type to get the right installation guide for you.</p>
+        <p class="section-lede" data-i18n="userType.subtitle">Pick the path that matches your client. AI one-click and marketplace installs are usually fastest; terminal and ZIP are for manual control.</p>
         
-        <div class="user-type-cards">
+        <div class="user-type-cards user-type-cards-4">
+          <article class="user-type-card user-type-card-featured" data-user="ai">
+            <div class="user-type-kicker" data-i18n="userType.ai.kicker">Recommended</div>
+            <h3 data-i18n="userType.ai.title">AI one-click setup</h3>
+            <p data-i18n="userType.ai.desc">Generate an API key on signaldig.com, let your AI configure MCP, then install the Skill.</p>
+            <ul>
+              <li data-i18n="userType.ai.feature1">Works with Codex, Claude, Cursor, Grok, WorkBuddy and more</li>
+              <li data-i18n="userType.ai.feature2">Copy-ready prompts — no guesswork</li>
+              <li data-i18n="userType.ai.feature3">Includes MCP connection check</li>
+            </ul>
+            <button class="button button-dark select-user-btn" data-select="ai" data-i18n="userType.btnSelect">Select This Method</button>
+          </article>
+
+          <article class="user-type-card" data-user="marketplace">
+            <h3 data-i18n="userType.market.title">ClawHub / WorkBuddy</h3>
+            <p data-i18n="userType.market.desc">Install research-growth-signals from a Skill marketplace without cloning the repo.</p>
+            <ul>
+              <li data-i18n="userType.market.feature1">ClawHub: open and install research-growth-signals</li>
+              <li data-i18n="userType.market.feature2">WorkBuddy: search SignalDig Growth Research in-app</li>
+              <li data-i18n="userType.market.feature3">Still needs a SignalDig MCP API key</li>
+            </ul>
+            <button class="button button-light select-user-btn" data-select="marketplace" data-i18n="userType.btnSelect">Select This Method</button>
+          </article>
+
           <article class="user-type-card" data-user="developer">
-            <div class="user-type-icon">⚡</div>
-            <h3 data-i18n="userType.dev.title">Developer / 开发者</h3>
-            <p data-i18n="userType.dev.desc">Clone the repository and copy the Skill from a terminal.</p>
+            <h3 data-i18n="userType.dev.title">Developer</h3>
+            <p data-i18n="userType.dev.desc">Clone the repository and copy the Skill from a terminal. macOS/Linux and Windows commands included.</p>
             <ul>
               <li data-i18n="userType.dev.feature1">Current repository version</li>
               <li data-i18n="userType.dev.feature2">Update with <code>git pull</code></li>
               <li data-i18n="userType.dev.feature3">Inspect the complete source</li>
             </ul>
-            <button class="button button-dark select-user-btn" data-select="developer" data-i18n="userType.btnSelect">Select This Method</button>
+            <button class="button button-light select-user-btn" data-select="developer" data-i18n="userType.btnSelect">Select This Method</button>
           </article>
 
           <article class="user-type-card" data-user="non-developer">
-            <div class="user-type-icon">📦</div>
-            <h3 data-i18n="userType.nondev.title">Non-Developer / 非开发者</h3>
+            <h3 data-i18n="userType.nondev.title">ZIP download</h3>
             <p data-i18n="userType.nondev.desc">Download the packaged Skill from GitHub Releases. Git is not required.</p>
             <ul>
               <li data-i18n="userType.nondev.feature1">Versioned release archive</li>
@@ -215,17 +285,85 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
         </div>
       </section>
 
+      <!-- AI one-click setup -->
+      <section id="install-ai" class="section install install-ai-section" style="display: none;">
+        <h2 data-i18n="install.ai.title">AI one-click setup</h2>
+        <p class="section-lede" data-i18n="install.ai.subtitle">
+          The official SignalDig setup page generates your API key, gives copy-ready MCP and Skill prompts, and includes a connection check. Use it when you want the AI client to configure itself.
+        </p>
+        <div class="install-step">
+          <div class="extract-steps">
+            <div class="extract-step-item">
+              <span class="extract-num">1</span>
+              <p data-i18n="install.ai.step1">Open the Agent setup page and sign in to create a SignalDig API key (shown once).</p>
+            </div>
+            <div class="extract-step-item">
+              <span class="extract-num">2</span>
+              <p data-i18n="install.ai.step2">Copy the MCP setup prompt into your AI client. Enter the key only in a protected Secret / password field — never in chat.</p>
+            </div>
+            <div class="extract-step-item">
+              <span class="extract-num">3</span>
+              <p data-i18n="install.ai.step3">Copy the Skill install prompt so the client installs <code>research-growth-signals</code>, or use ClawHub / WorkBuddy below if your client prefers a marketplace.</p>
+            </div>
+          </div>
+          <div class="api-key-note">
+            <span data-i18n="install.ai.note">Recommended path for most users — MCP, API key, and Skill install in one flow.</span>
+            <a class="button button-dark" href="https://signaldig.com/agent-setup" target="_blank" rel="noopener noreferrer" data-locale-href="agent-setup" data-i18n="install.ai.cta">Open AI one-click setup →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Marketplace Installation -->
+      <section id="install-market" class="section install install-market-section" style="display: none;">
+        <h2 data-i18n="install.market.title">Install from ClawHub or WorkBuddy</h2>
+        <p class="section-lede" data-i18n="install.market.subtitle">
+          Marketplace installs put <code>research-growth-signals</code> into the client without cloning this repo. You still need a SignalDig MCP connection and API key.
+        </p>
+
+        <div class="marketplace-grid">
+          <article class="marketplace-card">
+            <h3 data-i18n="install.market.clawhub.title">Install from ClawHub</h3>
+            <p data-i18n="install.market.clawhub.body">Open ClawHub and install the maintained <code>research-growth-signals</code> Skill. Historical SignalDig Skills are compatibility entries and are not needed for new setups.</p>
+            <a class="button button-dark" href="https://clawhub.ai/jerrykik/skills/research-growth-signals" target="_blank" rel="noopener noreferrer" data-i18n="install.market.clawhub.cta">Open ClawHub →</a>
+          </article>
+          <article class="marketplace-card">
+            <h3 data-i18n="install.market.workbuddy.title">WorkBuddy: install in the app</h3>
+            <p data-i18n="install.market.workbuddy.body">In WorkBuddy Skill search, find and install <strong>SignalDig Growth Research</strong>. You do not need to download the ZIP first.</p>
+            <div class="extract-steps">
+              <div class="extract-step-item">
+                <span class="extract-num">1</span>
+                <p data-i18n="install.market.workbuddy.step1">Open WorkBuddy and go to Skill search.</p>
+              </div>
+              <div class="extract-step-item">
+                <span class="extract-num">2</span>
+                <p data-i18n="install.market.workbuddy.step2">Search for <strong>SignalDig Growth Research</strong> or <code>research-growth-signals</code>.</p>
+              </div>
+              <div class="extract-step-item">
+                <span class="extract-num">3</span>
+                <p data-i18n="install.market.workbuddy.step3">Install that result, then connect SignalDig MCP with your API key.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="api-key-note">
+          <span data-i18n="install.apikey.note">Get your API key from your SignalDig workspace dashboard.</span>
+          <a class="button button-light" href="https://signaldig.com/agent-setup" target="_blank" rel="noopener noreferrer" data-locale-href="agent-setup" data-i18n="install.apikey.cta">Get your API Key →</a>
+        </div>
+      </section>
+
       <!-- Developer Installation -->
       <section id="install-dev" class="section install install-dev-section" style="display: none;">
         <h2 data-i18n="install.dev.title">Developer Installation</h2>
         <p class="section-lede" data-i18n="install.dev.subtitle">
           Clone the repository and copy <code>research-growth-signals</code> into your agent's skills directory.
-          The repository contains one maintained Skill and one SignalDig MCP connection.
+          Commands are provided for macOS/Linux and Windows.
         </p>
 
         <!-- Step 1: Clone -->
         <div class="install-step">
           <h3 data-i18n="install.step1">Step 1: Clone the repository</h3>
+          <p class="step-hint" data-i18n="install.step1.hint">Same clone command on every OS. On Windows, run it in Git Bash, PowerShell (with Git installed), or Windows Terminal.</p>
           <div class="code-row">
             <pre><code>git clone https://github.com/daily-growth-signals/seo-signal-skills.git</code></pre>
             <button type="button" data-copy="git clone https://github.com/daily-growth-signals/seo-signal-skills.git">Copy</button>
@@ -234,8 +372,13 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
 
         <!-- Step 2: Platform tabs + skill list -->
         <div class="install-step">
-          <h3 data-i18n="install.step2">Step 2: Choose your agent and copy the Skill</h3>
-          <p class="step-hint" data-i18n="install.step2.hint">Select a client to get the correct destination folder.</p>
+          <h3 data-i18n="install.step2">Step 2: Choose your OS, agent, and copy the Skill</h3>
+          <p class="step-hint" data-i18n="install.step2.hint">Pick your operating system first, then the AI client. Run the copy command from the parent folder of <code>seo-signal-skills</code> (the directory that contains the cloned repo).</p>
+
+          <div class="os-tabs" role="tablist" aria-label="Operating system">
+            <button type="button" role="tab" aria-selected="true" data-os="unix">macOS / Linux</button>
+            <button type="button" role="tab" aria-selected="false" data-os="windows">Windows</button>
+          </div>
 
           <div class="platform-tabs" role="tablist" aria-label="Agent platform">
             <button role="tab" aria-selected="true" data-platform="claude">Claude Code</button>
@@ -243,6 +386,8 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
             <button role="tab" aria-selected="false" data-platform="cursor">Cursor</button>
             <button role="tab" aria-selected="false" data-platform="windsurf">Windsurf</button>
           </div>
+
+          <p class="step-hint os-hint" id="os-hint" data-i18n="install.os.unix.hint">macOS / Linux: run the command in Terminal from the parent of the cloned repo.</p>
 
           <!-- Skill cards rendered by JS -->
           <div id="skill-cards" class="skill-cards">
@@ -299,7 +444,7 @@ daily-growth-signals/seo-signal-skills.git</code></pre>
 
             <div class="mcp-service-card">
               <h4>Codex</h4>
-              <p class="mcp-service-desc"><code>~/.codex/config.toml</code></p>
+              <p class="mcp-service-desc" data-i18n="install.mcp.codex.path">macOS/Linux: <code>~/.codex/config.toml</code> · Windows: <code>%USERPROFILE%\.codex\config.toml</code></p>
               <div class="code-row code-row-small">
                 <pre><code>[mcp_servers.signaldig]
 url = "https://mcp.signaldig.com/mcp"
@@ -321,7 +466,7 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
 
             <div class="mcp-service-card">
               <h4>Windsurf</h4>
-              <p class="mcp-service-desc"><code>~/.codeium/mcp_config.json</code></p>
+              <p class="mcp-service-desc" data-i18n="install.mcp.windsurf.path">macOS/Linux: <code>~/.codeium/mcp_config.json</code> · Windows: <code>%USERPROFILE%\.codeium\mcp_config.json</code></p>
               <div class="code-row code-row-small">
                 <pre><code>{
   "mcpServers": {
@@ -363,9 +508,18 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
             </div>
           </div>
 
+          <div class="windows-env-note">
+            <h4 data-i18n="install.windowsEnv.title">Windows: set SIGNALDIG_API_KEY first</h4>
+            <ol class="windows-env-steps">
+              <li data-i18n="install.windowsEnv.1">Press the Windows key, search for, and open “Edit environment variables for your account.”</li>
+              <li data-i18n="install.windowsEnv.2">Under User variables, click New. Name: <code>SIGNALDIG_API_KEY</code>. Value: your SignalDig API key.</li>
+              <li data-i18n="install.windowsEnv.3">OK to save. Fully quit and reopen your AI client. <code>%USERPROFILE%</code> is your Windows user folder.</li>
+            </ol>
+          </div>
+
           <div class="api-key-note">
             <span data-i18n="install.apikey.note">Get your API key from your SignalDig workspace dashboard.</span>
-            <a class="button button-light" href="https://signaldig.com/agent-setup" target="_blank" rel="noopener" data-i18n="install.apikey.cta">Get your API Key →</a>
+            <a class="button button-light" href="https://signaldig.com/agent-setup" target="_blank" rel="noopener noreferrer" data-locale-href="agent-setup" data-i18n="install.apikey.cta">Get your API Key →</a>
           </div>
         </div>
       </section>
@@ -460,18 +614,22 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
             <div class="agent-path-card">
               <h4>Claude Code</h4>
               <code>~/.claude/skills/</code>
+              <code class="path-windows">%USERPROFILE%\.claude\skills\</code>
             </div>
             <div class="agent-path-card">
               <h4>Codex</h4>
               <code>~/.codex/skills/</code>
+              <code class="path-windows">%USERPROFILE%\.codex\skills\</code>
             </div>
             <div class="agent-path-card">
               <h4>Cursor</h4>
               <code>~/.cursor/skills/</code>
+              <code class="path-windows">%USERPROFILE%\.cursor\skills\</code>
             </div>
             <div class="agent-path-card">
               <h4>Windsurf</h4>
               <code>~/.windsurf/skills/</code>
+              <code class="path-windows">%USERPROFILE%\.windsurf\skills\</code>
             </div>
           </div>
 
@@ -527,12 +685,12 @@ header: Authorization: Bearer &lt;SIGNALDIG_API_KEY&gt;</code></pre>
             </div>
             <div class="api-key-note">
               <span data-i18n="install.apikey.note">Get your API key from your SignalDig workspace dashboard.</span>
-              <a class="button button-light" href="https://signaldig.com/agent-setup" target="_blank" rel="noopener" data-i18n="install.apikey.cta">Get your API Key →</a>
+              <a class="button button-light" href="https://signaldig.com/agent-setup" target="_blank" rel="noopener noreferrer" data-locale-href="agent-setup" data-i18n="install.apikey.cta">Get your API Key →</a>
             </div>
             <p class="mcp-key-hint" data-i18n="install.nondev.mcpKeyHint">
               The API Key is like your <strong>data pass</strong> for SignalDig services. Keep it private — don't paste it into chats you don't trust.
             </p>
-            <a class="button button-light" href="https://signaldig.com/agent-setup" target="_blank" rel="noopener" data-i18n="install.nondev.viewDocs">View Full Documentation →</a>
+            <a class="button button-light" href="https://signaldig.com/agent-setup" target="_blank" rel="noopener noreferrer" data-locale-href="agent-setup" data-i18n="install.nondev.viewDocs">View Full Documentation →</a>
           </div>
         </div>
       </section>
