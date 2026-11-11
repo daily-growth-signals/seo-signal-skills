@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SEO research">
+  <path fill="#a9b0bb" d="m270.987 303.479 32.424-32.425 56.759 56.759-32.425 32.424z"/>
+  <path fill="#d5a889" d="m321.444 346.224 24.78-24.78c8.185-8.185 21.579-8.185 29.764 0l113.873 113.873c8.185 8.185 8.185 21.579 0 29.764l-24.78 24.78c-8.185 8.185-21.579 8.185-29.764 0L321.444 375.988c-8.185-8.185-8.185-21.579 0-29.764"/>
+  <circle cx="180.098" cy="180.098" r="164.098" fill="#66d4f1"/>
+  <circle cx="180.098" cy="180.098" r="118.538" fill="#f4f6f8"/>
+  <rect x="163.777" y="105.631" width="301.246" height="148.933" rx="15.348" fill="#f76c82"/>
+  <text x="196" y="221" font-family="Arial, sans-serif" font-size="108" font-weight="700" letter-spacing="-7" fill="#000">SEO</text>
+  <path fill="none" stroke="#000" stroke-width="14" stroke-linecap="round" d="M180 16a164 164 0 1 0 0 328 164 164 0 0 0 120-52"/>
+</svg>

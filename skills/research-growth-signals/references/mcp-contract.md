@@ -110,8 +110,16 @@ Submit these through `research_social_signals`. They return an `analysis_id`, us
 | `zhihu_hot_recommend` | Optional integer `offset`, integer `page_number`, and `session_token` | Reuse returned paging values unchanged |
 | `zhihu_preset_search` | No target required | None |
 | `xiaohongshu_search_suggestions` | `target.keyword`; empty string requests popular recommendations | None |
+| `youtube_search` | `target.keyword`; named-country `target.country_code`; optional `language_code`, `page_number`. See the Skill's YouTube section. | Select one page by number |
+| `youtube_channel_search` | `target.keyword` or returned `continuation_token` | Reuse returned token |
+| `youtube_channel_id` | `target.channel_url` | None |
+| `youtube_channel_detail` | `target.channel_id` or `target.channel_url` | None |
+| `youtube_channel_videos` | `target.channel_id` or `target.channel_url` | Reuse returned token |
+| `youtube_video_comments` | `target.video_id`; optional `sort_by` | Reuse first-level comment-list token |
 
 Zhihu and Xiaohongshu resource results expose submitted public parameters, capture time, and sanitized business `data`; provider envelope metadata is not part of the public contract. Threads is currently available only as a topic-search platform through `research_social_signals`; the unified public schema does not expose Threads profile, user-post, or single-post retrieval. The live input schema takes precedence over this summary.
+
+YouTube is a named Social resource operation. Use the stable `channel_id` returned by URL resolution or search; a handle is not an ID. Read its terminal records from `social_resources`, and follow the live schema for optional fields and pagination.
 
 ## Tool: `research_seo_signals`
 

@@ -3,12 +3,12 @@ name: research-growth-signals
 description: Research traceable public social and SEO signals through SignalDig, including bounded Zhihu and Xiaohongshu resources plus Threads topic signals. Use when a user asks for social discussions, posts, profiles, Zhihu questions or trends, search suggestions, keyword demand, SERP, competitors, GEO, backlinks, rankings, or traffic evidence. Use the unified research tools and never expose providers, workflows, or bindings.
 slug: research-growth-signals
 displayName: SignalDig Growth Research
-version: 2.2.0
+version: 2.2.1
 summary: Retrieve traceable public social and SEO signals through SignalDig's unified research tools.
 tags: [seo, social, mcp, signaldig, research]
 license: MIT
 metadata:
-  version: "2.2.0"
+  version: "2.2.1"
   homepage: "https://signaldig.com/"
 ---
 
@@ -134,6 +134,20 @@ These resource results contain submitted public parameters, capture time, and sa
 ### Threads
 
 For keyword search, use `research_social_signals` with `scope.platforms=["threads"]`. Treat results as query-bounded observations, not exhaustive platform coverage. The current unified public schema does not expose Threads profile, user-post, or single-post retrieval; do not construct a direct Threads tool name.
+
+### YouTube
+
+Submit YouTube requests through `research_social_signals` with a named `youtube_*` operation and the matching `target`. Poll the returned `analysis_id` and read `dataset="social_resources"`. Do not include topic `scope`, `search`, or result budget.
+
+- `youtube_search`: set `target.keyword` and use the uppercase two-letter ISO country code in `target.country_code` when the user names a country. Optional `target.language_code` preserves the query language, and `target.page_number` selects one results page. For a Brazil search, use `target={"keyword":"grok免费","country_code":"BR","language_code":"zh","page_number":1}`. The service resolves the country internally; never send native region codes or location fields. Preserve each returned video, channel, or playlist item type.
+- `youtube_channel_search`: set `target.keyword` for the first page; reuse its returned `continuation_token` for a later page.
+- `youtube_channel_id`: set `target.channel_url` to resolve a YouTube channel URL to its stable `channel_id`.
+- `youtube_channel_detail` and `youtube_channel_videos`: set either `target.channel_id` or `target.channel_url`; the service resolves a URL when supplied. Reuse a returned video-list continuation token unchanged.
+- `youtube_video_comments`: set the 11-character `target.video_id`; optional `sort_by` is `top` or `newest`. Reuse the first-level comment-list continuation token unchanged. A reply continuation token is not a comment-list page token.
+
+The stable channel ID starts with `UC`. A handle such as `@username` is not a channel ID. Never derive an ID or a continuation token from a URL or handle. Report only fields returned by the live result.
+
+Apply requested publication-date and view-count thresholds to fields in returned search results. Report missing metrics or insufficient coverage instead of claiming the search enforced those thresholds.
 
 ## SEO Submission
 
