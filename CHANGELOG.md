@@ -6,6 +6,12 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 ### Changes
 
+- To be added.
+
+## [2.2.1] - 2026-11-11
+
+### Changes
+
 - Social research now supports YouTube: search videos by keyword with an optional country and language, find and inspect channels (details and video lists), and read video comments ordered by top or newest. Results are returned with their actual item type (video, channel, or playlist).
 - YouTube channel references are resolved to stable channel IDs by the service, and paging continues with returned tokens. If a requested date or view-count threshold cannot be enforced by the search, the skill reports the actual coverage instead of implying the filter was applied.
 
