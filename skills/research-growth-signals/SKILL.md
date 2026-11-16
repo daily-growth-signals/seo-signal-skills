@@ -1,14 +1,14 @@
 ---
 name: research-growth-signals
-description: Research traceable public social and SEO signals through SignalDig, including bounded Zhihu and Xiaohongshu resources plus Threads topic signals. Use when a user asks for social discussions, posts, profiles, Zhihu questions or trends, search suggestions, keyword demand, SERP, competitors, GEO, backlinks, rankings, or traffic evidence. Use the unified research tools and never expose providers, workflows, or bindings.
+description: Research traceable public social and SEO signals through SignalDig, including bounded Zhihu, Xiaohongshu, and Instagram resources plus Threads topic signals. Use when a user asks for social discussions, posts, profiles, Zhihu questions or trends, search suggestions, keyword demand, SERP, competitors, GEO, backlinks, rankings, or traffic evidence. Use the unified research tools and never expose providers, workflows, or bindings.
 slug: research-growth-signals
 displayName: SignalDig Growth Research
-version: 2.2.1
+version: 2.2.2
 summary: Retrieve traceable public social and SEO signals through SignalDig's unified research tools.
 tags: [seo, social, mcp, signaldig, research]
 license: MIT
 metadata:
-  version: "2.2.1"
+  version: "2.2.2"
   homepage: "https://signaldig.com/"
 ---
 
@@ -148,6 +148,21 @@ Submit YouTube requests through `research_social_signals` with a named `youtube_
 The stable channel ID starts with `UC`. A handle such as `@username` is not a channel ID. Never derive an ID or a continuation token from a URL or handle. Report only fields returned by the live result.
 
 Apply requested publication-date and view-count thresholds to fields in returned search results. Report missing metrics or insufficient coverage instead of claiming the search enforced those thresholds.
+
+### Instagram
+
+Submit Instagram requests through `research_social_signals` with a named `instagram_*` operation and the matching `target`. Poll the returned `analysis_id` and read `dataset="social_resources"`. Do not include topic `scope`, `search`, or result budget, and do not add Instagram to topic-search `scope.platforms`.
+
+- `instagram_general_search`: set `target.keyword`; for a later page, pass the returned token as `target.pagination_token` unchanged.
+- `instagram_search_users`: set `target.keyword`. This operation does not accept a continuation token.
+- `instagram_hashtag_posts`: set `target.keyword` to a hashtag name without `#`. Optionally set `target.instagram_feed_type` to `top`, `recent`, or `reels` (default `top`). For a later page, pass the returned token as `target.pagination_token` unchanged.
+- `instagram_user_brief`: set both numeric `target.instagram_user_id` and `target.instagram_username`.
+- `instagram_user_posts`: set `target.instagram_username`. The first page may set `count`; forward pages use `first` with `after`, and backward pages use `last` with `before`. Keep returned cursors unchanged.
+- `instagram_post_detail`: set numeric `target.instagram_media_id` or `target.instagram_post_url` with a public `/p/`, `/reel/`, `/reels/`, or `/tv/` Instagram URL. The media ID takes precedence when both are supplied.
+- `instagram_post_comments`: set `target.instagram_code_or_url` to a shortcode or public post URL. Optionally set `target.instagram_comment_sort_by` to `recent` (default) or `popular`. For a later page, pass the returned token as `target.pagination_token` unchanged.
+- `instagram_shortcode_to_media_id`: set `target.instagram_shortcode` to the shortcode alone. Use the returned media ID in a separate detail request when needed.
+
+Each operation reads one bounded page. Report only fields present in the returned public data and do not infer missing engagement metrics or account details.
 
 ## SEO Submission
 

@@ -8,6 +8,12 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [2.2.2] - 2026-11-16
+
+### Changes
+
+- Instagram resource research now supports general search, user search, hashtag posts, brief public profiles, paged user posts, post details and comments, and shortcode-to-media-ID conversion through the existing Social research tool. Use supported returned pagination tokens unchanged.
+
 ## [2.2.1] - 2026-11-11
 
 ### Changes

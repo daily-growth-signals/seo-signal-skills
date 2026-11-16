@@ -116,8 +116,16 @@ Submit these through `research_social_signals`. They return an `analysis_id`, us
 | `youtube_channel_detail` | `target.channel_id` or `target.channel_url` | None |
 | `youtube_channel_videos` | `target.channel_id` or `target.channel_url` | Reuse returned token |
 | `youtube_video_comments` | `target.video_id`; optional `sort_by` | Reuse first-level comment-list token |
+| `instagram_general_search` | `target.keyword`; optional `target.pagination_token` | Pass returned token as `target.pagination_token` |
+| `instagram_search_users` | `target.keyword` | None |
+| `instagram_hashtag_posts` | `target.keyword` without `#`; optional `target.instagram_feed_type` (`top`, `recent`, `reels`) and `target.pagination_token` | Pass returned token as `target.pagination_token` |
+| `instagram_user_brief` | Numeric `target.instagram_user_id` and `target.instagram_username` | None |
+| `instagram_user_posts` | `target.instagram_username`; optional `count`, `first`, `after`, `last`, `before` | Forward: `first` + `after`; backward: `last` + `before` |
+| `instagram_post_detail` | Numeric `target.instagram_media_id` or public `target.instagram_post_url`; ID takes precedence | None |
+| `instagram_post_comments` | `target.instagram_code_or_url` (shortcode or public post URL); optional `target.instagram_comment_sort_by` (`recent` or `popular`) and `target.pagination_token` | Pass returned token as `target.pagination_token` |
+| `instagram_shortcode_to_media_id` | `target.instagram_shortcode` without the surrounding URL | None |
 
-Zhihu and Xiaohongshu resource results expose submitted public parameters, capture time, and sanitized business `data`; provider envelope metadata is not part of the public contract. Threads is currently available only as a topic-search platform through `research_social_signals`; the unified public schema does not expose Threads profile, user-post, or single-post retrieval. The live input schema takes precedence over this summary.
+Resource results expose submitted public parameters, capture time, and sanitized business `data`; provider envelope metadata is not part of the public contract. Threads is currently available only as a topic-search platform through `research_social_signals`; the unified public schema does not expose Threads profile, user-post, or single-post retrieval. The live input schema takes precedence over this summary.
 
 YouTube is a named Social resource operation. Use the stable `channel_id` returned by URL resolution or search; a handle is not an ID. Read its terminal records from `social_resources`, and follow the live schema for optional fields and pagination.
 
