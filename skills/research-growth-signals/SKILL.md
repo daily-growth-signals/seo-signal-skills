@@ -3,12 +3,12 @@ name: research-growth-signals
 description: Research traceable public social and SEO signals through SignalDig, including bounded Zhihu, Xiaohongshu, and Instagram resources plus Threads topic signals. Use when a user asks for social discussions, posts, profiles, Zhihu questions or trends, search suggestions, keyword demand, SERP, competitors, GEO, backlinks, rankings, or traffic evidence. Use the unified research tools and never expose providers, workflows, or bindings.
 slug: research-growth-signals
 displayName: SignalDig Growth Research
-version: 2.2.2
+version: 2.2.3
 summary: Retrieve traceable public social and SEO signals through SignalDig's unified research tools.
 tags: [seo, social, mcp, signaldig, research]
 license: MIT
 metadata:
-  version: "2.2.2"
+  version: "2.2.3"
   homepage: "https://signaldig.com/"
 ---
 
@@ -156,13 +156,14 @@ Submit Instagram requests through `research_social_signals` with a named `instag
 - `instagram_general_search`: set `target.keyword`; for a later page, pass the returned token as `target.pagination_token` unchanged.
 - `instagram_search_users`: set `target.keyword`. This operation does not accept a continuation token.
 - `instagram_hashtag_posts`: set `target.keyword` to a hashtag name without `#`. Optionally set `target.instagram_feed_type` to `top`, `recent`, or `reels` (default `top`). For a later page, pass the returned token as `target.pagination_token` unchanged.
-- `instagram_user_brief`: set both numeric `target.instagram_user_id` and `target.instagram_username`.
-- `instagram_user_posts`: set `target.instagram_username`. The first page may set `count`; forward pages use `first` with `after`, and backward pages use `last` with `before`. Keep returned cursors unchanged.
-- `instagram_post_detail`: set numeric `target.instagram_media_id` or `target.instagram_post_url` with a public `/p/`, `/reel/`, `/reels/`, or `/tv/` Instagram URL. The media ID takes precedence when both are supplied.
+- `instagram_user_brief`: set exactly one of numeric `target.instagram_user_id` or `target.instagram_username`.
+- `instagram_user_info`: set exactly one of numeric `target.instagram_user_id` or `target.instagram_username` to view the public user profile.
+- `instagram_user_posts`: set exactly one of `target.instagram_username` or numeric `target.instagram_user_id`. For a later page, pass the returned token as `target.pagination_token` unchanged.
+- `instagram_post_detail`: set `target.instagram_code_or_url` to a shortcode or public post URL, or set `target.instagram_post_url` to a public `/p/`, `/reel/`, `/reels/`, or `/tv/` Instagram URL. Do not supply both.
 - `instagram_post_comments`: set `target.instagram_code_or_url` to a shortcode or public post URL. Optionally set `target.instagram_comment_sort_by` to `recent` (default) or `popular`. For a later page, pass the returned token as `target.pagination_token` unchanged.
-- `instagram_shortcode_to_media_id`: set `target.instagram_shortcode` to the shortcode alone. Use the returned media ID in a separate detail request when needed.
+- `instagram_shortcode_to_media_id`: set `target.instagram_shortcode` to the shortcode alone. The returned media ID is a separate resource; `instagram_post_detail` requires a shortcode or post URL.
 
-Each operation reads one bounded page. Report only fields present in the returned public data and do not infer missing engagement metrics or account details.
+For a user-posts result, use a returned post `code` or `url` to request `instagram_post_detail`. Use the returned `user.username` or `user.id` with `instagram_user_brief` or `instagram_user_info` to view the user's profile. The media `id` remains a stable identifier but is not an input to V2 post detail. Each operation reads one bounded page. Report only fields present in the returned public data and do not infer missing engagement metrics or account details.
 
 ## SEO Submission
 

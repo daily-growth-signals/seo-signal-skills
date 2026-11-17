@@ -119,9 +119,10 @@ Submit these through `research_social_signals`. They return an `analysis_id`, us
 | `instagram_general_search` | `target.keyword`; optional `target.pagination_token` | Pass returned token as `target.pagination_token` |
 | `instagram_search_users` | `target.keyword` | None |
 | `instagram_hashtag_posts` | `target.keyword` without `#`; optional `target.instagram_feed_type` (`top`, `recent`, `reels`) and `target.pagination_token` | Pass returned token as `target.pagination_token` |
-| `instagram_user_brief` | Numeric `target.instagram_user_id` and `target.instagram_username` | None |
-| `instagram_user_posts` | `target.instagram_username`; optional `count`, `first`, `after`, `last`, `before` | Forward: `first` + `after`; backward: `last` + `before` |
-| `instagram_post_detail` | Numeric `target.instagram_media_id` or public `target.instagram_post_url`; ID takes precedence | None |
+| `instagram_user_brief` | Exactly one of numeric `target.instagram_user_id` or `target.instagram_username` | None |
+| `instagram_user_info` | Exactly one of numeric `target.instagram_user_id` or `target.instagram_username` | None |
+| `instagram_user_posts` | Exactly one of `target.instagram_username` or numeric `target.instagram_user_id`; optional `target.pagination_token` | Pass returned token as `target.pagination_token` |
+| `instagram_post_detail` | `target.instagram_code_or_url` (shortcode or public post URL) or public `target.instagram_post_url`; supply only one | None |
 | `instagram_post_comments` | `target.instagram_code_or_url` (shortcode or public post URL); optional `target.instagram_comment_sort_by` (`recent` or `popular`) and `target.pagination_token` | Pass returned token as `target.pagination_token` |
 | `instagram_shortcode_to_media_id` | `target.instagram_shortcode` without the surrounding URL | None |
 

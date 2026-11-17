@@ -8,6 +8,12 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [2.2.3] - 2026-11-17
+
+### Changes
+
+- Instagram user profile and user-post requests now use one account identifier. User-post pagination uses the returned token, and post details use a shortcode or post URL. User-post results expose a post link and public user identifiers for follow-up requests.
+
 ## [2.2.2] - 2026-11-16
 
 ### Changes
