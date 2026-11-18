@@ -8,6 +8,13 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 - To be added.
 
+## [2.3.0] - 2026-11-18
+
+### Changes
+
+- Social research now supports bounded public Douyin video details and statistics, profiles and user posts, keyword searches and suggestions, and hot video, topic, and search lists through the unified Social tool.
+- Social research now supports bounded public TikTok post details and comments, profiles and user posts, keyword and user search, search suggestions, trending search terms, and country/category rankings through the same tool. Continue paged requests with the returned cursor and preserve reported coverage limits.
+
 ## [2.2.3] - 2026-11-17
 
 ### Changes

@@ -125,6 +125,27 @@ Submit these through `research_social_signals`. They return an `analysis_id`, us
 | `instagram_post_detail` | `target.instagram_code_or_url` (shortcode or public post URL) or public `target.instagram_post_url`; supply only one | None |
 | `instagram_post_comments` | `target.instagram_code_or_url` (shortcode or public post URL); optional `target.instagram_comment_sort_by` (`recent` or `popular`) and `target.pagination_token` | Pass returned token as `target.pagination_token` |
 | `instagram_shortcode_to_media_id` | `target.instagram_shortcode` without the surrounding URL | None |
+| `douyin_video_detail` | Decimal `target.douyin_aweme_id` | None |
+| `douyin_video_by_share_url` | Public `target.douyin_share_url` | None |
+| `douyin_video_statistics` | 1–100 unique decimal `target.douyin_aweme_ids` | None |
+| `douyin_user_profile` | `target.douyin_sec_user_id` | None |
+| `douyin_user_posts` | `target.douyin_sec_user_id`; optional `douyin_count`, `douyin_sort_type`, and `douyin_channel` | Pass returned `next_cursor` as `target.douyin_max_cursor` |
+| `douyin_general_search_v1` | `target.douyin_keyword`; optional search filters | Pass returned cursor, `search_id`, and `backtrace` as matching `target.douyin_*` fields |
+| `douyin_search_suggest` | `target.douyin_keyword` | None |
+| `douyin_user_search` | `target.douyin_keyword`; optional `douyin_user_fans`, `douyin_user_type` | Pass returned cursor and `search_id` as matching `target.douyin_*` fields |
+| `douyin_challenge_search_v1` | `target.douyin_keyword`; optional search filters | Pass returned cursor, `search_id`, and `backtrace` as matching `target.douyin_*` fields |
+| `douyin_hot_video_list` | Optional `douyin_page`, `douyin_page_size`, `douyin_date_window`, `douyin_keyword`, `douyin_billboard_sub_type` | Increase `target.douyin_page` for next page |
+| `douyin_hot_topic_list` | Optional `douyin_page`, `douyin_page_size`, `douyin_date_window`, `douyin_keyword` | Increase `target.douyin_page` for next page |
+| `douyin_hot_search_list` | Optional `douyin_page`, `douyin_page_size`, `douyin_date_window`, `douyin_keyword` | Increase `target.douyin_page` for next page |
+| `tiktok_post_detail` | Decimal `target.tiktok_item_id` | None |
+| `tiktok_trending_searchwords` | No target fields | None |
+| `tiktok_user_profile` | `target.tiktok_unique_id` or `target.tiktok_sec_uid` | None |
+| `tiktok_user_posts` | `target.tiktok_sec_uid`; optional `tiktok_count` (1–15), `tiktok_cover_format` (1 or 2) | Pass returned `cursor` as `target.tiktok_cursor` |
+| `tiktok_post_comments` | Decimal `target.tiktok_item_id`; optional `tiktok_count`, `tiktok_region` | Pass returned `cursor` as `target.tiktok_cursor` |
+| `tiktok_search_suggest` | `target.tiktok_keyword` | None |
+| `tiktok_user_search` | `target.tiktok_keyword`; optional `tiktok_search_count`, `tiktok_user_follower_count`, `tiktok_user_profile_type`, `tiktok_user_other_pref` | Pass returned `cursor` as `target.tiktok_offset` |
+| `tiktok_general_search` | `target.tiktok_keyword`; optional `tiktok_search_count`, `tiktok_search_sort_type`, `tiktok_publish_time` | Pass returned `cursor` as `target.tiktok_offset` |
+| `tiktok_top_contents` | Required `target.tiktok_period_end_timestamp` (10-digit UTC Unix seconds); optional `tiktok_period_dimension` (1 weekly, 3 daily default, 5 long period), `tiktok_region` (supplier `country_code`, default `US`), `tiktok_content_label_ids` (comma-separated category IDs), `tiktok_order_by_metric` (1 views, 2 engagement, 3 six-second view rate), `tiktok_organic_only`, `tiktok_page` (default 1), `tiktok_limit` (default 20, max 100). See the Skill's TikTok section for all 15 category IDs and date selection. | Increase `target.tiktok_page` while `data.pagination.hasMore` is true; never auto-change dates after an empty ranking |
 
 Resource results expose submitted public parameters, capture time, and sanitized business `data`; provider envelope metadata is not part of the public contract. Threads is currently available only as a topic-search platform through `research_social_signals`; the unified public schema does not expose Threads profile, user-post, or single-post retrieval. The live input schema takes precedence over this summary.
 

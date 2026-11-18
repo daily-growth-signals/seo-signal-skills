@@ -1,14 +1,14 @@
 ---
 name: research-growth-signals
-description: Research traceable public social and SEO signals through SignalDig, including bounded Zhihu, Xiaohongshu, and Instagram resources plus Threads topic signals. Use when a user asks for social discussions, posts, profiles, Zhihu questions or trends, search suggestions, keyword demand, SERP, competitors, GEO, backlinks, rankings, or traffic evidence. Use the unified research tools and never expose providers, workflows, or bindings.
+description: Research traceable public social and SEO signals through SignalDig, including bounded Douyin and TikTok search and hot lists, Zhihu, Xiaohongshu, and Instagram resources plus Threads topic signals. Use when a user asks for social discussions, posts, profiles, Douyin or TikTok search and trends, Zhihu questions or trends, search suggestions, keyword demand, SERP, competitors, GEO, backlinks, rankings, or traffic evidence. Use the unified research tools and never expose providers, workflows, or bindings.
 slug: research-growth-signals
 displayName: SignalDig Growth Research
-version: 2.2.3
+version: 2.3.0
 summary: Retrieve traceable public social and SEO signals through SignalDig's unified research tools.
 tags: [seo, social, mcp, signaldig, research]
 license: MIT
 metadata:
-  version: "2.2.3"
+  version: "2.3.0"
   homepage: "https://signaldig.com/"
 ---
 
@@ -56,7 +56,7 @@ If the required tool is unavailable, the connection fails, or authentication is 
   provide `scope.domain`, omit `scope.keyword`, and never mix it with `geo_analysis` or other scopes.
 - Ask one short clarification only when different scope choices would materially change cost, target interpretation, or the answer. Otherwise make the narrowest reasonable choice and state the resulting coverage.
 - `refresh=false` is the default. Use `refresh=true` only when the user explicitly requests fresh collection.
-- Never invent or forward native cursors, search IDs, provider parameters, internal IDs, or low-level request payloads. The service maps and validates them.
+- Never invent native cursors, search IDs, provider parameters, internal IDs, or low-level request payloads. For named resource operations, pass only the public target fields documented below and reuse returned continuation values unchanged; the service maps and validates them.
 
 ## Evidence and Response Rules
 
@@ -113,6 +113,35 @@ Zhihu supports bounded public topic retrieval through the same Social Tool and `
 ## Unified Social Resource Retrieval
 
 Submit these through `research_social_signals` with the named `operation`, the smallest matching `target`, and no topic `scope`, `search`, or result budget. Poll the returned `analysis_id`, then read `dataset="social_resources"`.
+
+### Douyin
+
+- `douyin_video_detail`: set `target.douyin_aweme_id` to a decimal video ID.
+- `douyin_video_by_share_url`: set `target.douyin_share_url` to a public Douyin share URL.
+- `douyin_video_statistics`: set `target.douyin_aweme_ids` to 1–100 unique decimal video IDs. The returned counts are native observations, not comparable reach estimates.
+- `douyin_user_profile`: set `target.douyin_sec_user_id` to the stable public profile token.
+- `douyin_user_posts`: set `target.douyin_sec_user_id`; optional `douyin_max_cursor`, `douyin_count`, `douyin_sort_type`, and `douyin_channel` select one page. Pass a returned `next_cursor` as `douyin_max_cursor` for continuation. The provider may return more items than the requested count.
+- `douyin_general_search_v1`, `douyin_search_suggest`, `douyin_user_search`, `douyin_challenge_search_v1`: set `target.douyin_keyword`. General, user, and challenge search pages accept `douyin_cursor` and returned `douyin_search_id`; general and challenge search also accept `douyin_search_sort_type`, `douyin_publish_time`, `douyin_filter_duration`, `douyin_content_type`, and `douyin_backtrace`. User search accepts `douyin_user_fans` and `douyin_user_type`.
+- `douyin_hot_video_list`, `douyin_hot_topic_list`, `douyin_hot_search_list`: optional `douyin_page`, `douyin_page_size`, `douyin_date_window` (1, 24, 72, or 168 hours), and `douyin_keyword` select one page. Video hot list also accepts `douyin_billboard_sub_type` (1001–1005).
+
+Use only IDs or links supplied by the user or a trusted previous result. Do not add Douyin to topic-search `scope.platforms`. Results expose a bounded public projection of descriptions, profile fields, native metrics, and pagination; missing counts are unknown rather than zero.
+
+### TikTok
+
+- `tiktok_post_detail`: set decimal `target.tiktok_item_id`. The App V3 request does not accept region.
+- `tiktok_trending_searchwords`: omit `target` fields to read daily public search terms.
+- `tiktok_user_profile`: set `target.tiktok_unique_id` or `target.tiktok_sec_uid`.
+- `tiktok_user_posts`: set `target.tiktok_sec_uid`; optional `tiktok_cursor`, `tiktok_count` (1–15), and `tiktok_cover_format` (1 or 2) select a page. Return the cursor unchanged for continuation and deduplicate adjacent pages by post ID.
+- `tiktok_post_comments`: set decimal `target.tiktok_item_id`; optional `tiktok_cursor`, `tiktok_count`, and `tiktok_region` select a page.
+- `tiktok_search_suggest`: set `target.tiktok_keyword`.
+- `tiktok_user_search`: set `target.tiktok_keyword`; optional `tiktok_offset`, `tiktok_search_count`, `tiktok_user_follower_count`, `tiktok_user_profile_type`, and `tiktok_user_other_pref` select one App V3 page. Pass the returned `cursor` as the next `tiktok_offset`.
+- `tiktok_general_search`: set `target.tiktok_keyword`; optional `tiktok_offset`, `tiktok_search_count`, `tiktok_search_sort_type`, and `tiktok_publish_time` select one App V3 page. Pass the returned `cursor` as the next `tiktok_offset`.
+- `tiktok_top_contents`: set `target.tiktok_period_end_timestamp` to the ranking period's end date as a **10-digit Unix timestamp in seconds**, calculated in UTC. `target.tiktok_period_dimension` defaults to `3` (daily); `1` selects a weekly ranking and `5` a long-period ranking. These values select ranking types, not lookback windows. For a weekly ranking, choose a published UTC Sunday; UTC midnight is a convenient conversion point, not a required exact second. Recent dates can still return an empty ranking. Do not automatically try another date or period.
+  - `target.tiktok_region` maps to the supplier's `country_code` and defaults to `US`. Use an uppercase two-letter code for a country the user selected; the supplier's location list determines actual coverage, and an unsupported region may return an empty list.
+  - `target.tiktok_content_label_ids` is an empty string for all categories or a comma-separated string of IDs, such as `11002,11015`. Valid IDs: `11001` Nature & Animals; `11002` Beauty & Care; `11003` Fashion; `11004` Music & Entertainment; `11005` Games; `11006` Education & Work; `11007` Sports & Outdoor; `11008` Creativity & Talent; `11009` Family & Relationships; `11010` Food & Drink; `11011` Vlog & Selfie; `11012` Society; `11013` Lifestyle & Leisure; `11014` Automotive & Transport; `11015` Technology & Finance. Do not send category names as IDs.
+  - `target.tiktok_order_by_metric` defaults to `1` (views); `2` sorts by engagement rate and `3` by six-second view rate. `target.tiktok_organic_only` defaults to `false`. `target.tiktok_page` starts at `1`; `target.tiktok_limit` defaults to `20` and cannot exceed `100`. Read `data.pagination.hasMore` before requesting another page.
+
+Do not add TikTok to topic-search `scope.platforms` or provide account Cookie values or search tracking IDs. Results contain a bounded public projection; video CDN links and access tokens are excluded. Empty App V3 search pages can be valid; inspect the returned `has_more` before continuing.
 
 ### Zhihu
 
