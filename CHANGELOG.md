@@ -6,7 +6,8 @@ This file records user-facing changes only. Do not include commits, refactoring 
 
 ### Changes
 
-- To be added.
+- Clarify SEO and Social submission, status polling, and dataset reading, including required fields and examples for formal research and free searches.
+- Explain YouTube language defaults, Social result limits, terminal statuses, and the difference between reading collected results and requesting another source page. Search evidence should be checked for relevance.
 
 ## [2.3.0] - 2026-11-18
 

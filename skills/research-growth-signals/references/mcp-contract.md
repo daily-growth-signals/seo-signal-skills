@@ -347,3 +347,12 @@ maximum page count instead of following cursors without a fixed bound. When the 
 `page.has_more` is true, report that more collected results remain.
 
 Never infer internal providers, workflows, operations, bindings, storage, prompts, or native pagination state from this response.
+
+Social topic requests support `result_budget.total` (default 50, range 1–200).
+Formal terminal statuses use `completed`, `partial`, or `failed`; free responses use
+`complete`, `partial`, or `failed`. Outer `page.has_more` covers records in the current
+analysis. Nested continuation fields describe another source page and require a new bounded
+resource submit when further collection is wanted. YouTube search uses `page_number`.
+For YouTube, `language_code` defaults to `en` on search and `zh-CN` on channel
+detail, channel videos and comments. Set it explicitly when a language is required.
+Search records can be weakly related; evaluate each record against the user's topic.
