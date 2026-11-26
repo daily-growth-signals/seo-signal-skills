@@ -3,12 +3,12 @@ name: research-growth-signals
 description: Research traceable public social and SEO signals through SignalDig, including bounded Douyin and TikTok search and hot lists, Zhihu, Xiaohongshu, and Instagram resources plus Threads topic signals. Use when a user asks for social discussions, posts, profiles, Douyin or TikTok search and trends, Zhihu questions or trends, search suggestions, keyword demand, SERP, competitors, GEO, backlinks, rankings, or traffic evidence. Use the unified research tools and never expose providers, workflows, or bindings.
 slug: research-growth-signals
 displayName: SignalDig Growth Research
-version: 2.3.0
+version: 2.3.1
 summary: Retrieve traceable public social and SEO signals through SignalDig's unified research tools.
 tags: [seo, social, mcp, signaldig, research]
 license: MIT
 metadata:
-  version: "2.3.0"
+  version: "2.3.1"
   homepage: "https://signaldig.com/"
 ---
 
