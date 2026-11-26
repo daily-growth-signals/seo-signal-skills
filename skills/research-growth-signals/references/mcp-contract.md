@@ -50,6 +50,17 @@ The public topic-search source list is X, Reddit, Xiaohongshu, Zhihu, and Thread
 
 Every newly published research capability must enter the unified Research MCP and this Skill in the same release. Topic-search sources extend `scope.platforms`; entity, feed, or ID-based capabilities extend an appropriate operation/target shape or public Dataset instead of creating another public MCP connection.
 
+Formal Social submits always require a non-empty `request`. On formal get, omit
+`operation`, including after named resource submits; the analysis ID identifies the operation. Poll with
+`{"action":"get","analysis_id":"<id>","view":"status"}`.
+Read topic evidence with `view="results", dataset="social_posts"` and resource evidence
+with `view="results", dataset="social_resources"`.
+
+For explicit free Social search, submit `operation="free_channel_search"` with
+`channel_query={channel, keyword}`. Poll using only `action="get"`, the same
+`operation`, and the complete returned `analysis_id` on the same connection.
+Wait for `poll_after_seconds` between reads.
+
 ## Social Entity Retrieval
 
 The same Social Tool also accepts three bounded business operations:
@@ -155,7 +166,7 @@ YouTube is a named Social resource operation. Use the stable `channel_id` return
 
 Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, and GEO
 visibility. Use `scope.target` for backlink, ranked-keyword, or traffic research when the target is a
-domain, subdomain, or webpage URL. `domain` and `target` are mutually exclusive. Every submit must
+domain, subdomain, or webpage URL. `domain` and `target` are mutually exclusive. Every formal research submit must
 include a non-empty, unique `scope.data_scopes` list. Select the smallest useful evidence set for the
 user's goal; omission is invalid and never means “all.” Interpret intent semantically rather than
 requiring users to name a Dataset or use one of the examples below verbatim.
@@ -165,6 +176,7 @@ Submit a traditional or domain-based analysis:
 ```json
 {
   "action": "submit",
+  "operation": "research",
   "request": "Research demand and current SERP patterns for AI SEO tools",
   "scope": {
     "keyword": "AI SEO tools",
@@ -177,6 +189,42 @@ Submit a traditional or domain-based analysis:
   "refresh": false
 }
 ```
+
+Poll the returned analysis after `retry_after_seconds` with the same authenticated connection. Once it has results, read
+one matching Dataset at a time:
+
+```json
+{"action":"get","operation":"research","analysis_id":"<analysis_id>","view":"status"}
+```
+
+```json
+{"action":"get","operation":"research","analysis_id":"<analysis_id>","view":"results","dataset":"keyword_overview"}
+```
+
+For an explicit free keyword difficulty request on an authenticated connection, submit once:
+
+```json
+{
+  "action": "submit",
+  "operation": "free_keyword_difficulty",
+  "free_query": {
+    "keyword": "AI SEO tools",
+    "market": "US",
+    "language": "en",
+    "output_language": "en"
+  }
+}
+```
+
+While the free response is pending or running, wait for `poll_after_seconds` and read it with
+only these fields. Copy the full returned `analysis_id` unchanged and keep the same connection:
+
+```json
+{"action":"get","operation":"free_keyword_difficulty","analysis_id":"<analysis_id>"}
+```
+
+For an explicit quota check, send `{"action":"quota","operation":"free_keyword_difficulty"}`
+on the authenticated connection.
 
 For a domain-level AI-search score with benchmark and citation evidence, use the same SEO Tool with
 the exclusive `geo_score` scope. It currently uses the fixed US/en comparison scope and does not

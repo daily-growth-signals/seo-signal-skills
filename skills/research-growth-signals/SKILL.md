@@ -18,6 +18,9 @@ Use connected SignalDig MCP tools to turn a user's question into the smallest su
 
 ## Availability Gate
 
+Use anonymous search only when explicitly requested and supported by the connected MCP client.
+For an anonymous installation, the client supplies the `X-SignalDig-Installation` header.
+
 This Skill has no data of its own. Before research, inspect the visible MCP tools for `research_social_signals` and `research_seo_signals`. The server alias and any local tool namespace are client-defined; use the exact visible identifiers and never construct an `mcp__<alias>__<tool>` name.
 
 If the required tool is unavailable, the connection fails, or authentication is rejected, stop. Never simulate results from general knowledge. Tell the user that SignalDig is not connected and direct them to [Connect SignalDig](https://signaldig.com/agent-setup). Do not expose endpoints, configuration internals, or machine error codes in that failure response.
@@ -31,6 +34,9 @@ If the required tool is unavailable, the connection fails, or authentication is 
 - Ask one short clarification only when choosing Social versus SEO, the required platform set, or the SEO business scope would otherwise be unsafe. Do not ask the user about providers, workflows, bindings, page tokens, operation names, or storage.
 
 ## Unified Research Execution Contract
+
+For formal research, use the following sequence. For free keyword difficulty, use the separate
+[SEO call examples](references/mcp-contract.md#tool-research_seo_signals).
 
 1. Preserve the user's requested topic, platforms, market, language, time intent, result count, and refresh intent. Do not add sources or broaden the topic.
 2. Select only one of the two business tools unless both evidence directions are necessary.
@@ -196,9 +202,15 @@ For a user-posts result, use a returned post `code` or `url` to request `instagr
 
 ## SEO Submission
 
-Translate the user's request into the live `research_seo_signals` schema:
+Choose the SEO operation before submitting. Follow the matching call sequence in
+[the SEO call examples](references/mcp-contract.md#tool-research_seo_signals). Keep the operation, returned
+`analysis_id`, and connection together for every read. Use free keyword difficulty only when
+the user explicitly requests it.
 
-- `request`: the natural-language research goal.
+For `operation="research"`, translate the user's request into the live
+`research_seo_signals` schema:
+
+- `request`: a required, non-empty natural-language research goal on every submit, including retries and single-scope requests.
 - `scope.market` and `scope.language`: normalized business inputs required by the live schema.
 - `scope.keyword`: required for every SEO scope except domain-only `geo_score`; omit it for `geo_score`.
 - Use `scope.domain` for traditional keyword/SERP/trend research, competitor analysis, GEO visibility,
@@ -233,8 +245,8 @@ separate analyses required by the mutually exclusive `scope.domain` and `scope.t
 
 ## Status and Result Reading
 
-- Use `view="status"` to check one `analysis_id` or an ordered `analysis_ids` collection without returning result bodies.
-- Use `view="results"` only for terminal or partially terminal work. Select one Dataset per call and use the same ordered analysis collection for every page.
+- For formal research, use `view="status"` to check one `analysis_id` or an ordered `analysis_ids` collection without returning result bodies.
+- For formal research, use `view="results"` only for terminal or partially terminal work. Always pass one matching `dataset` per call and use the same ordered analysis collection for every page.
 - Social post records use `dataset="social_posts"`. For SEO, use the Dataset matching the requested evidence family:
   `keyword_overview`, `domain_rank_overview`, `related_keywords`, `serp_results`, `google_trends`,
   `x_recent_search`, `ranked_keywords`, `backlinks`, `competitor_domains`, `geo_mentions`, `geo_score`, or
