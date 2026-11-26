@@ -39,7 +39,7 @@ You can also download the packaged Skill from the [latest GitHub release](https:
 
 ## Connect SignalDig MCP
 
-The Skill contains instructions but no research data. Register the SignalDig Streamable HTTP endpoint in your client and provide the API key through a secret or environment variable:
+Connect to `https://mcp.signaldig.com/mcp` with a Streamable HTTP MCP client. The MCP tools describe their own inputs and result-reading steps, so clients can also use them without installing this Skill. For full research, provide your account API key through a secret or environment variable:
 
 ```json
 {
@@ -55,6 +55,16 @@ The Skill contains instructions but no research data. Register the SignalDig Str
 
 The `signaldig` alias is configurable. Do not commit the API key. Client-specific configuration is documented at [Connect SignalDig](https://signaldig.com/agent-setup).
 
+## Anonymous access
+
+Anonymous users can try supported single-channel searches through the same MCP connection.
+Use `research_social_signals` for social searches and `research_seo_signals` for web searches.
+Full research requires account authorization. See [Connect SignalDig](https://signaldig.com/agent-setup)
+for access options.
+
+The updated guide explains how to submit research and read results. MCP clients can also
+use the tools without installing this Skill.
+
 ## 中文说明
 
 SignalDig Growth Research 是一个开源 Agent Skill，通过一个 SignalDig MCP 连接完成公开社媒研究与 SEO 研究。支持 Codex、Claude Code、Cursor、Windsurf，以及其他兼容 Agent Skills 和 Streamable HTTP MCP 的客户端。
@@ -65,6 +75,14 @@ SignalDig Growth Research 是一个开源 Agent Skill，通过一个 SignalDig M
 - SEO 研究：关键词需求、相关搜索、SERP、趋势、竞品、GEO 可见度、外链、排名关键词和流量证据。
 
 安装时把 `skills/research-growth-signals` 复制到客户端的 skills 目录，然后按[接入说明](https://signaldig.com/agent-setup)配置 SignalDig MCP。Skill 本身不包含研究数据；未连接 MCP 时不会用常识补写结果。
+
+### 匿名访问
+
+支持匿名用户通过同一 MCP 连接试用单渠道搜索。
+社媒搜索使用 `research_social_signals`，网页搜索使用 `research_seo_signals`。
+完整研究需要账户授权，接入方式见[连接指南](https://signaldig.com/agent-setup)。
+
+本次更新完善了研究提交和结果读取指南。客户端也可直接使用 MCP 工具，无需安装 Skill。
 
 ## License
 
